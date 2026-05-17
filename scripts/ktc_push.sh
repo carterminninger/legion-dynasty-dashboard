@@ -37,9 +37,24 @@ else
     log "combine_data.json is fresh (< 7 days) — skipping combine scrape"
 fi
 
+# ── 1c. Dynasty Domain monitor (new videos → dynasty_domain_rankings.json) ────
+# Load ANTHROPIC_API_KEY from ~/.anthropic_key if not already in environment (launchd doesn't
+# inherit shell vars, so the key must be stored in a separate file for daemon contexts).
+if [ -z "${ANTHROPIC_API_KEY:-}" ] && [ -f "$HOME/.anthropic_key" ]; then
+    export ANTHROPIC_API_KEY="$(cat "$HOME/.anthropic_key")"
+    log "Loaded ANTHROPIC_API_KEY from ~/.anthropic_key"
+fi
+if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
+    log "WARNING: ANTHROPIC_API_KEY not set — skipping dynasty_domain_monitor.py"
+else
+    if ! "$PYTHON" "$PROJECT_DIR/scripts/dynasty_domain_monitor.py" >> "$LOG_FILE" 2>&1; then
+        log "WARNING: dynasty_domain_monitor.py failed — continuing without rankings refresh"
+    fi
+fi
+
 # ── 2. Stage ──────────────────────────────────────────────────────────────────
 cd "$PROJECT_DIR"
-"$GIT" add public/ktc_live.json public/combine_data.json >> "$LOG_FILE" 2>&1
+"$GIT" add public/ktc_live.json public/combine_data.json public/dynasty_domain_rankings.json >> "$LOG_FILE" 2>&1
 
 if "$GIT" diff --cached --quiet; then
     log "No changes detected in ktc_live.json — skipping commit"

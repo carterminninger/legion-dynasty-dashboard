@@ -12,6 +12,7 @@ const LEAGUE_ID   = "1321707192847450112";
 const FC_URL      = "https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=2&ppr=1";
 const KTC_URL     = "/ktc_live.json";
 const COMBINE_URL = "/combine_data.json";
+const DD_URL      = "/dynasty_domain_rankings.json";
 const REFRESH_INTERVAL = 30 * 60 * 1000;
 
 function ktcVal(player, ktcLive) {
@@ -880,6 +881,7 @@ export default function App() {
   const [selectedPlayer,  setSelectedPlayer] = useState(null);
   const [ktcLive,         setKtcLive]        = useState(null);
   const [combineData,     setCombineData]    = useState(null);
+  const [dynastyDomain,   setDynastyDomain]  = useState(null);
   const { roster, rosterLoading, record, allRosters, playersDb, leagueUsers, myRosterId } = useRoster();
 
   const today = new Date().toISOString().slice(0, 10);
@@ -933,6 +935,13 @@ export default function App() {
     fetch(COMBINE_URL)
       .then(r => r.ok ? r.json() : null)
       .then(data => { if (data) setCombineData(data); })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch(DD_URL)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data) setDynastyDomain(data); })
       .catch(() => {});
   }, []);
 
@@ -1031,7 +1040,7 @@ export default function App() {
       </div>
 
       {selectedPlayer && (
-        <PlayerModal player={selectedPlayer} fcData={fcData} ktcLive={ktcLive} combineData={combineData} onClose={() => setSelectedPlayer(null)} />
+        <PlayerModal player={selectedPlayer} fcData={fcData} ktcLive={ktcLive} combineData={combineData} dynastyDomain={dynastyDomain} onClose={() => setSelectedPlayer(null)} />
       )}
 
       <div style={{ padding:"20px 16px 0", color:"#0f1f30", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em" }}>

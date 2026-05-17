@@ -159,7 +159,65 @@ function CombineStats({ combine }) {
   );
 }
 
-export default function PlayerModal({ player, fcData, ktcLive, combineData, onClose }) {
+const DD_TIER_COLORS = {
+  S: "#f59e0b",  // gold
+  A: "#10b981",  // green
+  B: "#3b82f6",  // blue
+  C: "#eab308",  // yellow
+  D: "#ef4444",  // red
+};
+
+const DD_CATEGORY_COLORS = {
+  "Cornerstone":    "#c084fc",
+  "Foundational":   "#60a5fa",
+  "Upside Premier": "#34d399",
+};
+
+function DynastyDomainCard({ data, playerName }) {
+  const entry = data?.players?.[playerName];
+  if (!entry) return null;
+
+  const tierColor     = DD_TIER_COLORS[entry.tier]          || "#475569";
+  const categoryColor = DD_CATEGORY_COLORS[entry.category]  || "#475569";
+  const snippet = entry.context?.length > 110
+    ? entry.context.slice(0, 110) + "…"
+    : entry.context;
+
+  return (
+    <div style={{ background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, padding:"10px 12px", marginTop:12 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:7 }}>
+        <span style={{ color:"#f59e0b", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.15em" }}>DYNASTY DOMAIN</span>
+        <span style={{
+          background: tierColor+"20", color: tierColor, border:`1px solid ${tierColor}40`,
+          borderRadius:4, padding:"1px 7px", fontSize:11,
+          fontFamily:"'Space Mono',monospace", fontWeight:700,
+        }}>{entry.tier}</span>
+      </div>
+      <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:6 }}>
+        <span style={{ color: categoryColor, fontSize:12, fontFamily:"'Space Mono',monospace", fontWeight:700, letterSpacing:"0.06em" }}>
+          {entry.category.toUpperCase()}
+        </span>
+        {entry.depreciating_pillar && (
+          <span style={{
+            background:"#ef444418", color:"#ef4444", border:"1px solid #ef444440",
+            borderRadius:4, padding:"1px 5px", fontSize:8,
+            fontFamily:"'Space Mono',monospace", fontWeight:700, letterSpacing:"0.05em",
+          }}>DEPRECIATING</span>
+        )}
+      </div>
+      {snippet && (
+        <div style={{ color:"#475569", fontSize:10, fontFamily:"'DM Sans',sans-serif", lineHeight:1.5, marginBottom:6 }}>
+          {snippet}
+        </div>
+      )}
+      <div style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>
+        {entry.source_date && `${entry.source_date} · `}{entry.source_video}
+      </div>
+    </div>
+  );
+}
+
+export default function PlayerModal({ player, fcData, ktcLive, combineData, dynastyDomain, onClose }) {
   useEffect(() => {
     const handler = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
@@ -295,6 +353,9 @@ export default function PlayerModal({ player, fcData, ktcLive, combineData, onCl
 
         {/* Combine athletic data */}
         <CombineStats combine={combine} />
+
+        {/* Dynasty Domain tier rating */}
+        <DynastyDomainCard data={dynastyDomain} playerName={player.name} />
 
         {/* KTC value history sparkline */}
         <KtcSparkline playerName={player.name} />
