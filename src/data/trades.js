@@ -1,0 +1,26 @@
+export const TRADES = [
+  {
+    id:"t1",
+    label:"McConkey → Jadarian Price",
+    gave:["Ladd McConkey"],
+    got:["Jadarian Price"],
+    gaveKtc: 7200,
+    gotKtc:  3400,
+    verdict:"SELL HIGH",
+    verdictColor:"#10b981",
+    note:"Bought Price's upside in SEA. McConkey was peak value.",
+    date:"2026-03-12",
+  },
+  {
+    id:"t2",
+    label:"Pitts → 2027 1st",
+    gave:["Kyle Pitts"],
+    got:["2027 1st Round Pick"],
+    gaveKtc: 3100,
+    gotKtc:  3200,
+    verdict:"FAIR",
+    verdictColor:"#f59e0b",
+    note:"Converted aging TE into future capital.",
+    date:"2026-04-01",
+  },
+];
