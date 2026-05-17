@@ -1,11 +1,6 @@
-import { useState, useEffect, useRef } from "react";
-import { ROSTER } from "../data/roster";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 const POS_COLORS = { QB:"#f59e0b", RB:"#10b981", WR:"#3b82f6", TE:"#a855f7" };
-
-// Precomputed at module load — ROSTER is a static import, no need for useMemo
-const ROSTER_NAMES   = new Set(ROSTER.map(p => p.name));
-const ROSTER_BY_NAME = Object.fromEntries(ROSTER.map(p => [p.name, p]));
 
 function PosBadge({ pos }) {
   const c = POS_COLORS[pos] || "#64748b";
@@ -52,7 +47,7 @@ function PlayerCard({ item, onRemove }) {
   );
 }
 
-function SearchBox({ side, ktcLive, allFc, onAdd, added }) {
+function SearchBox({ side, ktcLive, allFc, onAdd, added, rosterNames, roster }) {
   const [query,   setQuery]   = useState("");
   const [results, setResults] = useState([]);
   const ref = useRef();
@@ -75,7 +70,7 @@ function SearchBox({ side, ktcLive, allFc, onAdd, added }) {
             team:       p.team || "FA",
             ktc:        p.sf_value,
             fc:         fc?.value ?? null,
-            isOnRoster: ROSTER_NAMES.has(name),
+            isOnRoster: rosterNames.has(name),
           };
         })
         .sort((a, b) => {
@@ -86,7 +81,7 @@ function SearchBox({ side, ktcLive, allFc, onAdd, added }) {
         .slice(0, 10);
     } else {
       // Fallback while ktcLive is loading: roster KTC + FC pool
-      const rosterHits = ROSTER
+      const rosterHits = roster
         .filter(p => p.name.toLowerCase().includes(q) && !added.includes(p.name))
         .map(p => {
           const fc = allFc?.find(f => f.player?.name === p.name);
@@ -95,7 +90,7 @@ function SearchBox({ side, ktcLive, allFc, onAdd, added }) {
       const fcHits = (allFc || [])
         .filter(f => {
           const n = f.player?.name || "";
-          return n.toLowerCase().includes(q) && !ROSTER_NAMES.has(n) && !added.includes(n);
+          return n.toLowerCase().includes(q) && !rosterNames.has(n) && !added.includes(n);
         })
         .slice(0, 6)
         .map(f => ({
@@ -160,7 +155,9 @@ function SearchBox({ side, ktcLive, allFc, onAdd, added }) {
   );
 }
 
-export default function TradeCalc({ fcData, ktcLive }) {
+export default function TradeCalc({ fcData, ktcLive, roster }) {
+  const rosterNames   = useMemo(() => new Set(roster.map(p => p.name)), [roster]);
+
   const [give, setGive] = useState([]);
   const [get,  setGet]  = useState([]);
 
@@ -199,7 +196,7 @@ export default function TradeCalc({ fcData, ktcLive }) {
         {/* YOU GIVE */}
         <div style={{ flex:1 }}>
           <div style={{ color:"#ef4444", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:8 }}>YOU GIVE</div>
-          <SearchBox side="YOU GIVE" ktcLive={ktcLive} allFc={fcData} onAdd={item => addTo("give", item)} added={allAdded} />
+          <SearchBox side="YOU GIVE" ktcLive={ktcLive} allFc={fcData} onAdd={item => addTo("give", item)} added={allAdded} rosterNames={rosterNames} roster={roster} />
           {give.map(item => <PlayerCard key={item.name} item={item} onRemove={name => removeFrom("give", name)} />)}
           {give.length === 0 && <div style={{ color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace" }}>Search to add players</div>}
         </div>
@@ -207,7 +204,7 @@ export default function TradeCalc({ fcData, ktcLive }) {
         {/* YOU GET */}
         <div style={{ flex:1 }}>
           <div style={{ color:"#10b981", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:8 }}>YOU GET</div>
-          <SearchBox side="YOU GET" ktcLive={ktcLive} allFc={fcData} onAdd={item => addTo("get", item)} added={allAdded} />
+          <SearchBox side="YOU GET" ktcLive={ktcLive} allFc={fcData} onAdd={item => addTo("get", item)} added={allAdded} rosterNames={rosterNames} roster={roster} />
           {get.map(item => <PlayerCard key={item.name} item={item} onRemove={name => removeFrom("get", name)} />)}
           {get.length === 0 && <div style={{ color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace" }}>Search to add players</div>}
         </div>

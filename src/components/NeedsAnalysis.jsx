@@ -1,55 +1,64 @@
-import { ROSTER } from "../data/roster";
+function lastName(name) { return name.split(" ").slice(-1)[0]; }
 
-function analyzeNeeds() {
-  const starters = ROSTER.filter(p => p.slot === "STARTER");
-  const ir       = ROSTER.filter(p => p.slot === "IR");
+function analyzeNeeds(roster) {
+  const starters = roster.filter(p => p.slot === "STARTER");
+  const ir       = roster.filter(p => p.slot === "IR");
   const needs    = [];
 
   // QB
-  const qbs = starters.filter(p => p.pos === "QB").sort((a,b) => b.ktc - a.ktc);
+  const qbs = starters.filter(p => p.pos === "QB").sort((a,b) => (b.ktc||0) - (a.ktc||0));
   needs.push({
     pos:"QB",
     icon:"✅",
-    text:`QB — Williams + Lawrence, strong SF stack (${qbs.map(q=>q.name.split(" ")[1]).join(" + ")})`,
+    text: qbs.length >= 2
+      ? `QB — ${qbs.map(q => lastName(q.name)).join(" + ")}, strong SF stack`
+      : qbs.length === 1
+      ? `QB — ${qbs[0].name} starting, need QB depth`
+      : `QB — no starters`,
   });
 
   // RB
-  const rbs = starters.filter(p => p.pos === "RB" || (p.slot === "STARTER" && p.pos === "RB")).sort((a,b) => b.ktc - a.ktc);
-  const topRb = ROSTER.filter(p => p.pos === "RB" && p.slot === "STARTER").sort((a,b) => b.ktc - a.ktc);
-  const rbDrop = topRb.length >= 2 ? ((topRb[0].ktc - topRb[1].ktc) / topRb[0].ktc) : 0;
+  const rbStarters = starters.filter(p => p.pos === "RB").sort((a,b) => (b.ktc||0) - (a.ktc||0));
+  const rbDrop = rbStarters.length >= 2
+    ? ((rbStarters[0].ktc||0) - (rbStarters[1].ktc||0)) / (rbStarters[0].ktc || 1)
+    : 0;
   needs.push({
     pos:"RB",
-    icon:"✅",
-    text:`RB — elite depth, Bijan + Hampton + Price (drop-off: ${Math.round(rbDrop*100)}% from RB1→RB2)`,
+    icon: rbStarters.length >= 3 ? "✅" : rbStarters.length >= 2 ? "✅" : "⚠",
+    text: `RB — ${rbStarters.map(p => lastName(p.name)).join(" + ") || "none"} (drop-off: ${Math.round(rbDrop*100)}% RB1→RB2)`,
   });
 
   // WR
-  const wrsOnIr = ir.filter(p => p.pos === "WR");
-  const wrStarters = ROSTER.filter(p => p.pos === "WR" && p.slot === "STARTER").sort((a,b) => b.ktc - a.ktc);
-  const wrDrop = wrStarters.length >= 2 ? ((wrStarters[0].ktc - wrStarters[1].ktc) / wrStarters[0].ktc) : 0;
+  const wrsOnIr   = ir.filter(p => p.pos === "WR");
+  const wrStarters = starters.filter(p => p.pos === "WR").sort((a,b) => (b.ktc||0) - (a.ktc||0));
+  const wrDrop     = wrStarters.length >= 2
+    ? ((wrStarters[0].ktc||0) - (wrStarters[1].ktc||0)) / (wrStarters[0].ktc || 1)
+    : 0;
   const wrIcon = wrsOnIr.length > 0 ? "⚠" : wrDrop > 0.4 ? "⚠" : "✅";
-  const irNames = wrsOnIr.map(p => p.name).join(", ");
   needs.push({
     pos:"WR",
     icon: wrIcon,
     text: wrsOnIr.length > 0
-      ? `WR — ${irNames} on IR, McMillan is acting WR1, depth thins after BT`
-      : `WR — McMillan + Brian Thomas starting, ${Math.round(wrDrop*100)}% drop to WR3`,
+      ? `WR — ${wrsOnIr.map(p => p.name).join(", ")} on IR, ${wrStarters[0]?.name || "?"} is acting WR1`
+      : `WR — ${wrStarters.map(p => lastName(p.name)).join(" + ")}, ${Math.round(wrDrop*100)}% drop to WR3`,
   });
 
   // TE
-  const teStarters = ROSTER.filter(p => p.pos === "TE" && p.slot === "STARTER").sort((a,b) => b.ktc - a.ktc);
+  const teStarters = starters.filter(p => p.pos === "TE").sort((a,b) => (b.ktc||0) - (a.ktc||0));
+  const teTaxi     = roster.filter(p => p.pos === "TE" && p.slot === "TAXI");
   needs.push({
     pos:"TE",
     icon:"🔵",
-    text:`TE — Fannin is TE5 upside, Sinnott on taxi. Positional strength.`,
+    text: teStarters.length > 0
+      ? `TE — ${teStarters.map(p => lastName(p.name)).join(" + ")} starting${teTaxi.length > 0 ? `, ${teTaxi.map(p => lastName(p.name)).join("/")} on taxi` : ""}. Positional strength.`
+      : `TE — no starters, needs upgrade`,
   });
 
   return needs;
 }
 
-export default function NeedsAnalysis() {
-  const needs = analyzeNeeds();
+export default function NeedsAnalysis({ roster }) {
+  const needs = analyzeNeeds(roster);
   const iconColor = { "✅":"#10b981", "⚠":"#f59e0b", "🔵":"#60a5fa" };
 
   return (

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { ROSTER } from "./data/roster";
+import { useRoster } from "./hooks/useRoster";
 import { PICKS }  from "./data/picks";
 import { TRADES } from "./data/trades";
 import PlayerModal   from "./components/PlayerModal";
@@ -12,9 +12,9 @@ const FC_URL  = "https://api.fantasycalc.com/values/current?isDynasty=true&numQb
 const KTC_URL = "/ktc_live.json";
 const REFRESH_INTERVAL = 30 * 60 * 1000;
 
-// Return live KTC SF value for a player, falling back to hardcoded roster value
+// Return live KTC SF value for a player, falling back to roster value then 0
 function ktcVal(player, ktcLive) {
-  return ktcLive?.players?.[player.name]?.sf_value ?? player.ktc;
+  return ktcLive?.players?.[player.name]?.sf_value ?? player.ktc ?? 0;
 }
 function ktcRankStr(player, ktcLive) {
   const live = ktcLive?.players?.[player.name];
@@ -26,8 +26,6 @@ const POS_COLORS  = { QB:"#f59e0b", RB:"#10b981", WR:"#3b82f6", TE:"#a855f7" };
 const SLOT_COLORS = { STARTER:"#10b981", BENCH:"#475569", TAXI:"#f59e0b", IR:"#ef4444" };
 const SLOT_ORDER  = ["STARTER","BENCH","TAXI","IR"];
 const POS_ORDER   = ["QB","RB","WR","TE","K"];
-const STARTERS    = ROSTER.filter(p => p.slot === "STARTER");
-
 const NAV_TABS = [
   { key:"briefing",  label:"BRIEFING"   },
   { key:"roster",    label:"ROSTER"     },
@@ -144,21 +142,21 @@ function PlayerRow({ player, rank, fcData, ktcLive, onClick }) {
   );
 }
 
-function RosterTab({ fcData, ktcLive, onPlayerClick }) {
+function RosterTab({ roster, fcData, ktcLive, onPlayerClick }) {
   const [filterTab, setFilterTab] = useState("ALL");
   const [sortBy,    setSortBy]    = useState("slot");
 
   const counts = Object.fromEntries(
     ROSTER_FILTER_TABS.map(t => [
       t.key,
-      t.key === "ALL" ? ROSTER.length
+      t.key === "ALL" ? roster.length
         : ["STARTER","BENCH","TAXI","IR"].includes(t.key)
-          ? ROSTER.filter(p => p.slot === t.key).length
-          : ROSTER.filter(p => p.pos  === t.key).length,
+          ? roster.filter(p => p.slot === t.key).length
+          : roster.filter(p => p.pos  === t.key).length,
     ])
   );
 
-  let filtered = ROSTER.filter(p => {
+  let filtered = roster.filter(p => {
     if (filterTab === "ALL") return true;
     if (["STARTER","BENCH","TAXI","IR"].includes(filterTab)) return p.slot === filterTab;
     return p.pos === filterTab;
@@ -167,7 +165,7 @@ function RosterTab({ fcData, ktcLive, onPlayerClick }) {
   filtered = [...filtered].sort((a, b) => {
     if (sortBy === "age") return a.age - b.age;
     if (sortBy === "pos") return POS_ORDER.indexOf(a.pos) - POS_ORDER.indexOf(b.pos);
-    if (sortBy === "ktc") return b.ktc - a.ktc;
+    if (sortBy === "ktc") return ktcVal(b, ktcLive) - ktcVal(a, ktcLive);
     if (sortBy === "fc") {
       const fa = fcData?.find(f => f.player?.name === a.name)?.value ?? 0;
       const fb = fcData?.find(f => f.player?.name === b.name)?.value ?? 0;
@@ -320,10 +318,11 @@ function PlayerNewsSection({ news }) {
 
 // ── Briefing tab ──────────────────────────────────────────────────────────────
 
-function BriefingTab({ fcData, lastUpdated, onRefresh, refreshing, ktcLive, today }) {
-  const topAssets  = [...ROSTER].sort((a,b) => b.ktc - a.ktc).slice(0, 8);
-  const irPlayers  = ROSTER.filter(p => p.slot === "IR");
-  const totalKtc   = ROSTER.reduce((s,p) => s + p.ktc, 0);
+function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLive, today }) {
+  const starters   = roster.filter(p => p.slot === "STARTER");
+  const topAssets  = [...roster].sort((a,b) => ktcVal(b, ktcLive) - ktcVal(a, ktcLive)).slice(0, 8);
+  const irPlayers  = roster.filter(p => p.slot === "IR");
+  const totalKtc   = roster.reduce((s,p) => s + ktcVal(p, ktcLive), 0);
 
   const [playerNews, setPlayerNews] = useState(null);
 
@@ -339,7 +338,7 @@ function BriefingTab({ fcData, lastUpdated, onRefresh, refreshing, ktcLive, toda
         const data = await res.json();
         const articles = data.articles || [];
 
-        const starterByName = Object.fromEntries(STARTERS.map(p => [p.name, p]));
+        const starterByName = Object.fromEntries(starters.map(p => [p.name, p]));
         const grouped = {};
 
         for (const art of articles) {
@@ -363,13 +362,13 @@ function BriefingTab({ fcData, lastUpdated, onRefresh, refreshing, ktcLive, toda
       }
     }, 400);
     return () => clearTimeout(timer);
-  }, []); // STARTERS is a module-level constant — safe empty deps
+  }, [roster]); // re-runs once when live roster replaces fallback
 
-  const movers = ROSTER
+  const movers = roster
     .map(p => {
       const fc = fcData?.find(f => f.player?.name === p.name)?.value;
       if (fc == null) return null;
-      return { ...p, fc, delta: fc - p.ktc };
+      return { ...p, fc, delta: fc - ktcVal(p, ktcLive) };
     })
     .filter(Boolean)
     .sort((a,b) => Math.abs(b.delta) - Math.abs(a.delta))
@@ -421,7 +420,7 @@ function BriefingTab({ fcData, lastUpdated, onRefresh, refreshing, ktcLive, toda
                   <span style={{ color:"#e2e8f0", fontWeight:600 }}>{p.name}</span> ({p.pos} · {p.team} · {p.age})
                   {i < irPlayers.length - 1 ? " and " : ""}
                 </span>
-              ))} on reserve. Nabers is your key asset to monitor for return timeline.
+              ))} {irPlayers.length === 1 ? "is" : "are"} on reserve.
             </div>
           </div>
         </div>
@@ -429,7 +428,7 @@ function BriefingTab({ fcData, lastUpdated, onRefresh, refreshing, ktcLive, toda
 
       <PlayerNewsSection news={playerNews} />
 
-      <NeedsAnalysis />
+      <NeedsAnalysis roster={roster} />
 
       {/* Top 8 assets */}
       <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
@@ -442,7 +441,7 @@ function BriefingTab({ fcData, lastUpdated, onRefresh, refreshing, ktcLive, toda
               {p.name}
               {p.slot !== "STARTER" && <SlotBadge slot={p.slot} />}
             </div>
-            <span style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace" }}>{p.ktc.toLocaleString()}</span>
+            <span style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace" }}>{ktcVal(p, ktcLive).toLocaleString()}</span>
           </div>
         ))}
         <div style={{ marginTop:8, paddingTop:8, borderTop:"1px solid #1a2d40", display:"flex", justifyContent:"space-between" }}>
@@ -451,7 +450,7 @@ function BriefingTab({ fcData, lastUpdated, onRefresh, refreshing, ktcLive, toda
         </div>
       </div>
 
-      <ValueTrend fcData={fcData} />
+      <ValueTrend fcData={fcData} roster={roster} />
 
       {/* FC vs KTC divergence */}
       {movers.length > 0 && (
@@ -461,7 +460,7 @@ function BriefingTab({ fcData, lastUpdated, onRefresh, refreshing, ktcLive, toda
             <div key={p.id} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:7 }}>
               <PosBadge pos={p.pos} />
               <div style={{ flex:1, color:"#94a3b8", fontSize:12, fontFamily:"'DM Sans',sans-serif" }}>{p.name}</div>
-              <span style={{ color:"#c084fc", fontSize:10, fontFamily:"'Space Mono',monospace" }}>{p.ktc.toLocaleString()}</span>
+              <span style={{ color:"#c084fc", fontSize:10, fontFamily:"'Space Mono',monospace" }}>{ktcVal(p, ktcLive).toLocaleString()}</span>
               <span style={{ color:"#334155", fontSize:10 }}>→</span>
               <span style={{ color:"#60a5fa", fontSize:10, fontFamily:"'Space Mono',monospace" }}>{p.fc.toLocaleString()}</span>
               <span style={{ color: p.delta > 0 ? "#10b981" : "#ef4444", fontSize:10, fontFamily:"'Space Mono',monospace", minWidth:52, textAlign:"right" }}>
@@ -562,6 +561,7 @@ export default function App() {
   const [refreshing,      setRefreshing]     = useState(false);
   const [selectedPlayer,  setSelectedPlayer] = useState(null);
   const [ktcLive,         setKtcLive]        = useState(null);
+  const { roster, rosterLoading }            = useRoster();
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -611,9 +611,9 @@ export default function App() {
       .catch(() => {});
   }, []);
 
-  const avgAge        = (ROSTER.reduce((s,p) => s + p.age, 0) / ROSTER.length).toFixed(1);
-  const starterCount  = ROSTER.filter(p => p.slot === "STARTER").length;
-  const starterAvgAge = (ROSTER.filter(p => p.slot === "STARTER").reduce((s,p) => s + p.age, 0) / starterCount).toFixed(1);
+  const starterCount  = roster.filter(p => p.slot === "STARTER").length;
+  const avgAge        = roster.length ? (roster.reduce((s,p) => s + p.age, 0) / roster.length).toFixed(1) : "—";
+  const starterAvgAge = starterCount  ? (roster.filter(p => p.slot === "STARTER").reduce((s,p) => s + p.age, 0) / starterCount).toFixed(1) : "—";
 
   return (
     <div style={{ minHeight:"100vh", background:"#060d16", color:"#e2e8f0", fontFamily:"'DM Sans',sans-serif", paddingBottom:60 }}>
@@ -640,7 +640,7 @@ export default function App() {
           <div style={{ color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>{LEAGUE.name} · {LEAGUE.season}</div>
           <div style={{ display:"flex", gap:8, marginTop:18, flexWrap:"wrap" }}>
             <StatCard label="RECORD"  value="0-0-0"            color="#64748b" />
-            <StatCard label="ROSTER"  value={33} sub="players" color="#a855f7" />
+            <StatCard label="ROSTER"  value={rosterLoading ? "…" : roster.length} sub="players" color="#a855f7" />
             <StatCard label="AVG AGE" value={avgAge}            sub={`starters ${starterAvgAge}`} color="#10b981" />
             <StatCard label="FAAB"    value={`$${LEAGUE.faab}`} sub="unspent"  color="#f59e0b" />
           </div>
@@ -667,11 +667,11 @@ export default function App() {
 
       {/* CONTENT */}
       <div style={{ padding:"0 16px" }}>
-        {navTab === "briefing"  && <BriefingTab fcData={fcData} lastUpdated={lastUpdated} onRefresh={fetchFc} refreshing={refreshing} ktcLive={ktcLive} today={today} />}
-        {navTab === "roster"    && <RosterTab   fcData={fcData} ktcLive={ktcLive} onPlayerClick={setSelectedPlayer} />}
+        {navTab === "briefing"  && <BriefingTab roster={roster} fcData={fcData} lastUpdated={lastUpdated} onRefresh={fetchFc} refreshing={refreshing} ktcLive={ktcLive} today={today} />}
+        {navTab === "roster"    && <RosterTab   roster={roster} fcData={fcData} ktcLive={ktcLive} onPlayerClick={setSelectedPlayer} />}
         {navTab === "picks"     && <PicksTab />}
         {navTab === "trades"    && <TradesTab />}
-        {navTab === "tradecalc" && <TradeCalc  fcData={fcData} ktcLive={ktcLive} />}
+        {navTab === "tradecalc" && <TradeCalc  fcData={fcData} ktcLive={ktcLive} roster={roster} />}
       </div>
 
       {selectedPlayer && (

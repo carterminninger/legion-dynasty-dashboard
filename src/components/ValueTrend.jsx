@@ -1,4 +1,3 @@
-import { ROSTER } from "../data/roster";
 
 function getSnapshots() {
   const keys = Object.keys(localStorage).filter(k => k.startsWith("fc_snapshot_")).sort();
@@ -27,7 +26,7 @@ function Sparkline({ values }) {
   );
 }
 
-export default function ValueTrend({ fcData }) {
+export default function ValueTrend({ fcData, roster }) {
   const snapshots = getSnapshots();
   if (snapshots.length < 2 || !fcData) {
     return (
@@ -43,7 +42,7 @@ export default function ValueTrend({ fcData }) {
   const prev     = snapshots[snapshots.length - 2];
   const prevDate = prev.date;
 
-  const movers = ROSTER
+  const movers = roster
     .map(p => {
       const today    = fcData.find(f => f.player?.name === p.name)?.value ?? null;
       const yesterday = prev.players?.[p.name]?.value ?? null;
