@@ -26,6 +26,7 @@ const POS_COLORS  = { QB:"#f59e0b", RB:"#10b981", WR:"#3b82f6", TE:"#a855f7" };
 const SLOT_COLORS = { STARTER:"#10b981", BENCH:"#475569", TAXI:"#f59e0b", IR:"#ef4444" };
 const SLOT_ORDER  = ["STARTER","BENCH","TAXI","IR"];
 const POS_ORDER   = ["QB","RB","WR","TE","K"];
+const STARTERS    = ROSTER.filter(p => p.slot === "STARTER");
 
 const NAV_TABS = [
   { key:"briefing",  label:"BRIEFING"   },
@@ -234,12 +235,135 @@ function RosterTab({ fcData, ktcLive, onPlayerClick }) {
   );
 }
 
+// ── Player news helpers ───────────────────────────────────────────────────────
+
+function timeAgo(ts) {
+  if (!ts) return "—";
+  const ms   = ts > 1e12 ? ts : ts * 1000;
+  const diff = Date.now() - ms;
+  const m    = Math.floor(diff / 60_000);
+  const h    = Math.floor(diff / 3_600_000);
+  const d    = Math.floor(diff / 86_400_000);
+  if (m < 1)  return "just now";
+  if (m < 60) return `${m}m ago`;
+  if (h < 24) return `${h}h ago`;
+  if (d < 7)  return `${d}d ago`;
+  return new Date(ms).toLocaleDateString("en-US", { month:"short", day:"numeric" });
+}
+
+function PlayerNewsSection({ news }) {
+  if (news === null) {
+    return (
+      <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
+        <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:8 }}>PLAYER NEWS</div>
+        <div style={{ color:"#1e3a5f", fontSize:10, fontFamily:"'Space Mono',monospace" }}>LOADING...</div>
+      </div>
+    );
+  }
+  if (!news.length) return null;
+
+  // Flatten all items, sort by recency, enforce 3-per-player cap
+  const counts = {};
+  const items = news
+    .flatMap(({ player, items: playerItems }) =>
+      playerItems.map(item => ({ ...item, player }))
+    )
+    .sort((a, b) => {
+      const ta = a.published || a.date || 0;
+      const tb = b.published || b.date || 0;
+      const msa = ta > 1e12 ? ta : ta * 1000;
+      const msb = tb > 1e12 ? tb : tb * 1000;
+      return msb - msa;
+    })
+    .filter(item => {
+      const key = item.player.id;
+      counts[key] = (counts[key] || 0) + 1;
+      return counts[key] <= 3;
+    });
+
+  if (!items.length) return null;
+
+  return (
+    <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
+      <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:12 }}>PLAYER NEWS</div>
+      {items.map((item, i) => (
+        <div
+          key={`${item.player.id}-${i}`}
+          style={{
+            borderBottom: i < items.length - 1 ? "1px solid #0d1825" : "none",
+            paddingBottom: i < items.length - 1 ? 12 : 0,
+            marginBottom:  i < items.length - 1 ? 12 : 0,
+          }}
+        >
+          <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }}>
+            <PosBadge pos={item.player.pos} />
+            <span style={{ color:"#94a3b8", fontSize:11, fontFamily:"'DM Sans',sans-serif", fontWeight:600 }}>
+              {item.player.name}
+            </span>
+            <span style={{ marginLeft:"auto", color:"#1e3a5f", fontSize:10, fontFamily:"'Space Mono',monospace", flexShrink:0 }}>
+              {timeAgo(item.published || item.date || 0)}
+            </span>
+          </div>
+          <div style={{ color:"#e2e8f0", fontSize:12, fontFamily:"'DM Sans',sans-serif", lineHeight:1.5, marginBottom:4 }}>
+            {item.title || item.headline || "—"}
+          </div>
+          {(item.source || item.source_type) && (
+            <div style={{ color:"#334155", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.06em" }}>
+              {(item.source || item.source_type).toUpperCase()}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ── Briefing tab ──────────────────────────────────────────────────────────────
 
 function BriefingTab({ fcData, lastUpdated, onRefresh, refreshing, ktcLive, today }) {
   const topAssets  = [...ROSTER].sort((a,b) => b.ktc - a.ktc).slice(0, 8);
   const irPlayers  = ROSTER.filter(p => p.slot === "IR");
   const totalKtc   = ROSTER.reduce((s,p) => s + p.ktc, 0);
+
+  const [playerNews, setPlayerNews] = useState(null);
+
+  useEffect(() => {
+    // Single ESPN fetch after initial render; athlete categories let us match to our starters.
+    // Section renders nothing during offseason when starters aren't in the news cycle.
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          "https://site.api.espn.com/apis/site/v2/sports/football/nfl/news?limit=50"
+        );
+        if (!res.ok) { setPlayerNews([]); return; }
+        const data = await res.json();
+        const articles = data.articles || [];
+
+        const starterByName = Object.fromEntries(STARTERS.map(p => [p.name, p]));
+        const grouped = {};
+
+        for (const art of articles) {
+          const cats = art.categories || [];
+          const match = cats.find(c => c.type === "athlete" && starterByName[c.description]);
+          if (!match) continue;
+          const player = starterByName[match.description];
+          if (!grouped[player.name]) grouped[player.name] = { player, items:[] };
+          if (grouped[player.name].items.length < 3) {
+            grouped[player.name].items.push({
+              title:     art.headline || "—",
+              source:    art.source || art.byline || "ESPN",
+              published: art.published ? new Date(art.published).getTime() : 0,
+            });
+          }
+        }
+
+        setPlayerNews(Object.values(grouped));
+      } catch {
+        setPlayerNews([]);
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, []); // STARTERS is a module-level constant — safe empty deps
 
   const movers = ROSTER
     .map(p => {
@@ -302,6 +426,8 @@ function BriefingTab({ fcData, lastUpdated, onRefresh, refreshing, ktcLive, toda
           </div>
         </div>
       )}
+
+      <PlayerNewsSection news={playerNews} />
 
       <NeedsAnalysis />
 
