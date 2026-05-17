@@ -1,7 +1,101 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
-const POS_COLORS = { QB:"#f59e0b", RB:"#10b981", WR:"#3b82f6", TE:"#a855f7" };
+const POS_COLORS  = { QB:"#f59e0b", RB:"#10b981", WR:"#3b82f6", TE:"#a855f7" };
 const SLOT_COLORS = { STARTER:"#10b981", BENCH:"#475569", TAXI:"#f59e0b", IR:"#ef4444" };
+
+function KtcSparkline({ playerName }) {
+  const history = useMemo(() => {
+    const keys = Object.keys(localStorage)
+      .filter(k => k.startsWith("ktc_snapshot_"))
+      .sort();
+    return keys
+      .map(key => {
+        try {
+          const snap = JSON.parse(localStorage.getItem(key) || "{}");
+          const val  = snap.players?.[playerName];
+          return val != null ? { date: snap.date || key.replace("ktc_snapshot_", ""), value: val } : null;
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean);
+  }, [playerName]);
+
+  if (history.length < 3) {
+    return (
+      <div style={{ background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, padding:"10px 12px", marginTop:12 }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>
+          <span style={{ color:"#c084fc", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.15em" }}>KTC HISTORY</span>
+          <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>{history.length} / 3 DAYS</span>
+        </div>
+        <div style={{ color:"#334155", fontSize:10, fontFamily:"'Space Mono',monospace", letterSpacing:"0.08em" }}>BUILDING HISTORY...</div>
+      </div>
+    );
+  }
+
+  const values = history.map(d => d.value);
+  const min    = Math.min(...values);
+  const max    = Math.max(...values);
+  const range  = max - min || 1;
+
+  const W = 320, H = 44, PAD = 4;
+  const pts = history.map((d, i) => {
+    const x = PAD + (i / (history.length - 1)) * (W - PAD * 2);
+    const y = H - PAD - ((d.value - min) / range) * (H - PAD * 2);
+    return { x, y, value: d.value, date: d.date };
+  });
+
+  const latest  = values[values.length - 1];
+  const oldest  = values[0];
+  const delta   = latest - oldest;
+  const trendColor = delta > 0 ? "#10b981" : delta < 0 ? "#ef4444" : "#475569";
+  const polyline = pts.map(p => `${p.x},${p.y}`).join(" ");
+
+  return (
+    <div style={{ background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, padding:"10px 12px", marginTop:12 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
+        <span style={{ color:"#c084fc", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.15em" }}>KTC HISTORY</span>
+        <span style={{ color: trendColor, fontSize:10, fontFamily:"'Space Mono',monospace" }}>
+          {delta > 0 ? "+" : ""}{delta.toLocaleString()} · {history.length}d
+        </span>
+      </div>
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        style={{ width:"100%", height:H, display:"block", overflow:"visible" }}
+        preserveAspectRatio="none"
+      >
+        {/* Area fill */}
+        <defs>
+          <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={trendColor} stopOpacity="0.18" />
+            <stop offset="100%" stopColor={trendColor} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <polygon
+          points={`${pts[0].x},${H} ${polyline} ${pts[pts.length-1].x},${H}`}
+          fill="url(#sparkGrad)"
+        />
+        {/* Line */}
+        <polyline
+          points={polyline}
+          fill="none"
+          stroke={trendColor}
+          strokeWidth="1.5"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+        {/* Dots */}
+        {pts.map((p, i) => (
+          <circle key={i} cx={p.x} cy={p.y} r={2.5} fill={trendColor} />
+        ))}
+      </svg>
+      <div style={{ display:"flex", justifyContent:"space-between", marginTop:2 }}>
+        <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>{history[0].date}</span>
+        <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>{history[history.length - 1].date}</span>
+      </div>
+    </div>
+  );
+}
 
 export default function PlayerModal({ player, fcData, ktcLive, onClose }) {
   useEffect(() => {
@@ -13,19 +107,19 @@ export default function PlayerModal({ player, fcData, ktcLive, onClose }) {
   if (!player) return null;
 
   const fc = fcData?.find(p => p.player?.name === player.name);
-  const fcValue  = fc?.value ?? null;
-  const fcRank   = fc?.overallRank ?? null;
+  const fcValue   = fc?.value ?? null;
+  const fcRank    = fc?.overallRank ?? null;
   const posColor  = POS_COLORS[player.pos] || "#64748b";
   const slotColor = SLOT_COLORS[player.slot] || "#475569";
   const ageColor  = player.age <= 22 ? "#10b981" : player.age <= 24 ? "#3b82f6" : player.age <= 26 ? "#f59e0b" : "#ef4444";
 
-  const liveKtc   = ktcLive?.players?.[player.name];
-  const ktcValue  = liveKtc?.sf_value ?? player.ktc;
+  const liveKtc    = ktcLive?.players?.[player.name];
+  const ktcValue   = liveKtc?.sf_value ?? player.ktc ?? 0;
   const ktcRankLbl = liveKtc
     ? `${player.pos}${liveKtc.sf_pos_rank} · #${liveKtc.sf_rank} overall`
     : player.ktcRank;
-  const trend     = liveKtc?.sf_trend_7d ?? 0;
-  const isLive    = !!liveKtc;
+  const trend  = liveKtc?.sf_trend_7d ?? 0;
+  const isLive = !!liveKtc;
 
   const maxVal = 10000;
   const ktcPct = Math.round((ktcValue / maxVal) * 100);
@@ -43,7 +137,8 @@ export default function PlayerModal({ player, fcData, ktcLive, onClose }) {
         onClick={e => e.stopPropagation()}
         style={{
           background:"#0a1525", border:"1px solid #1a2d40", borderRadius:12,
-          padding:24, width:"100%", maxWidth:380, position:"relative",
+          padding:24, width:"100%", maxWidth:400, position:"relative",
+          maxHeight:"90vh", overflowY:"auto",
         }}
       >
         {/* Close */}
@@ -123,6 +218,9 @@ export default function PlayerModal({ player, fcData, ktcLive, onClose }) {
             {ktcRankLbl} · {ktcValue.toLocaleString()} pts
           </div>
         </div>
+
+        {/* KTC value history sparkline */}
+        <KtcSparkline playerName={player.name} />
       </div>
     </div>
   );

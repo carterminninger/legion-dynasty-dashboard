@@ -15,27 +15,36 @@ export function useRoster() {
   const [roster,        setRoster]        = useState(FALLBACK_ROSTER);
   const [source,        setSource]        = useState("fallback");
   const [rosterLoading, setRosterLoading] = useState(true);
+  const [record,        setRecord]        = useState("—");
+  const [allRosters,    setAllRosters]    = useState([]);
+  const [playersDb,     setPlayersDb]     = useState({});
+  const [leagueUsers,   setLeagueUsers]   = useState([]);
+  const [myRosterId,    setMyRosterId]    = useState(null);
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
       try {
-        const [rostersRes, playersRes] = await Promise.all([
+        const [rostersRes, playersRes, usersRes] = await Promise.all([
           fetch(`/api/sleeper?path=/league/${LEAGUE_ID}/rosters`),
           fetch("/api/players"),
+          fetch(`/api/sleeper?path=/league/${LEAGUE_ID}/users`),
         ]);
-        if (!rostersRes.ok || !playersRes.ok) throw new Error("fetch failed");
+        if (!rostersRes.ok || !playersRes.ok || !usersRes.ok) throw new Error("fetch failed");
 
         const rosters = await rostersRes.json();
         const players = await playersRes.json();
+        const users   = await usersRes.json();
 
         const mine = rosters.find(r => r.owner_id === OWNER_ID);
         if (!mine) throw new Error("roster not found");
 
-        // mine.players is the full deduplicated list of all IDs on the roster
-        const allIds = (mine.players || []).filter(id => id !== "0");
+        const wins   = mine.settings?.wins   ?? 0;
+        const losses = mine.settings?.losses ?? 0;
+        const ties   = mine.settings?.ties   ?? 0;
 
+        const allIds = (mine.players || []).filter(id => id !== "0");
         const built = allIds
           .map(id => {
             const p = players[id];
@@ -56,6 +65,11 @@ export function useRoster() {
         if (!cancelled) {
           setRoster(built);
           setSource("live");
+          setRecord(`${wins}-${losses}-${ties}`);
+          setAllRosters(rosters);
+          setPlayersDb(players);
+          setLeagueUsers(Array.isArray(users) ? users : []);
+          setMyRosterId(mine.roster_id);
         }
       } catch {
         if (!cancelled) setSource("fallback");
@@ -68,5 +82,5 @@ export function useRoster() {
     return () => { cancelled = true; };
   }, []);
 
-  return { roster, source, rosterLoading };
+  return { roster, source, rosterLoading, record, allRosters, playersDb, leagueUsers, myRosterId };
 }

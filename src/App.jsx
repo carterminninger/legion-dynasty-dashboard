@@ -1,18 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRoster } from "./hooks/useRoster";
 import { PICKS }  from "./data/picks";
-import { TRADES } from "./data/trades";
+import { TRADES as FALLBACK_TRADES } from "./data/trades";
 import PlayerModal   from "./components/PlayerModal";
 import NeedsAnalysis from "./components/NeedsAnalysis";
 import ValueTrend    from "./components/ValueTrend";
 import TradeCalc     from "./components/TradeCalc";
 
-const LEAGUE  = { name:"Worm Up Dynasty 🪱🪱🪱", season:"2026", record:"0-0-0", faab:300, waiver:7 };
+const LEAGUE  = { name:"Worm Up Dynasty 🪱🪱🪱", season:"2026", faab:300, waiver:7 };
+const LEAGUE_ID = "1321707192847450112";
 const FC_URL  = "https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=2&ppr=1";
 const KTC_URL = "/ktc_live.json";
 const REFRESH_INTERVAL = 30 * 60 * 1000;
 
-// Return live KTC SF value for a player, falling back to roster value then 0
 function ktcVal(player, ktcLive) {
   return ktcLive?.players?.[player.name]?.sf_value ?? player.ktc ?? 0;
 }
@@ -20,6 +20,44 @@ function ktcRankStr(player, ktcLive) {
   const live = ktcLive?.players?.[player.name];
   if (live?.sf_pos_rank && live?.sf_rank) return `${player.pos}${live.sf_pos_rank} · #${live.sf_rank} overall`;
   return player.ktcRank;
+}
+
+// Build a roster array from a raw Sleeper roster object + playersDb
+function slotFor(id, sleeperRoster) {
+  if (sleeperRoster.reserve?.includes(id))  return "IR";
+  if (sleeperRoster.taxi?.includes(id))     return "TAXI";
+  if (sleeperRoster.starters?.includes(id)) return "STARTER";
+  return "BENCH";
+}
+function buildTeamRoster(sleeperRoster, playersDb) {
+  const allIds = (sleeperRoster.players || []).filter(id => id !== "0");
+  return allIds
+    .map(id => {
+      const p = playersDb[id];
+      if (!p) return null;
+      return {
+        id,
+        name:    `${p.first_name} ${p.last_name}`,
+        pos:     p.fantasy_positions?.[0] || p.position || "?",
+        team:    p.team || "FA",
+        age:     p.age ?? 0,
+        slot:    slotFor(id, sleeperRoster),
+        ktc:     null,
+        ktcRank: null,
+      };
+    })
+    .filter(Boolean);
+}
+
+// Map roster_id → team display name
+function buildRosterNameMap(allRosters, leagueUsers) {
+  return Object.fromEntries(
+    allRosters.map(r => {
+      const user = leagueUsers.find(u => u.user_id === r.owner_id);
+      const name = user?.metadata?.team_name || user?.display_name || `Team ${r.roster_id}`;
+      return [r.roster_id, name];
+    })
+  );
 }
 
 const POS_COLORS  = { QB:"#f59e0b", RB:"#10b981", WR:"#3b82f6", TE:"#a855f7" };
@@ -99,13 +137,13 @@ function PlayerRow({ player, rank, fcData, ktcLive, onClick }) {
   const trend   = ktcLive?.players?.[player.name]?.sf_trend_7d ?? 0;
   return (
     <div
-      onClick={() => onClick(player)}
+      onClick={() => onClick && onClick(player)}
       style={{
         display:"flex", alignItems:"center", gap:10,
         padding:"10px 16px", borderBottom:"1px solid #0d1825",
-        transition:"background 0.12s", cursor:"pointer",
+        transition:"background 0.12s", cursor: onClick ? "pointer" : "default",
       }}
-      onMouseEnter={e => e.currentTarget.style.background = "#0d1825"}
+      onMouseEnter={e => { if (onClick) e.currentTarget.style.background = "#0d1825"; }}
       onMouseLeave={e => e.currentTarget.style.background = "transparent"}
     >
       <div style={{ width:20, color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace", textAlign:"right" }}>{rank}</div>
@@ -142,21 +180,35 @@ function PlayerRow({ player, rank, fcData, ktcLive, onClick }) {
   );
 }
 
-function RosterTab({ roster, fcData, ktcLive, onPlayerClick }) {
-  const [filterTab, setFilterTab] = useState("ALL");
-  const [sortBy,    setSortBy]    = useState("slot");
+function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, playersDb, leagueUsers, myRosterId }) {
+  const [filterTab,      setFilterTab]      = useState("ALL");
+  const [sortBy,         setSortBy]         = useState("slot");
+  const [selectedTeamId, setSelectedTeamId] = useState("mine");
+
+  const rosterNameMap = buildRosterNameMap(allRosters, leagueUsers);
+  const teamOptions   = allRosters
+    .map(r => ({ rosterId: r.roster_id, name: rosterNameMap[r.roster_id] || `Team ${r.roster_id}` }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+
+  const isMyTeam = selectedTeamId === "mine" || selectedTeamId === myRosterId;
+  const activeRoster = (() => {
+    if (isMyTeam) return roster;
+    const oppSleeperRoster = allRosters.find(r => r.roster_id === selectedTeamId);
+    if (!oppSleeperRoster || Object.keys(playersDb).length === 0) return [];
+    return buildTeamRoster(oppSleeperRoster, playersDb);
+  })();
 
   const counts = Object.fromEntries(
     ROSTER_FILTER_TABS.map(t => [
       t.key,
-      t.key === "ALL" ? roster.length
+      t.key === "ALL" ? activeRoster.length
         : ["STARTER","BENCH","TAXI","IR"].includes(t.key)
-          ? roster.filter(p => p.slot === t.key).length
-          : roster.filter(p => p.pos  === t.key).length,
+          ? activeRoster.filter(p => p.slot === t.key).length
+          : activeRoster.filter(p => p.pos  === t.key).length,
     ])
   );
 
-  let filtered = roster.filter(p => {
+  let filtered = activeRoster.filter(p => {
     if (filterTab === "ALL") return true;
     if (["STARTER","BENCH","TAXI","IR"].includes(filterTab)) return p.slot === filterTab;
     return p.pos === filterTab;
@@ -183,7 +235,41 @@ function RosterTab({ roster, fcData, ktcLive, onPlayerClick }) {
 
   return (
     <div>
-      <div style={{ display:"flex", gap:5, paddingTop:14, overflowX:"auto", paddingBottom:4 }}>
+      {/* Team selector */}
+      {allRosters.length > 0 && (
+        <div style={{ paddingTop:14, marginBottom:4, display:"flex", alignItems:"center", gap:8 }}>
+          <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace", flexShrink:0 }}>SCOUTING</span>
+          <select
+            value={isMyTeam ? "mine" : selectedTeamId}
+            onChange={e => setSelectedTeamId(e.target.value === "mine" ? "mine" : Number(e.target.value))}
+            style={{
+              background:"#0c1828", border:"1px solid #1a2d40", borderRadius:6,
+              color:"#94a3b8", fontSize:10, fontFamily:"'Space Mono',monospace",
+              padding:"5px 8px", cursor:"pointer", flex:1,
+            }}
+          >
+            <option value="mine">MY ROSTER</option>
+            {teamOptions
+              .filter(t => t.rosterId !== myRosterId)
+              .map(t => (
+                <option key={t.rosterId} value={t.rosterId}>{t.name.toUpperCase()}</option>
+              ))
+            }
+          </select>
+          {!isMyTeam && (
+            <button
+              onClick={() => setSelectedTeamId("mine")}
+              style={{
+                background:"transparent", border:"1px solid #1a2d40", borderRadius:4,
+                color:"#334155", fontSize:9, fontFamily:"'Space Mono',monospace",
+                padding:"4px 8px", cursor:"pointer", flexShrink:0,
+              }}
+            >✕</button>
+          )}
+        </div>
+      )}
+
+      <div style={{ display:"flex", gap:5, paddingTop: allRosters.length > 0 ? 8 : 14, overflowX:"auto", paddingBottom:4 }}>
         {ROSTER_FILTER_TABS.map(tab => {
           const active = filterTab === tab.key;
           const c = tabColor(tab.key);
@@ -222,11 +308,25 @@ function RosterTab({ roster, fcData, ktcLive, onPlayerClick }) {
         <div style={{ display:"flex", alignItems:"center", gap:10, padding:"7px 16px", background:"#0c1828", borderBottom:"1px solid #1a2d40" }}>
           <div style={{ width:20 }} />
           <div style={{ width:44, color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>POS</div>
-          <div style={{ flex:1,  color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>PLAYER</div>
+          <div style={{ flex:1,  color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>
+            {isMyTeam ? "PLAYER" : (rosterNameMap[selectedTeamId] || "OPPONENT").toUpperCase()}
+          </div>
           <div style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>KTC / FC / AGE</div>
         </div>
+        {filtered.length === 0 && (
+          <div style={{ padding:"20px 16px", color:"#334155", fontSize:11, fontFamily:"'Space Mono',monospace", textAlign:"center" }}>
+            {Object.keys(playersDb).length === 0 ? "LOADING..." : "NO PLAYERS"}
+          </div>
+        )}
         {filtered.map((player, i) => (
-          <PlayerRow key={player.id} player={player} rank={i+1} fcData={fcData} ktcLive={ktcLive} onClick={onPlayerClick} />
+          <PlayerRow
+            key={player.id}
+            player={player}
+            rank={i+1}
+            fcData={isMyTeam ? fcData : null}
+            ktcLive={ktcLive}
+            onClick={onPlayerClick}
+          />
         ))}
       </div>
     </div>
@@ -260,7 +360,6 @@ function PlayerNewsSection({ news }) {
   }
   if (!news.length) return null;
 
-  // Flatten all items, sort by recency, enforce 3-per-player cap
   const counts = {};
   const items = news
     .flatMap(({ player, items: playerItems }) =>
@@ -316,9 +415,90 @@ function PlayerNewsSection({ news }) {
   );
 }
 
+// ── League standings ──────────────────────────────────────────────────────────
+
+function LeagueStandings({ allRosters, leagueUsers, playersDb, ktcLive, myRosterId }) {
+  const ready = allRosters.length > 0 && Object.keys(playersDb).length > 0;
+
+  const rosterNameMap = buildRosterNameMap(allRosters, leagueUsers);
+
+  const standings = ready ? allRosters
+    .map(r => {
+      const players = (r.players || []).filter(id => id !== "0");
+      const totalKtc = players.reduce((sum, id) => {
+        const p = playersDb[id];
+        if (!p) return sum;
+        const name = `${p.first_name} ${p.last_name}`;
+        return sum + (ktcLive?.players?.[name]?.sf_value ?? 0);
+      }, 0);
+      const wins   = r.settings?.wins   ?? 0;
+      const losses = r.settings?.losses ?? 0;
+      const ties   = r.settings?.ties   ?? 0;
+      return {
+        rosterId: r.roster_id,
+        teamName: rosterNameMap[r.roster_id] || `Team ${r.roster_id}`,
+        totalKtc,
+        wins,
+        losses,
+        ties,
+      };
+    })
+    .sort((a, b) => b.totalKtc - a.totalKtc)
+    : [];
+
+  return (
+    <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
+      <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:10 }}>LEAGUE STANDINGS</div>
+
+      {!ready && (
+        <div style={{ color:"#1e3a5f", fontSize:10, fontFamily:"'Space Mono',monospace" }}>LOADING...</div>
+      )}
+
+      {ready && standings.map((team, i) => {
+        const isMe = team.rosterId === myRosterId;
+        return (
+          <div
+            key={team.rosterId}
+            style={{
+              display:"flex", alignItems:"center", gap:8,
+              padding:"6px 8px", marginBottom:3, borderRadius:6,
+              background: isMe ? "#1e3a5f18" : "transparent",
+              border: isMe ? "1px solid #3b82f620" : "1px solid transparent",
+            }}
+          >
+            <div style={{
+              width:20, textAlign:"center", fontSize:11,
+              fontFamily:"'Space Mono',monospace",
+              color: i === 0 ? "#f59e0b" : i === 1 ? "#94a3b8" : i === 2 ? "#cd7c3b" : "#1e3a5f",
+              fontWeight:700,
+            }}>#{i+1}</div>
+            <div style={{ flex:1, minWidth:0 }}>
+              <div style={{
+                color: isMe ? "#93c5fd" : "#94a3b8",
+                fontSize: isMe ? 12 : 12,
+                fontFamily:"'DM Sans',sans-serif",
+                fontWeight: isMe ? 700 : 400,
+                whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis",
+              }}>
+                {team.teamName}{isMe ? " ★" : ""}
+              </div>
+            </div>
+            <div style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace", textAlign:"right", flexShrink:0 }}>
+              {team.totalKtc.toLocaleString()}
+            </div>
+            <div style={{ color:"#475569", fontSize:10, fontFamily:"'Space Mono',monospace", minWidth:48, textAlign:"right" }}>
+              {team.wins}-{team.losses}{team.ties ? `-${team.ties}` : ""}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // ── Briefing tab ──────────────────────────────────────────────────────────────
 
-function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLive, today }) {
+function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLive, today, allRosters, playersDb, leagueUsers, myRosterId }) {
   const starters   = roster.filter(p => p.slot === "STARTER");
   const topAssets  = [...roster].sort((a,b) => ktcVal(b, ktcLive) - ktcVal(a, ktcLive)).slice(0, 8);
   const irPlayers  = roster.filter(p => p.slot === "IR");
@@ -327,8 +507,6 @@ function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLi
   const [playerNews, setPlayerNews] = useState(null);
 
   useEffect(() => {
-    // Single ESPN fetch after initial render; athlete categories let us match to our starters.
-    // Section renders nothing during offseason when starters aren't in the news cycle.
     const timer = setTimeout(async () => {
       try {
         const res = await fetch(
@@ -362,7 +540,7 @@ function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLi
       }
     }, 400);
     return () => clearTimeout(timer);
-  }, [roster]); // re-runs once when live roster replaces fallback
+  }, [roster]);
 
   const movers = roster
     .map(p => {
@@ -378,14 +556,12 @@ function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLi
     <div style={{ paddingTop:14 }}>
       {/* Data status indicators */}
       <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:14, flexWrap:"wrap" }}>
-        {/* FC status */}
         <div style={{ display:"flex", alignItems:"center", gap:6 }}>
           <span style={{ width:6, height:6, borderRadius:"50%", background: fcData ? "#10b981" : "#ef4444", display:"inline-block" }} />
           <span style={{ color:"#334155", fontSize:9, fontFamily:"'Space Mono',monospace" }}>
             FC {fcData ? "LIVE" : "OFFLINE"}{lastUpdated ? ` · ${lastUpdated}` : ""}
           </span>
         </div>
-        {/* KTC status */}
         {(() => {
           const scrapedAt = ktcLive?.scraped_at;
           const isToday   = scrapedAt?.slice(0,10) === today;
@@ -429,6 +605,14 @@ function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLi
       <PlayerNewsSection news={playerNews} />
 
       <NeedsAnalysis roster={roster} />
+
+      <LeagueStandings
+        allRosters={allRosters}
+        leagueUsers={leagueUsers}
+        playersDb={playersDb}
+        ktcLive={ktcLive}
+        myRosterId={myRosterId}
+      />
 
       {/* Top 8 assets */}
       <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
@@ -518,10 +702,116 @@ function PicksTab() {
 
 // ── Trades tab ────────────────────────────────────────────────────────────────
 
-function TradesTab() {
+function TradesTab({ playersDb, myRosterId, allRosters, leagueUsers, ktcLive }) {
+  const [trades,  setTrades]  = useState(null); // null = loading
+  const [usingFallback, setUsingFallback] = useState(false);
+
+  const rosterNameMap = buildRosterNameMap(allRosters, leagueUsers);
+
+  useEffect(() => {
+    if (!myRosterId) return; // wait for roster data
+
+    async function fetchTrades() {
+      try {
+        const res = await fetch(`/api/sleeper?path=/league/${LEAGUE_ID}/transactions/1`);
+        if (!res.ok) throw new Error("fetch failed");
+        const txns = await res.json();
+
+        const liveTrades = txns
+          .filter(t => t.type === "trade" && t.status === "complete" && (t.roster_ids || []).includes(myRosterId))
+          .map(t => {
+            const adds  = t.adds  || {};
+            const drops = t.drops || {};
+            const picks = t.draft_picks || [];
+
+            // Players I received
+            const playersGot = Object.entries(adds)
+              .filter(([, rId]) => rId === myRosterId)
+              .map(([id]) => {
+                const p = playersDb[id];
+                return p ? `${p.first_name} ${p.last_name}` : id;
+              });
+
+            // Players I sent
+            const playersGave = Object.entries(drops)
+              .filter(([, rId]) => rId === myRosterId)
+              .map(([id]) => {
+                const p = playersDb[id];
+                return p ? `${p.first_name} ${p.last_name}` : id;
+              });
+
+            // Picks I received
+            const picksGot = picks
+              .filter(pk => pk.owner_id === myRosterId)
+              .map(pk => `${pk.season} Round ${pk.round}`);
+
+            // Picks I sent
+            const picksGave = picks
+              .filter(pk => pk.previous_owner_id === myRosterId)
+              .map(pk => `${pk.season} Round ${pk.round}`);
+
+            const got  = [...playersGot,  ...picksGot];
+            const gave = [...playersGave, ...picksGave];
+
+            const gotKtc = playersGot.reduce((s, name) => s + (ktcLive?.players?.[name]?.sf_value ?? 0), 0);
+            const gaveKtc = playersGave.reduce((s, name) => s + (ktcLive?.players?.[name]?.sf_value ?? 0), 0);
+
+            const oppRosterId = (t.roster_ids || []).find(id => id !== myRosterId);
+            const oppName = rosterNameMap[oppRosterId] || "Opponent";
+
+            let verdict = "FAIR";
+            let verdictColor = "#f59e0b";
+            if (gotKtc > gaveKtc * 1.1)  { verdict = "WIN";  verdictColor = "#10b981"; }
+            if (gaveKtc > gotKtc  * 1.1) { verdict = "LOSS"; verdictColor = "#ef4444"; }
+
+            const ts = t.status_updated || t.created || 0;
+            const dateStr = ts
+              ? new Date(ts > 1e12 ? ts : ts * 1000).toISOString().slice(0, 10)
+              : "—";
+
+            return {
+              id:    t.transaction_id || String(ts),
+              label: `vs. ${oppName}`,
+              gave,
+              got,
+              gaveKtc,
+              gotKtc,
+              verdict,
+              verdictColor,
+              note:  "",
+              date:  dateStr,
+            };
+          });
+
+        if (liveTrades.length > 0) {
+          setTrades(liveTrades);
+          setUsingFallback(false);
+        } else {
+          setTrades(FALLBACK_TRADES);
+          setUsingFallback(true);
+        }
+      } catch {
+        setTrades(FALLBACK_TRADES);
+        setUsingFallback(true);
+      }
+    }
+
+    fetchTrades();
+  }, [myRosterId, playersDb, ktcLive]);
+
+  const displayTrades = trades ?? FALLBACK_TRADES;
+
   return (
     <div style={{ paddingTop:14 }}>
-      {TRADES.map(trade => (
+      {trades === null && (
+        <div style={{ color:"#334155", fontSize:10, fontFamily:"'Space Mono',monospace", marginBottom:10 }}>LOADING TRADES...</div>
+      )}
+      {usingFallback && trades !== null && (
+        <div style={{ color:"#475569", fontSize:9, fontFamily:"'Space Mono',monospace", marginBottom:10, letterSpacing:"0.08em" }}>
+          ↳ NO IN-SEASON TRADES FOUND · SHOWING OFFSEASON HISTORY
+        </div>
+      )}
+      {displayTrades.map(trade => (
         <div key={trade.id} style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:10 }}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:10 }}>
             <div style={{ color:"#e2e8f0", fontSize:15, fontFamily:"'DM Sans',sans-serif", fontWeight:700 }}>{trade.label}</div>
@@ -535,16 +825,18 @@ function TradesTab() {
           <div style={{ display:"flex", gap:12, marginBottom:10 }}>
             <div style={{ flex:1 }}>
               <div style={{ color:"#ef4444", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em", marginBottom:4 }}>GAVE</div>
-              {trade.gave.map(n => <div key={n} style={{ color:"#94a3b8", fontSize:12, fontFamily:"'DM Sans',sans-serif" }}>{n}</div>)}
-              <div style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>{trade.gaveKtc.toLocaleString()}</div>
+              {(trade.gave || []).map(n => <div key={n} style={{ color:"#94a3b8", fontSize:12, fontFamily:"'DM Sans',sans-serif" }}>{n}</div>)}
+              {trade.gave?.length === 0 && <div style={{ color:"#334155", fontSize:11, fontFamily:"'Space Mono',monospace" }}>—</div>}
+              <div style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>{(trade.gaveKtc||0).toLocaleString()}</div>
             </div>
             <div style={{ flex:1 }}>
               <div style={{ color:"#10b981", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em", marginBottom:4 }}>GOT</div>
-              {trade.got.map(n => <div key={n} style={{ color:"#94a3b8", fontSize:12, fontFamily:"'DM Sans',sans-serif" }}>{n}</div>)}
-              <div style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>{trade.gotKtc.toLocaleString()}</div>
+              {(trade.got || []).map(n => <div key={n} style={{ color:"#94a3b8", fontSize:12, fontFamily:"'DM Sans',sans-serif" }}>{n}</div>)}
+              {trade.got?.length === 0 && <div style={{ color:"#334155", fontSize:11, fontFamily:"'Space Mono',monospace" }}>—</div>}
+              <div style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>{(trade.gotKtc||0).toLocaleString()}</div>
             </div>
           </div>
-          <div style={{ color:"#334155", fontSize:11, fontFamily:"'DM Sans',sans-serif" }}>{trade.note}</div>
+          {trade.note && <div style={{ color:"#334155", fontSize:11, fontFamily:"'DM Sans',sans-serif" }}>{trade.note}</div>}
           <div style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace", marginTop:6 }}>{trade.date}</div>
         </div>
       ))}
@@ -561,7 +853,7 @@ export default function App() {
   const [refreshing,      setRefreshing]     = useState(false);
   const [selectedPlayer,  setSelectedPlayer] = useState(null);
   const [ktcLive,         setKtcLive]        = useState(null);
-  const { roster, rosterLoading }            = useRoster();
+  const { roster, rosterLoading, record, allRosters, playersDb, leagueUsers, myRosterId } = useRoster();
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -603,13 +895,26 @@ export default function App() {
     return () => clearInterval(interval);
   }, [fetchFc]);
 
-  // Fetch KTC live data from the scraped JSON file (served from public/)
   useEffect(() => {
     fetch(KTC_URL)
       .then(r => r.ok ? r.json() : null)
       .then(data => { if (data) setKtcLive(data); })
       .catch(() => {});
   }, []);
+
+  // Save a daily KTC snapshot to localStorage for sparkline history
+  useEffect(() => {
+    if (!ktcLive?.players) return;
+    const key = `ktc_snapshot_${today}`;
+    if (localStorage.getItem(key)) return;
+    const snapshot = { date: today, players: {} };
+    for (const [name, data] of Object.entries(ktcLive.players)) {
+      snapshot.players[name] = data.sf_value;
+    }
+    localStorage.setItem(key, JSON.stringify(snapshot));
+    const keys = Object.keys(localStorage).filter(k => k.startsWith("ktc_snapshot_")).sort();
+    if (keys.length > 30) keys.slice(0, keys.length - 30).forEach(k => localStorage.removeItem(k));
+  }, [ktcLive, today]);
 
   const starterCount  = roster.filter(p => p.slot === "STARTER").length;
   const avgAge        = roster.length ? (roster.reduce((s,p) => s + p.age, 0) / roster.length).toFixed(1) : "—";
@@ -625,6 +930,7 @@ export default function App() {
         ::-webkit-scrollbar-thumb { background:#1e3a5f; border-radius:4px; }
         input { outline:none; }
         input:focus { border-color:#3b82f6 !important; }
+        select { outline:none; appearance:none; }
       `}</style>
 
       {/* HEADER */}
@@ -639,10 +945,10 @@ export default function App() {
           <h1 style={{ fontSize:40, fontFamily:"'Bebas Neue',cursive", letterSpacing:"0.06em", color:"#f1f5f9", lineHeight:1 }}>LEGION OF CMINN</h1>
           <div style={{ color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>{LEAGUE.name} · {LEAGUE.season}</div>
           <div style={{ display:"flex", gap:8, marginTop:18, flexWrap:"wrap" }}>
-            <StatCard label="RECORD"  value="0-0-0"            color="#64748b" />
+            <StatCard label="RECORD"  value={record}                color="#64748b" />
             <StatCard label="ROSTER"  value={rosterLoading ? "…" : roster.length} sub="players" color="#a855f7" />
-            <StatCard label="AVG AGE" value={avgAge}            sub={`starters ${starterAvgAge}`} color="#10b981" />
-            <StatCard label="FAAB"    value={`$${LEAGUE.faab}`} sub="unspent"  color="#f59e0b" />
+            <StatCard label="AVG AGE" value={avgAge}                sub={`starters ${starterAvgAge}`} color="#10b981" />
+            <StatCard label="FAAB"    value={`$${LEAGUE.faab}`}     sub="unspent"  color="#f59e0b" />
           </div>
         </div>
       </div>
@@ -667,10 +973,26 @@ export default function App() {
 
       {/* CONTENT */}
       <div style={{ padding:"0 16px" }}>
-        {navTab === "briefing"  && <BriefingTab roster={roster} fcData={fcData} lastUpdated={lastUpdated} onRefresh={fetchFc} refreshing={refreshing} ktcLive={ktcLive} today={today} />}
-        {navTab === "roster"    && <RosterTab   roster={roster} fcData={fcData} ktcLive={ktcLive} onPlayerClick={setSelectedPlayer} />}
+        {navTab === "briefing"  && (
+          <BriefingTab
+            roster={roster} fcData={fcData} lastUpdated={lastUpdated}
+            onRefresh={fetchFc} refreshing={refreshing} ktcLive={ktcLive} today={today}
+            allRosters={allRosters} playersDb={playersDb} leagueUsers={leagueUsers} myRosterId={myRosterId}
+          />
+        )}
+        {navTab === "roster"    && (
+          <RosterTab
+            roster={roster} fcData={fcData} ktcLive={ktcLive} onPlayerClick={setSelectedPlayer}
+            allRosters={allRosters} playersDb={playersDb} leagueUsers={leagueUsers} myRosterId={myRosterId}
+          />
+        )}
         {navTab === "picks"     && <PicksTab />}
-        {navTab === "trades"    && <TradesTab />}
+        {navTab === "trades"    && (
+          <TradesTab
+            playersDb={playersDb} myRosterId={myRosterId}
+            allRosters={allRosters} leagueUsers={leagueUsers} ktcLive={ktcLive}
+          />
+        )}
         {navTab === "tradecalc" && <TradeCalc  fcData={fcData} ktcLive={ktcLive} roster={roster} />}
       </div>
 
@@ -679,7 +1001,7 @@ export default function App() {
       )}
 
       <div style={{ padding:"20px 16px 0", color:"#0f1f30", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em" }}>
-        WORM UP DYNASTY · SEASON 2026 · KTC 05/16/2026
+        WORM UP DYNASTY · SEASON 2026 · KTC 05/17/2026
       </div>
     </div>
   );
