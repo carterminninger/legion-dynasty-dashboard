@@ -545,7 +545,7 @@ export default function App() {
         {navTab === "roster"    && <RosterTab   fcData={fcData} ktcLive={ktcLive} onPlayerClick={setSelectedPlayer} />}
         {navTab === "picks"     && <PicksTab />}
         {navTab === "trades"    && <TradesTab />}
-        {navTab === "tradecalc" && <TradeCalc  fcData={fcData} />}
+        {navTab === "tradecalc" && <TradeCalc  fcData={fcData} ktcLive={ktcLive} />}
       </div>
 
       {selectedPlayer && (
