@@ -1,7 +1,36 @@
-import { useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 const POS_COLORS  = { QB:"#f59e0b", RB:"#10b981", WR:"#3b82f6", TE:"#a855f7" };
 const SLOT_COLORS = { STARTER:"#10b981", BENCH:"#475569", TAXI:"#f59e0b", IR:"#ef4444" };
+
+function fmtHeight(inches) {
+  if (!inches) return null;
+  return `${Math.floor(inches / 12)}'${inches % 12}"`;
+}
+
+function PlayerHeadshot({ id, pos, size = 88 }) {
+  const [error, setError] = useState(false);
+  const c = POS_COLORS[pos] || "#475569";
+  if (error || !id) {
+    return (
+      <div style={{
+        width:size, height:size, borderRadius:10, flexShrink:0,
+        background:c+"20", border:`2px solid ${c}40`,
+        display:"flex", alignItems:"center", justifyContent:"center",
+      }}>
+        <span style={{ color:c, fontSize:22, fontFamily:"'Space Mono',monospace", fontWeight:700 }}>{pos}</span>
+      </div>
+    );
+  }
+  return (
+    <img
+      src={`https://sleepercdn.com/content/nfl/players/thumb/${id}.jpg`}
+      alt=""
+      onError={() => setError(true)}
+      style={{ width:size, height:size, borderRadius:10, objectFit:"cover", flexShrink:0, border:`2px solid ${c}40` }}
+    />
+  );
+}
 
 function KtcSparkline({ playerName }) {
   const history = useMemo(() => {
@@ -148,15 +177,25 @@ export default function PlayerModal({ player, fcData, ktcLive, onClose }) {
         }}>✕</button>
 
         {/* Header */}
-        <div style={{ display:"flex", alignItems:"center", gap:10, marginBottom:16 }}>
-          <span style={{
-            background: posColor+"20", color: posColor, border:`1px solid ${posColor}50`,
-            borderRadius:4, padding:"3px 8px", fontSize:12,
-            fontFamily:"'Space Mono',monospace", fontWeight:700,
-          }}>{player.pos}</span>
-          <div>
-            <div style={{ color:"#f1f5f9", fontSize:20, fontFamily:"'Bebas Neue',cursive", letterSpacing:"0.04em" }}>{player.name}</div>
-            <div style={{ color:"#334155", fontSize:11, fontFamily:"'Space Mono',monospace" }}>{player.team} · <span style={{ color: ageColor }}>Age {player.age}</span></div>
+        <div style={{ display:"flex", alignItems:"flex-start", gap:12, marginBottom:16 }}>
+          <PlayerHeadshot id={player.id} pos={player.pos} size={88} />
+          <div style={{ flex:1, minWidth:0 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:6, flexWrap:"wrap" }}>
+              <span style={{
+                background: posColor+"20", color: posColor, border:`1px solid ${posColor}50`,
+                borderRadius:4, padding:"3px 8px", fontSize:12,
+                fontFamily:"'Space Mono',monospace", fontWeight:700,
+              }}>{player.pos}</span>
+            </div>
+            <div style={{ color:"#f1f5f9", fontSize:20, fontFamily:"'Bebas Neue',cursive", letterSpacing:"0.04em", lineHeight:1.1 }}>{player.name}</div>
+            <div style={{ color:"#334155", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>
+              {player.team} · <span style={{ color: ageColor }}>Age {player.age}</span>
+            </div>
+            {(player.height || player.weight) && (
+              <div style={{ color:"#475569", fontSize:10, fontFamily:"'Space Mono',monospace", marginTop:2 }}>
+                {fmtHeight(player.height)}{player.height && player.weight ? " · " : ""}{player.weight ? `${player.weight} lbs` : ""}
+              </div>
+            )}
           </div>
         </div>
 

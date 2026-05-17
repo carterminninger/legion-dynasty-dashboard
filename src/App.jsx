@@ -129,6 +129,30 @@ function StatCard({ label, value, sub, color }) {
 
 // ── Roster tab ────────────────────────────────────────────────────────────────
 
+function HeadshotThumb({ id, pos, size = 32 }) {
+  const [error, setError] = useState(false);
+  const c = POS_COLORS[pos] || "#475569";
+  if (error || !id) {
+    return (
+      <div style={{
+        width:size, height:size, borderRadius:"50%", flexShrink:0,
+        background:c+"28", border:`1.5px solid ${c}55`,
+        display:"flex", alignItems:"center", justifyContent:"center",
+      }}>
+        <span style={{ color:c, fontSize:8, fontFamily:"'Space Mono',monospace", fontWeight:700 }}>{pos}</span>
+      </div>
+    );
+  }
+  return (
+    <img
+      src={`https://sleepercdn.com/content/nfl/players/thumb/${id}.jpg`}
+      alt=""
+      onError={() => setError(true)}
+      style={{ width:size, height:size, borderRadius:"50%", objectFit:"cover", flexShrink:0, border:`1.5px solid ${c}40` }}
+    />
+  );
+}
+
 function PlayerRow({ player, rank, fcData, ktcLive, onClick }) {
   const fc      = fcData?.find(p => p.player?.name === player.name);
   const fcVal   = fc?.value;
@@ -147,6 +171,7 @@ function PlayerRow({ player, rank, fcData, ktcLive, onClick }) {
       onMouseLeave={e => e.currentTarget.style.background = "transparent"}
     >
       <div style={{ width:20, color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace", textAlign:"right" }}>{rank}</div>
+      <HeadshotThumb id={player.id} pos={player.pos} size={32} />
       <div style={{ width:44 }}><PosBadge pos={player.pos} /></div>
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{ color:"#e2e8f0", fontSize:14, fontWeight:600, fontFamily:"'DM Sans',sans-serif", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
