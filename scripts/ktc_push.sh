@@ -42,20 +42,4 @@ if ! "$GIT" push origin main >> "$LOG_FILE" 2>&1; then
     exit 1
 fi
 
-log "Push to GitHub complete"
-
-# ── 5. Deploy to Vercel ───────────────────────────────────────────────────────
-# Runs every time so deploys are reliable regardless of GitHub-Vercel link status.
-# Once GitHub auto-deploy is wired in Vercel dashboard, this becomes a no-op safety net.
-VERCEL="/opt/homebrew/bin/vercel"
-if [[ -x "$VERCEL" ]]; then
-    if ! "$VERCEL" deploy --prod --yes >> "$LOG_FILE" 2>&1; then
-        log "WARNING: vercel deploy failed — ktc_live.json is committed to GitHub but Vercel may be stale"
-    else
-        log "Vercel production deploy triggered"
-    fi
-else
-    log "WARNING: vercel CLI not found at $VERCEL — skipping deploy"
-fi
-
 log "=== KTC push complete ==="
