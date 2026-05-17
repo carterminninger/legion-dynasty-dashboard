@@ -7,10 +7,11 @@ import NeedsAnalysis from "./components/NeedsAnalysis";
 import ValueTrend    from "./components/ValueTrend";
 import TradeCalc     from "./components/TradeCalc";
 
-const LEAGUE  = { name:"Worm Up Dynasty 🪱🪱🪱", season:"2026", faab:300, waiver:7 };
-const LEAGUE_ID = "1321707192847450112";
-const FC_URL  = "https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=2&ppr=1";
-const KTC_URL = "/ktc_live.json";
+const LEAGUE      = { name:"Worm Up Dynasty 🪱🪱🪱", season:"2026", faab:300, waiver:7 };
+const LEAGUE_ID   = "1321707192847450112";
+const FC_URL      = "https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=2&ppr=1";
+const KTC_URL     = "/ktc_live.json";
+const COMBINE_URL = "/combine_data.json";
 const REFRESH_INTERVAL = 30 * 60 * 1000;
 
 function ktcVal(player, ktcLive) {
@@ -878,6 +879,7 @@ export default function App() {
   const [refreshing,      setRefreshing]     = useState(false);
   const [selectedPlayer,  setSelectedPlayer] = useState(null);
   const [ktcLive,         setKtcLive]        = useState(null);
+  const [combineData,     setCombineData]    = useState(null);
   const { roster, rosterLoading, record, allRosters, playersDb, leagueUsers, myRosterId } = useRoster();
 
   const today = new Date().toISOString().slice(0, 10);
@@ -924,6 +926,13 @@ export default function App() {
     fetch(KTC_URL)
       .then(r => r.ok ? r.json() : null)
       .then(data => { if (data) setKtcLive(data); })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    fetch(COMBINE_URL)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data) setCombineData(data); })
       .catch(() => {});
   }, []);
 
@@ -1022,7 +1031,7 @@ export default function App() {
       </div>
 
       {selectedPlayer && (
-        <PlayerModal player={selectedPlayer} fcData={fcData} ktcLive={ktcLive} onClose={() => setSelectedPlayer(null)} />
+        <PlayerModal player={selectedPlayer} fcData={fcData} ktcLive={ktcLive} combineData={combineData} onClose={() => setSelectedPlayer(null)} />
       )}
 
       <div style={{ padding:"20px 16px 0", color:"#0f1f30", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em" }}>

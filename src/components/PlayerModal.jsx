@@ -126,7 +126,40 @@ function KtcSparkline({ playerName }) {
   );
 }
 
-export default function PlayerModal({ player, fcData, ktcLive, onClose }) {
+function CombineStats({ combine }) {
+  if (!combine) return null;
+  const stats = [
+    { label:"40 YD",  value: combine.forty      != null ? `${combine.forty}s`    : null },
+    { label:"BENCH",  value: combine.bench       != null ? `${combine.bench} rp`  : null },
+    { label:"VERT",   value: combine.vertical    != null ? `${combine.vertical}"` : null },
+    { label:"BROAD",  value: combine.broad_jump  != null ? `${combine.broad_jump}"`  : null },
+    { label:"CONE",   value: combine.three_cone  != null ? `${combine.three_cone}s` : null },
+    { label:"SHUTTLE",value: combine.shuttle     != null ? `${combine.shuttle}s`  : null },
+  ].filter(s => s.value !== null);
+
+  if (!stats.length) return null;
+
+  return (
+    <div style={{ background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, padding:"10px 12px", marginTop:12 }}>
+      <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
+        <span style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.15em" }}>COMBINE</span>
+        {combine.season && (
+          <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>{combine.season}</span>
+        )}
+      </div>
+      <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"6px 16px" }}>
+        {stats.map(s => (
+          <div key={s.label} style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline" }}>
+            <span style={{ color:"#475569", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.08em" }}>{s.label}</span>
+            <span style={{ color:"#e2e8f0", fontSize:12, fontFamily:"'Space Mono',monospace", fontWeight:700 }}>{s.value}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function PlayerModal({ player, fcData, ktcLive, combineData, onClose }) {
   useEffect(() => {
     const handler = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", handler);
@@ -142,6 +175,7 @@ export default function PlayerModal({ player, fcData, ktcLive, onClose }) {
   const slotColor = SLOT_COLORS[player.slot] || "#475569";
   const ageColor  = player.age <= 22 ? "#10b981" : player.age <= 24 ? "#3b82f6" : player.age <= 26 ? "#f59e0b" : "#ef4444";
 
+  const combine    = combineData?.players?.[player.name] ?? null;
   const liveKtc    = ktcLive?.players?.[player.name];
   const ktcValue   = liveKtc?.sf_value ?? player.ktc ?? 0;
   const ktcRankLbl = liveKtc
@@ -194,6 +228,7 @@ export default function PlayerModal({ player, fcData, ktcLive, onClose }) {
             {(player.height || player.weight) && (
               <div style={{ color:"#475569", fontSize:10, fontFamily:"'Space Mono',monospace", marginTop:2 }}>
                 {fmtHeight(player.height)}{player.height && player.weight ? " · " : ""}{player.weight ? `${player.weight} lbs` : ""}
+                {combine?.forty != null && <span style={{ color:"#f59e0b", marginLeft:6 }}>⚡{combine.forty}s</span>}
               </div>
             )}
           </div>
@@ -257,6 +292,9 @@ export default function PlayerModal({ player, fcData, ktcLive, onClose }) {
             {ktcRankLbl} · {ktcValue.toLocaleString()} pts
           </div>
         </div>
+
+        {/* Combine athletic data */}
+        <CombineStats combine={combine} />
 
         {/* KTC value history sparkline */}
         <KtcSparkline playerName={player.name} />

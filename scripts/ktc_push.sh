@@ -13,15 +13,33 @@ log() { printf '%s  %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >> "$LOG_FILE"; }
 
 log "=== KTC push started ==="
 
-# ── 1. Scrape ─────────────────────────────────────────────────────────────────
+# ── 1. KTC Scrape ─────────────────────────────────────────────────────────────
 if ! "$PYTHON" "$PROJECT_DIR/scripts/ktc_scrape.py" >> "$LOG_FILE" 2>&1; then
     log "ERROR: ktc_scrape.py failed — aborting"
     exit 1
 fi
 
+# ── 1b. Combine Scrape (only if file is missing or older than 7 days) ─────────
+COMBINE_JSON="$PROJECT_DIR/public/combine_data.json"
+if "$PYTHON" -c "
+import sys, time
+from pathlib import Path
+p = Path('$COMBINE_JSON')
+if not p.exists() or (time.time() - p.stat().st_mtime) > 7 * 86400:
+    sys.exit(0)   # needs refresh
+sys.exit(1)       # still fresh
+"; then
+    log "combine_data.json missing or stale — running combine_scrape.py"
+    if ! "$PYTHON" "$PROJECT_DIR/scripts/combine_scrape.py" >> "$LOG_FILE" 2>&1; then
+        log "WARNING: combine_scrape.py failed — continuing without combine refresh"
+    fi
+else
+    log "combine_data.json is fresh (< 7 days) — skipping combine scrape"
+fi
+
 # ── 2. Stage ──────────────────────────────────────────────────────────────────
 cd "$PROJECT_DIR"
-"$GIT" add public/ktc_live.json >> "$LOG_FILE" 2>&1
+"$GIT" add public/ktc_live.json public/combine_data.json >> "$LOG_FILE" 2>&1
 
 if "$GIT" diff --cached --quiet; then
     log "No changes detected in ktc_live.json — skipping commit"
