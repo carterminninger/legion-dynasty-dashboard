@@ -11,9 +11,9 @@ export const ROSTER = [
   { id:"13301", name:"Antonio Williams",  pos:"WR", team:"WAS", age:21, slot:"STARTER", ktc:1800, ktcRank:"WR48" },
   { id:"7523",  name:"Trevor Lawrence",   pos:"QB", team:"JAX", age:26, slot:"STARTER", ktc:5100, ktcRank:"QB8"  },
   // TAXI
-  { id:"11596", name:"Trevor Etienne",    pos:"RB", team:"CAR", age:21, slot:"TAXI",    ktc:430,  ktcRank:"RB80" },
+  { id:"12531", name:"Trevor Etienne",    pos:"RB", team:"CAR", age:21, slot:"TAXI",    ktc:430,  ktcRank:"RB80" },
   { id:"12470", name:"Riley Leonard",     pos:"QB", team:"IND", age:23, slot:"TAXI",    ktc:520,  ktcRank:"QB22" },
-  { id:"12531", name:"Ben Sinnott",       pos:"TE", team:"WAS", age:23, slot:"TAXI",    ktc:295,  ktcRank:"TE30" },
+  { id:"11596", name:"Ben Sinnott",       pos:"TE", team:"WAS", age:23, slot:"TAXI",    ktc:295,  ktcRank:"TE30" },
   // IR
   { id:"11632", name:"Malik Nabers",      pos:"WR", team:"NYG", age:22, slot:"IR",      ktc:7200, ktcRank:"WR3"  },
   { id:"9753",  name:"Zach Charbonnet",   pos:"RB", team:"SEA", age:25, slot:"IR",      ktc:1700, ktcRank:"RB40" },
