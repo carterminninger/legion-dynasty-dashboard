@@ -3,13 +3,16 @@ dynasty_domain_monitor.py — Monitor @thedynastydomain for new YouTube videos a
 Purpose:  Fetch recent videos from the Dynasty Domain channel, transcribe new ones, enhance with
           Claude API, and extract dynasty player rankings into dynasty_domain_rankings.json.
 Inputs:   None (reads YouTube via yt-dlp; reads scripts/seen_videos.json for state)
+          --manual: skip API, parse most recent vault note, commit+push (no API key needed)
 Outputs:  Updates public/dynasty_domain_rankings.json; updates scripts/seen_videos.json
           Appends to scripts/dynasty_domain_monitor.log
-Dependencies: anthropic>=0.100 (scripts/venv), yt-dlp (CLI), stdlib: json, logging, re, subprocess, pathlib
-NOTE: Makes at most MAX_API_CALLS Anthropic API calls per run — one per new video.
+Dependencies: anthropic>=0.100 (scripts/venv, normal mode only), yt-dlp (CLI),
+              stdlib: argparse, json, logging, re, subprocess, pathlib
+NOTE: Normal mode makes at most MAX_API_CALLS Anthropic API calls per run — one per new video.
       Cost estimate: ~$0.10-0.15 per video at claude-sonnet-4-6 pricing.
 """
 
+import argparse
 import json
 import logging
 import re
@@ -251,7 +254,82 @@ def _seen_entry(title: str, url: str, status: str) -> dict:
     }
 
 
+# ── CLI arg parsing ───────────────────────────────────────────────────────────
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Monitor @thedynastydomain and update dynasty rankings"
+    )
+    parser.add_argument(
+        "--manual", action="store_true",
+        help=(
+            "Skip API enhancement. Parse the most recently modified note in the "
+            "vault YouTube Notes folder, then commit and push the updated rankings. "
+            "No ANTHROPIC_API_KEY required."
+        ),
+    )
+    return parser.parse_args()
+
+
+# ── Manual mode ───────────────────────────────────────────────────────────────
+
+def _git(args: list[str]) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        ["/usr/bin/git", "-C", str(PROJECT_DIR)] + args,
+        capture_output=True, text=True,
+    )
+
+
+def run_manual() -> None:
+    """Parse the most recently modified vault note and commit+push rankings."""
+    log.info("=== Manual mode — no API call ===")
+
+    notes = sorted(VAULT_YOUTUBE.glob("*.md"), key=lambda p: p.stat().st_mtime, reverse=True)
+    if not notes:
+        log.error("No .md files found in %s", VAULT_YOUTUBE)
+        sys.exit(1)
+
+    note_path = notes[0]
+    log.info("Most recent note: %s", note_path.name)
+
+    if not run_parse(note_path):
+        log.error("Parse failed — aborting")
+        sys.exit(1)
+
+    # Stage rankings file
+    r = _git(["add", str(RANKINGS_OUT)])
+    if r.returncode != 0:
+        log.error("git add failed: %s", r.stderr.strip())
+        sys.exit(1)
+
+    # Nothing staged → no-op
+    if _git(["diff", "--cached", "--quiet"]).returncode == 0:
+        log.info("dynasty_domain_rankings.json unchanged — nothing to commit")
+        log.info("=== done (no-op) ===")
+        return
+
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    r = _git(["commit", "-m", f"chore: dynasty rankings refresh {timestamp}"])
+    if r.returncode != 0:
+        log.error("git commit failed: %s", r.stderr.strip())
+        sys.exit(1)
+    log.info("Committed: %s", r.stdout.strip())
+
+    r = _git(["push", "origin", "main"])
+    if r.returncode != 0:
+        log.error("git push failed: %s", r.stderr.strip())
+        sys.exit(1)
+    log.info("Pushed to origin/main")
+    log.info("=== done ===")
+
+
 def main() -> None:
+    args = parse_args()
+
+    if args.manual:
+        run_manual()
+        return
+
     log.info("=== Dynasty Domain monitor started ===")
 
     client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env
@@ -300,4 +378,4 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 
-# CHANGELOG: initial implementation — yt-dlp channel poll, Claude enhance, parse into rankings JSON
+# CHANGELOG: added --manual flag — skips API, parses most recent vault note, commits and pushes
