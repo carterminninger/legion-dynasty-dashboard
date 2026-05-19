@@ -180,9 +180,23 @@ def enhance_with_claude(note_path: Path, client: anthropic.Anthropic) -> bool:
     message = client.messages.create(
         model=MODEL,
         max_tokens=8192,
-        system=_ENHANCE_SYSTEM,
+        system=[
+            {
+                "type": "text",
+                "text": _ENHANCE_SYSTEM,
+                "cache_control": {"type": "ephemeral"},
+            }
+        ],
         messages=[{"role": "user", "content": prompt}],
+        extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"},
     )
+
+    cache_read = getattr(message.usage, "cache_read_input_tokens", 0) or 0
+    if cache_read:
+        log.info("Prompt cache HIT — %d cached tokens saved", cache_read)
+    else:
+        log.info("Prompt cache MISS — system prompt written to cache")
+
     enhanced = message.content[0].text.strip()
 
     # Validate the critical section exists
@@ -393,4 +407,4 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 
-# CHANGELOG: fixed hardcoded YT_OBSIDIAN path to resolve relative to __file__; added seen_videos.json corruption guard; added YT_OBSIDIAN existence check at runtime
+# CHANGELOG: fixed hardcoded YT_OBSIDIAN path to resolve relative to __file__; added seen_videos.json corruption guard; added YT_OBSIDIAN existence check at runtime; added prompt caching (anthropic-beta) to enhance_with_claude() — system prompt marked ephemeral, cache hit/miss logged via usage.cache_read_input_tokens
