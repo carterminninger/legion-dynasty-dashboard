@@ -1,0 +1,40 @@
+name: KTC Scraper
+
+on:
+  schedule:
+    # Every 6 hours — offset from the hour to avoid GitHub's scheduled-job congestion window
+    - cron: '15 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install cloudscraper
+
+      - name: Run KTC scraper
+        run: python3 scripts/ktc_scrape.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet public/ktc_live.json; then
+            git add public/ktc_live.json
+            git commit -m "chore: ktc data refresh $(date -u '+%Y-%m-%d %H:%M UTC')"
+            git push
+          else
+            echo "public/ktc_live.json unchanged — skipping commit"
+          fi
