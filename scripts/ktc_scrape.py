@@ -98,10 +98,18 @@ def main() -> None:
         raw     = parse_players(html)
         players = normalize(raw)
 
+        if len(players) < 100:
+            log.error(
+                "Parsed only %d players — expected at least 100; "
+                "aborting to avoid overwriting %s with incomplete data",
+                len(players), OUT_PATH,
+            )
+            sys.exit(1)
+
         if not args.dry_run:
             write_output(players)
         else:
-            log.info("Dry run — skipping file write")
+            log.info("Dry run — skipping file write (%d players validated)", len(players))
 
         # Print preview sorted by SF value
         ranked = sorted(players.items(), key=lambda x: x[1]["sf_value"] or 0, reverse=True)

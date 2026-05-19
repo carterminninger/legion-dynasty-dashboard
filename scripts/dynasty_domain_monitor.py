@@ -32,7 +32,7 @@ VAULT_YOUTUBE = Path(
     "/Users/carterminninger/Library/Mobile Documents/"
     "iCloud~md~obsidian/Documents/Second Brain/Resources/YouTube Notes"
 )
-YT_OBSIDIAN  = Path("/Users/carterminninger/Projects/tools/yt_to_obsidian.py")
+YT_OBSIDIAN  = Path(__file__).parent.parent.parent / "tools" / "yt_to_obsidian.py"
 PARSE_SCRIPT = SCRIPTS_DIR / "dynasty_domain_parse.py"
 SEEN_FILE    = SCRIPTS_DIR / "seen_videos.json"
 RANKINGS_OUT = PROJECT_DIR / "public" / "dynasty_domain_rankings.json"
@@ -65,12 +65,22 @@ def is_ranking_video(title: str) -> bool:
 
 def load_seen() -> dict:
     if SEEN_FILE.exists():
-        return json.loads(SEEN_FILE.read_text())
+        try:
+            return json.loads(SEEN_FILE.read_text())
+        except (json.JSONDecodeError, OSError) as exc:
+            log.warning(
+                "seen_videos.json unreadable (%s) — starting with empty state; "
+                "all recent videos will be treated as new this run",
+                exc,
+            )
     return {"videos": {}}
 
 
 def save_seen(seen: dict) -> None:
-    SEEN_FILE.write_text(json.dumps(seen, indent=2))
+    try:
+        SEEN_FILE.write_text(json.dumps(seen, indent=2))
+    except OSError as exc:
+        log.error("Failed to write seen_videos.json: %s — state will not persist", exc)
 
 
 def get_recent_videos() -> list[dict]:
@@ -88,6 +98,11 @@ def get_recent_videos() -> list[dict]:
 
 def run_yt_to_obsidian(video_url: str) -> Optional[Path]:
     """Run yt_to_obsidian.py and return the path of the saved note file."""
+    if not YT_OBSIDIAN.exists():
+        raise FileNotFoundError(
+            f"yt_to_obsidian.py not found at expected path: {YT_OBSIDIAN} — "
+            "check that ~/Projects/tools/ exists and the script is present"
+        )
     result = subprocess.run(
         [sys.executable, str(YT_OBSIDIAN), video_url],
         capture_output=True, text=True,
@@ -378,4 +393,4 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 
-# CHANGELOG: added --manual flag — skips API, parses most recent vault note, commits and pushes
+# CHANGELOG: fixed hardcoded YT_OBSIDIAN path to resolve relative to __file__; added seen_videos.json corruption guard; added YT_OBSIDIAN existence check at runtime
