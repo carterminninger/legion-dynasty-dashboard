@@ -15,11 +15,29 @@ const COMBINE_URL = "/combine_data.json";
 const DD_URL      = "/dynasty_domain_rankings.json";
 const REFRESH_INTERVAL = 30 * 60 * 1000;
 
+// KTC name normalization — strips generational suffixes and apostrophes so
+// "Tre' Harris" matches "Tre Harris" and "Kenneth Walker III" matches "Kenneth Walker".
+const _SUFFIX_RE = /\s+(jr\.?|sr\.?|i{2,3}|iv)$/i;
+function normName(n) {
+  return n.replace(_SUFFIX_RE, "").replace(/'/g, "").toLowerCase().trim();
+}
+const _ktcNormIdx = new WeakMap();
+function getKtcIdx(ktcLive) {
+  if (!ktcLive?.players) return {};
+  if (_ktcNormIdx.has(ktcLive)) return _ktcNormIdx.get(ktcLive);
+  const idx = {};
+  for (const [k, v] of Object.entries(ktcLive.players)) { idx[normName(k)] = v; }
+  _ktcNormIdx.set(ktcLive, idx);
+  return idx;
+}
+function ktcEntry(name, ktcLive) {
+  return ktcLive?.players?.[name] ?? getKtcIdx(ktcLive)[normName(name)] ?? null;
+}
 function ktcVal(player, ktcLive) {
-  return ktcLive?.players?.[player.name]?.sf_value ?? player.ktc ?? 0;
+  return ktcEntry(player.name, ktcLive)?.sf_value ?? player.ktc ?? 0;
 }
 function ktcRankStr(player, ktcLive) {
-  const live = ktcLive?.players?.[player.name];
+  const live = ktcEntry(player.name, ktcLive);
   if (live?.sf_pos_rank && live?.sf_rank) return `${player.pos}${live.sf_pos_rank} · #${live.sf_rank} overall`;
   return player.ktcRank;
 }
@@ -160,7 +178,7 @@ function PlayerRow({ player, rank, fcData, ktcLive, onClick }) {
   const fcVal   = fc?.value;
   const liveKtc = ktcVal(player, ktcLive);
   const delta   = fcVal != null ? fcVal - liveKtc : null;
-  const trend   = ktcLive?.players?.[player.name]?.sf_trend_7d ?? 0;
+  const trend   = ktcEntry(player.name, ktcLive)?.sf_trend_7d ?? 0;
   return (
     <div
       onClick={() => onClick && onClick(player)}
@@ -456,7 +474,7 @@ function LeagueStandings({ allRosters, leagueUsers, playersDb, ktcLive, myRoster
         const p = playersDb[id];
         if (!p) return sum;
         const name = `${p.first_name} ${p.last_name}`;
-        return sum + (ktcLive?.players?.[name]?.sf_value ?? 0);
+        return sum + (ktcEntry(name, ktcLive)?.sf_value ?? 0);
       }, 0);
       const wins   = r.settings?.wins   ?? 0;
       const losses = r.settings?.losses ?? 0;
@@ -780,8 +798,8 @@ function TradesTab({ playersDb, myRosterId, allRosters, leagueUsers, ktcLive }) 
             const got  = [...playersGot,  ...picksGot];
             const gave = [...playersGave, ...picksGave];
 
-            const gotKtc = playersGot.reduce((s, name) => s + (ktcLive?.players?.[name]?.sf_value ?? 0), 0);
-            const gaveKtc = playersGave.reduce((s, name) => s + (ktcLive?.players?.[name]?.sf_value ?? 0), 0);
+            const gotKtc  = playersGot.reduce((s, name) => s + (ktcEntry(name, ktcLive)?.sf_value ?? 0), 0);
+            const gaveKtc = playersGave.reduce((s, name) => s + (ktcEntry(name, ktcLive)?.sf_value ?? 0), 0);
 
             const oppRosterId = (t.roster_ids || []).find(id => id !== myRosterId);
             const oppName = rosterNameMap[oppRosterId] || "Opponent";
