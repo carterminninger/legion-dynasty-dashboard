@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { validatePlayerData } from "../utils/validatePlayerData";
+import { fixPlayerData }      from "../utils/fixPlayerData";
 
 const LEAGUE_ID   = "1321707192847450112";
 const LEAGUE_NAME = "Worm Up Dynasty 🪱🪱🪱";
@@ -84,41 +85,94 @@ function IssueGroup({ type, issues, isError }) {
   );
 }
 
+function FixReportDisplay({ fixReport }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div style={{ marginTop: 20, borderTop: "1px solid #1a2d40", paddingTop: 16 }}>
+      <div style={{ color: "#60a5fa", fontSize: 9, fontFamily: "'Space Mono',monospace", letterSpacing: "0.18em", marginBottom: 10 }}>FIX REPORT</div>
+      <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
+        <StatPill label="RESOLVED"      value={fixReport.resolved}              color="#10b981" />
+        <StatPill label="MANUAL REVIEW" value={fixReport.manualReview.length}   color="#f59e0b" />
+      </div>
+      <div style={{ color: "#334155", fontSize: 9, fontFamily: "'Space Mono',monospace", marginBottom: 12 }}>
+        ALIASES SAVED TO BROWSER — RE-RUN VALIDATION TO SEE UPDATED COUNTS
+      </div>
+      {fixReport.manualReview.length > 0 && (
+        <div style={{ border: "1px solid #1a2d40", borderRadius: 8, overflow: "hidden" }}>
+          <button
+            onClick={() => setOpen(o => !o)}
+            style={{ width: "100%", background: "#0c1828", border: "none", padding: "10px 14px", display: "flex", alignItems: "center", gap: 10, cursor: "pointer" }}
+          >
+            <span style={{ background: "#f59e0b20", color: "#f59e0b", border: "1px solid #f59e0b50", borderRadius: 4, padding: "2px 8px", fontSize: 10, fontFamily: "'Space Mono',monospace", fontWeight: 700 }}>NEEDS MANUAL REVIEW</span>
+            <span style={{ color: "#475569", fontSize: 10, fontFamily: "'Space Mono',monospace" }}>{fixReport.manualReview.length} players</span>
+            <span style={{ marginLeft: "auto", color: "#334155", fontSize: 12 }}>{open ? "▲" : "▼"}</span>
+          </button>
+          {open && (
+            <div style={{ background: "#080e1a" }}>
+              {fixReport.manualReview.map((item, i) => (
+                <div key={i} style={{ padding: "8px 14px", borderTop: "1px solid #0d1825" }}>
+                  <div style={{ color: "#e2e8f0", fontSize: 12, fontFamily: "'DM Sans',sans-serif", fontWeight: 600 }}>{item.playerName}</div>
+                  <div style={{ color: "#475569", fontSize: 10, fontFamily: "'Space Mono',monospace", marginTop: 2 }}>{item.type} — {item.detail}</div>
+                  {item.suggestedFix && <div style={{ color: "#334155", fontSize: 9, fontFamily: "'Space Mono',monospace", marginTop: 2 }}>{item.suggestedFix}</div>}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ValidatorPanel() {
-  const [report,  setReport]  = useState(null);
-  const [running, setRunning] = useState(false);
-  const [error,   setError]   = useState(null);
+  const [report,    setReport]    = useState(null);
+  const [running,   setRunning]   = useState(false);
+  const [error,     setError]     = useState(null);
+  const [fixReport, setFixReport] = useState(null);
+  const [fixing,    setFixing]    = useState(false);
+  const [fixError,  setFixError]  = useState(null);
 
   async function run() {
-    setRunning(true);
-    setError(null);
-    try {
-      const result = await validatePlayerData();
-      setReport(result);
-    } catch (e) {
-      setError(e.message || "Validation failed");
-    } finally {
-      setRunning(false);
-    }
+    setRunning(true); setError(null); setFixReport(null);
+    try { setReport(await validatePlayerData()); }
+    catch (e) { setError(e.message || "Validation failed"); }
+    finally { setRunning(false); }
+  }
+
+  async function runFix() {
+    setFixing(true); setFixError(null);
+    try { setFixReport(await fixPlayerData(report)); }
+    catch (e) { setFixError(e.message || "Fix failed"); }
+    finally { setFixing(false); }
   }
 
   const groupBy = (issues) => issues.reduce((acc, i) => { (acc[i.type] ??= []).push(i); return acc; }, {});
 
   return (
     <div style={{ paddingTop: 20 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
-        <button
-          onClick={run}
-          disabled={running}
-          style={{ background: running ? "#0c1828" : "#1e3a5f", border: "1px solid #3b82f640", borderRadius: 6, color: running ? "#334155" : "#93c5fd", fontSize: 11, fontFamily: "'Space Mono',monospace", fontWeight: 700, padding: "8px 16px", cursor: running ? "not-allowed" : "pointer", letterSpacing: "0.1em" }}
-        >{running ? "RUNNING..." : "RUN VALIDATION"}</button>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
+        <button onClick={run} disabled={running} style={{ background: running ? "#0c1828" : "#1e3a5f", border: "1px solid #3b82f640", borderRadius: 6, color: running ? "#334155" : "#93c5fd", fontSize: 11, fontFamily: "'Space Mono',monospace", fontWeight: 700, padding: "8px 16px", cursor: running ? "not-allowed" : "pointer", letterSpacing: "0.1em" }}>
+          {running ? "RUNNING..." : "RUN VALIDATION"}
+        </button>
+        {report?.errors.length > 0 && !fixing && (
+          <button onClick={runFix} disabled={fixing} style={{ background: "#0c1828", border: "1px solid #10b98140", borderRadius: 6, color: "#10b981", fontSize: 11, fontFamily: "'Space Mono',monospace", fontWeight: 700, padding: "8px 16px", cursor: "pointer", letterSpacing: "0.1em" }}>
+            AUTO-FIX
+          </button>
+        )}
+        {fixing && <span style={{ color: "#10b981", fontSize: 10, fontFamily: "'Space Mono',monospace" }}>FIXING...</span>}
         {report && <span style={{ color: "#1e3a5f", fontSize: 9, fontFamily: "'Space Mono',monospace" }}>{new Date(report.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</span>}
       </div>
 
-      {error && <div style={{ color: "#ef4444", fontSize: 11, fontFamily: "'Space Mono',monospace", marginBottom: 14 }}>ERROR: {error}</div>}
+      {error    && <div style={{ color: "#ef4444", fontSize: 11, fontFamily: "'Space Mono',monospace", marginBottom: 14 }}>ERROR: {error}</div>}
+      {fixError && <div style={{ color: "#ef4444", fontSize: 11, fontFamily: "'Space Mono',monospace", marginBottom: 14 }}>FIX ERROR: {fixError}</div>}
 
       {report && (
         <>
+          {report.aliasesLoaded > 0 && (
+            <div style={{ color: "#3b82f6", fontSize: 9, fontFamily: "'Space Mono',monospace", marginBottom: 10 }}>
+              {report.aliasesLoaded} ALIAS{report.aliasesLoaded !== 1 ? "ES" : ""} ACTIVE · {report.aliasesApplied} APPLIED THIS RUN
+            </div>
+          )}
           <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
             <StatPill label="CHECKED"  value={report.checked}         color="#3b82f6" />
             <StatPill label="ERRORS"   value={report.errors.length}   color="#ef4444" />
@@ -147,6 +201,8 @@ function ValidatorPanel() {
           {report.errors.length === 0 && report.warnings.length === 0 && (
             <div style={{ color: "#10b981", fontSize: 12, fontFamily: "'Space Mono',monospace", textAlign: "center", paddingTop: 20 }}>ALL {report.checked} PLAYERS CLEAN ✓</div>
           )}
+
+          {fixReport && <FixReportDisplay fixReport={fixReport} />}
         </>
       )}
     </div>
