@@ -37,6 +37,12 @@ function similarity(a, b) {
   return 1 - dp[m][n] / Math.max(m, n);
 }
 
+/** Load persisted name aliases from localStorage (written by fixPlayerData). */
+function loadAliases() {
+  try { return JSON.parse(localStorage.getItem("player_aliases") ?? "{}"); }
+  catch { return {}; }
+}
+
 /** Build KTC lookup: normalisedName → { entry, originalKey }. */
 function buildKtcIndex(ktcPlayers) {
   const idx = {};
@@ -78,14 +84,16 @@ async function fetchAllData() {
  * @param {Object} ktcPlayers - ktcLive.players object
  * @param {Object} ktcIdx - pre-built normalised KTC index
  * @param {{ byId: Object, byName: Object }} fcMaps
+ * @param {Object} aliases - name alias map from fixPlayerData (sleeperName → ktcKey)
  * @returns {{ errors: Issue[], warnings: Issue[] }}
  */
-function checkPlayer(id, name, ktcPlayers, ktcIdx, fcMaps) {
+function checkPlayer(id, name, ktcPlayers, ktcIdx, fcMaps, aliases = {}) {
   const errors = [], warnings = [];
   const mk = (type, detail) => ({ type, playerName: name, sleeperId: id, detail });
 
-  const ktcExact = ktcPlayers[name];
-  const ktcNorm  = !ktcExact ? ktcIdx[normName(name)] : null;
+  const ktcLookupName = aliases[name] ?? name;
+  const ktcExact = ktcPlayers[ktcLookupName];
+  const ktcNorm  = !ktcExact ? ktcIdx[normName(ktcLookupName)] : null;
   const ktcEntry = ktcExact ?? ktcNorm?.entry ?? null;
   if (!ktcEntry) {
     errors.push(mk("MISSING_KTC", "No KTC entry found (exact or normalised)"));
@@ -119,11 +127,12 @@ export async function validatePlayerData() {
   const ktcPlayers = ktcLive.players ?? {};
   const ktcIdx     = buildKtcIndex(ktcPlayers);
   const fcMaps     = buildFcMaps(Array.isArray(fcData) ? fcData : []);
+  const aliases    = loadAliases();
 
-  const seen    = new Set();
-  const errors  = [];
+  const seen     = new Set();
+  const errors   = [];
   const warnings = [];
-  let clean = 0;
+  let clean = 0, aliasesApplied = 0;
 
   for (const roster of rosters) {
     for (const id of (roster.players ?? []).filter(i => i !== "0")) {
@@ -133,7 +142,8 @@ export async function validatePlayerData() {
       const p = playersDb[id];
       if (!p) continue;
       const name = `${p.first_name} ${p.last_name}`;
-      const result = checkPlayer(id, name, ktcPlayers, ktcIdx, fcMaps);
+      if (aliases[name]) aliasesApplied++;
+      const result = checkPlayer(id, name, ktcPlayers, ktcIdx, fcMaps, aliases);
 
       errors.push(...result.errors);
       warnings.push(...result.warnings);
@@ -141,5 +151,8 @@ export async function validatePlayerData() {
     }
   }
 
-  return { checked: seen.size, errors, warnings, clean, timestamp: new Date().toISOString() };
+  return {
+    checked: seen.size, errors, warnings, clean, timestamp: new Date().toISOString(),
+    aliasesLoaded: Object.keys(aliases).length, aliasesApplied,
+  };
 }
