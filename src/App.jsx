@@ -1,14 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
+import { Routes, Route, useParams, Link } from "react-router-dom";
 import { useRoster } from "./hooks/useRoster";
 import { PICKS }  from "./data/picks";
 import { TRADES as FALLBACK_TRADES } from "./data/trades";
-import PlayerModal   from "./components/PlayerModal";
-import NeedsAnalysis from "./components/NeedsAnalysis";
-import ValueTrend    from "./components/ValueTrend";
-import TradeCalc     from "./components/TradeCalc";
+import PlayerModal    from "./components/PlayerModal";
+import NeedsAnalysis  from "./components/NeedsAnalysis";
+import ValueTrend     from "./components/ValueTrend";
+import TradeCalc      from "./components/TradeCalc";
+import LeagueLanding  from "./components/LeagueLanding";
 
-const LEAGUE      = { name:"Worm Up Dynasty 🪱🪱🪱", season:"2026", faab:300, waiver:7 };
-const LEAGUE_ID   = "1321707192847450112";
+const LEAGUE_NAME      = "Worm Up Dynasty 🪱🪱🪱";
+const LEAGUE_SEASON    = "2026";
+const DEFAULT_OWNER_ID = "1002171390751113216";
+const LEAGUE_ID        = "1321707192847450112";
 const FC_URL      = "https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=2&ppr=1";
 const KTC_URL     = "/ktc_live.json";
 const COMBINE_URL = "/combine_data.json";
@@ -84,13 +88,15 @@ const POS_COLORS  = { QB:"#f59e0b", RB:"#10b981", WR:"#3b82f6", TE:"#a855f7" };
 const SLOT_COLORS = { STARTER:"#10b981", BENCH:"#475569", TAXI:"#f59e0b", IR:"#ef4444" };
 const SLOT_ORDER  = ["STARTER","BENCH","TAXI","IR"];
 const POS_ORDER   = ["QB","RB","WR","TE","K"];
-const NAV_TABS = [
+const ALL_NAV_TABS = [
   { key:"briefing",  label:"BRIEFING"   },
   { key:"roster",    label:"ROSTER"     },
   { key:"picks",     label:"PICKS"      },
   { key:"trades",    label:"TRADES"     },
   { key:"tradecalc", label:"TRADE CALC" },
 ];
+const navTabsFor = (isOwner) =>
+  isOwner ? ALL_NAV_TABS : ALL_NAV_TABS.filter(t => t.key !== "picks");
 
 const ROSTER_FILTER_TABS = [
   { key:"ALL",     label:"ALL"      },
@@ -889,9 +895,13 @@ function TradesTab({ playersDb, myRosterId, allRosters, leagueUsers, ktcLive }) 
   );
 }
 
-// ── App ───────────────────────────────────────────────────────────────────────
+// ── Dashboard ─────────────────────────────────────────────────────────────────
 
-export default function App() {
+function Dashboard() {
+  const { ownerId }                          = useParams();
+  const resolvedOwner                        = ownerId ?? DEFAULT_OWNER_ID;
+  const isOwner                              = resolvedOwner === DEFAULT_OWNER_ID;
+  const navTabs                              = navTabsFor(isOwner);
   const [navTab,          setNavTab]         = useState("briefing");
   const [fcData,          setFcData]         = useState(null);
   const [lastUpdated,     setLastUpdated]    = useState(null);
@@ -900,9 +910,12 @@ export default function App() {
   const [ktcLive,         setKtcLive]        = useState(null);
   const [combineData,     setCombineData]    = useState(null);
   const [dynastyDomain,   setDynastyDomain]  = useState(null);
-  const { roster, rosterLoading, record, allRosters, playersDb, leagueUsers, myRosterId } = useRoster();
+  const { roster, rosterLoading, record, allRosters, playersDb, leagueUsers, myRosterId } = useRoster(resolvedOwner);
 
   const today = new Date().toISOString().slice(0, 10);
+
+  const teamUser = leagueUsers.find(u => u.user_id === resolvedOwner);
+  const teamName = teamUser?.metadata?.team_name || teamUser?.display_name || (isOwner ? "LEGION OF CMINN" : "UNKNOWN TEAM");
 
   const saveSnapshot = useCallback((data) => {
     const snapshot = {
@@ -1002,21 +1015,25 @@ export default function App() {
       }}>
         <div style={{ position:"absolute", inset:0, opacity:0.04, backgroundImage:"linear-gradient(#3b82f6 1px,transparent 1px),linear-gradient(90deg,#3b82f6 1px,transparent 1px)", backgroundSize:"32px 32px" }} />
         <div style={{ position:"relative" }}>
+          <Link to="/" style={{ display:"inline-block", color:"#1e3a5f", fontSize:10, fontFamily:"'Space Mono',monospace", letterSpacing:"0.14em", marginBottom:10, textDecoration:"none" }}
+            onMouseEnter={e => e.currentTarget.style.color = "#3b82f6"}
+            onMouseLeave={e => e.currentTarget.style.color = "#1e3a5f"}
+          >← ALL TEAMS</Link>
           <div style={{ color:"#3b82f6", fontSize:10, fontFamily:"'Space Mono',monospace", letterSpacing:"0.22em", marginBottom:6 }}>DYNASTY COMMAND CENTER</div>
-          <h1 style={{ fontSize:40, fontFamily:"'Bebas Neue',cursive", letterSpacing:"0.06em", color:"#f1f5f9", lineHeight:1 }}>LEGION OF CMINN</h1>
-          <div style={{ color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>{LEAGUE.name} · {LEAGUE.season}</div>
+          <h1 style={{ fontSize:40, fontFamily:"'Bebas Neue',cursive", letterSpacing:"0.06em", color:"#f1f5f9", lineHeight:1 }}>{teamName}</h1>
+          <div style={{ color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>{LEAGUE_NAME} · {LEAGUE_SEASON}</div>
           <div style={{ display:"flex", gap:8, marginTop:18, flexWrap:"wrap" }}>
             <StatCard label="RECORD"  value={record}                color="#64748b" />
             <StatCard label="ROSTER"  value={rosterLoading ? "…" : roster.length} sub="players" color="#a855f7" />
             <StatCard label="AVG AGE" value={avgAge}                sub={`starters ${starterAvgAge}`} color="#10b981" />
-            <StatCard label="FAAB"    value={`$${LEAGUE.faab}`}     sub="unspent"  color="#f59e0b" />
+            {isOwner && <StatCard label="FAAB" value="$300" sub="unspent" color="#f59e0b" />}
           </div>
         </div>
       </div>
 
       {/* NAV TABS */}
       <div style={{ display:"flex", gap:0, borderBottom:"1px solid #1a2d40", overflowX:"auto" }}>
-        {NAV_TABS.map(tab => {
+        {navTabs.map(tab => {
           const active = navTab === tab.key;
           return (
             <button key={tab.key} onClick={() => setNavTab(tab.key)} style={{
@@ -1065,5 +1082,16 @@ export default function App() {
         WORM UP DYNASTY · SEASON 2026 · KTC 05/17/2026
       </div>
     </div>
+  );
+}
+
+// ── App (router shell) ────────────────────────────────────────────────────────
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/"               element={<LeagueLanding />} />
+      <Route path="/team/:ownerId"  element={<Dashboard />} />
+    </Routes>
   );
 }
