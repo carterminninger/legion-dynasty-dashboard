@@ -110,7 +110,7 @@ function checkPlayer(id, name, ktcPlayers, ktcIdx, fcMaps, aliases = {}) {
       errors.push(mk("NAME_MISMATCH", `Sleeper: "${name}" → FC: "${fcEntry.player.name}"`));
     if (ktcEntry && fcEntry.value && ktcEntry.sf_value) {
       const pct = Math.abs(ktcEntry.sf_value - fcEntry.value) / Math.max(ktcEntry.sf_value, fcEntry.value);
-      if (pct > 0.3)
+      if (pct > 0.5)
         warnings.push(mk("VALUE_DIVERGENCE", `KTC: ${ktcEntry.sf_value} / FC: ${fcEntry.value} (${Math.round(pct * 100)}% diff)`));
     }
   }
