@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { ROSTER as FALLBACK_ROSTER } from "../data/roster";
 
-const LEAGUE_ID = "1321707192847450112";
-const OWNER_ID  = "1002171390751113216";
+const LEAGUE_ID       = "1321707192847450112";
+const DEFAULT_OWNER_ID = "1002171390751113216";
 
 function slotFor(id, sleeperRoster) {
   if (sleeperRoster.reserve?.includes(id))  return "IR";
@@ -11,7 +11,7 @@ function slotFor(id, sleeperRoster) {
   return "BENCH";
 }
 
-export function useRoster() {
+export function useRoster(ownerId) {
   const [roster,        setRoster]        = useState(FALLBACK_ROSTER);
   const [source,        setSource]        = useState("fallback");
   const [rosterLoading, setRosterLoading] = useState(true);
@@ -37,7 +37,7 @@ export function useRoster() {
         const players = await playersRes.json();
         const users   = await usersRes.json();
 
-        const mine = rosters.find(r => r.owner_id === OWNER_ID);
+        const mine = rosters.find(r => r.owner_id === (ownerId ?? DEFAULT_OWNER_ID));
         if (!mine) throw new Error("roster not found");
 
         const wins   = mine.settings?.wins   ?? 0;
@@ -82,7 +82,7 @@ export function useRoster() {
 
     load();
     return () => { cancelled = true; };
-  }, []);
+  }, [ownerId]);
 
   return { roster, source, rosterLoading, record, allRosters, playersDb, leagueUsers, myRosterId };
 }
