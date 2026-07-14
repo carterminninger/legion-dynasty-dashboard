@@ -32,7 +32,12 @@ export function DataTable({ columns, rows, loading = false, emptyTitle = "Nothin
   };
   return (
     <div style={{ border: `1px solid ${theme.border}`, borderRadius: "12px", overflow: "auto", maxHeight, background: theme.surface }}>
-      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px", color: theme.text }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px", color: theme.text, tableLayout: columns.some(c => c.width) ? "fixed" : "auto" }}>
+        {columns.some(c => c.width) && (
+          <colgroup>
+            {columns.map(c => <col key={c.key} style={c.width ? { width: c.width } : undefined}/>)}
+          </colgroup>
+        )}
         <thead>
           <tr>
             {/* sortable header: th padding moves onto the button so the tap zone is the full 44px cell */}
