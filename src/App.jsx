@@ -358,9 +358,9 @@ function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, players
           </span>
         );
       } },
-    ...(effectiveFc && !narrow ? [{ key:"fc", label:"FC", numeric:true, sortable:true, sortValue:fcValOf,
+    ...(effectiveFc && !narrow ? [{ key:"fc", label:"FC", width:96, numeric:true, sortable:true, sortValue:fcValOf,
       render:p => <span style={{ ...NUM, fontSize:13, color:T.muted }}>{fcValOf(p) ? fcValOf(p).toLocaleString() : "—"}</span> }] : []),
-    { key:"age", label:"Age", numeric:true, sortable:true, sortValue:p => p.age, render:p => <AgeBadge age={p.age}/> },
+    { key:"age", label:"Age", width:narrow ? 72 : 80, numeric:true, sortable:true, sortValue:p => p.age, render:p => <AgeBadge age={p.age}/> },
   ];
 
   return (
