@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-
-const POS_COLORS  = { QB:"#f59e0b", RB:"#10b981", WR:"#3b82f6", TE:"#a855f7" };
-const SLOT_COLORS = { STARTER:"#10b981", BENCH:"#475569", TAXI:"#f59e0b", IR:"#ef4444" };
+import { cosmicApp as T, LABEL, NUM, MONO, GEORGIA } from "../kit/theme";
+import { posColors, slotColors } from "../kit/tokens";
 
 function fmtHeight(inches) {
   if (!inches) return null;
@@ -10,7 +9,7 @@ function fmtHeight(inches) {
 
 function PlayerHeadshot({ id, pos, size = 88 }) {
   const [error, setError] = useState(false);
-  const c = POS_COLORS[pos] || "#475569";
+  const c = posColors[pos] || "#64748b";
   if (error || !id) {
     return (
       <div style={{
@@ -18,7 +17,7 @@ function PlayerHeadshot({ id, pos, size = 88 }) {
         background:c+"20", border:`2px solid ${c}40`,
         display:"flex", alignItems:"center", justifyContent:"center",
       }}>
-        <span style={{ color:c, fontSize:22, fontFamily:"'Space Mono',monospace", fontWeight:700 }}>{pos}</span>
+        <span style={{ color:c, fontSize:22, fontFamily:MONO, fontWeight:700 }}>{pos}</span>
       </div>
     );
   }
@@ -52,12 +51,12 @@ function KtcSparkline({ playerName }) {
 
   if (history.length < 3) {
     return (
-      <div style={{ background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, padding:"10px 12px", marginTop:12 }}>
+      <div style={{ background:T.surface, border:`1px solid ${T.border}`, borderRadius:8, padding:"10px 12px", marginTop:12 }}>
         <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:4 }}>
-          <span style={{ color:"#c084fc", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.15em" }}>KTC HISTORY</span>
-          <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>{history.length} / 3 DAYS</span>
+          <span style={{ ...LABEL, color:T.muted, fontSize:"9px" }}>KTC history</span>
+          <span style={{ ...NUM, color:T.muted, opacity:0.7, fontSize:9 }}>{history.length} / 3 days</span>
         </div>
-        <div style={{ color:"#334155", fontSize:10, fontFamily:"'Space Mono',monospace", letterSpacing:"0.08em" }}>BUILDING HISTORY...</div>
+        <div style={{ fontFamily:GEORGIA, fontStyle:"italic", color:T.muted, fontSize:12 }}>History builds daily — the chart appears at three days.</div>
       </div>
     );
   }
@@ -77,19 +76,20 @@ function KtcSparkline({ playerName }) {
   const latest  = values[values.length - 1];
   const oldest  = values[0];
   const delta   = latest - oldest;
-  const trendColor = delta > 0 ? "#10b981" : delta < 0 ? "#ef4444" : "#475569";
+  const trendColor = delta > 0 ? T.success : delta < 0 ? T.danger : T.muted;
   const polyline = pts.map(p => `${p.x},${p.y}`).join(" ");
 
   return (
-    <div style={{ background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, padding:"10px 12px", marginTop:12 }}>
+    <div style={{ background:T.surface, border:`1px solid ${T.border}`, borderRadius:8, padding:"10px 12px", marginTop:12 }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6 }}>
-        <span style={{ color:"#c084fc", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.15em" }}>KTC HISTORY</span>
-        <span style={{ color: trendColor, fontSize:10, fontFamily:"'Space Mono',monospace" }}>
+        <span style={{ ...LABEL, color:T.muted, fontSize:"9px" }}>KTC history</span>
+        <span style={{ ...NUM, color: trendColor, fontSize:10 }}>
           {delta > 0 ? "+" : ""}{delta.toLocaleString()} · {history.length}d
         </span>
       </div>
       <svg
         viewBox={`0 0 ${W} ${H}`}
+        role="img" aria-label={`${playerName} KTC value over ${history.length} days`}
         style={{ width:"100%", height:H, display:"block", overflow:"visible" }}
         preserveAspectRatio="none"
       >
@@ -119,8 +119,8 @@ function KtcSparkline({ playerName }) {
         ))}
       </svg>
       <div style={{ display:"flex", justifyContent:"space-between", marginTop:2 }}>
-        <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>{history[0].date}</span>
-        <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>{history[history.length - 1].date}</span>
+        <span style={{ ...NUM, color:T.muted, opacity:0.6, fontSize:9 }}>{history[0].date}</span>
+        <span style={{ ...NUM, color:T.muted, opacity:0.6, fontSize:9 }}>{history[history.length - 1].date}</span>
       </div>
     </div>
   );
@@ -140,18 +140,18 @@ function CombineStats({ combine }) {
   if (!stats.length) return null;
 
   return (
-    <div style={{ background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, padding:"10px 12px", marginTop:12 }}>
+    <div style={{ background:T.surface, border:`1px solid ${T.border}`, borderRadius:8, padding:"10px 12px", marginTop:12 }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
-        <span style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.15em" }}>COMBINE</span>
+        <span style={{ ...LABEL, color:T.muted, fontSize:"9px" }}>Combine</span>
         {combine.season && (
-          <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>{combine.season}</span>
+          <span style={{ ...NUM, color:T.muted, opacity:0.6, fontSize:9 }}>{combine.season}</span>
         )}
       </div>
       <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"6px 16px" }}>
         {stats.map(s => (
           <div key={s.label} style={{ display:"flex", justifyContent:"space-between", alignItems:"baseline" }}>
-            <span style={{ color:"#475569", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.08em" }}>{s.label}</span>
-            <span style={{ color:"#e2e8f0", fontSize:12, fontFamily:"'Space Mono',monospace", fontWeight:700 }}>{s.value}</span>
+            <span style={{ ...NUM, color:T.muted, opacity:0.7, fontSize:9, letterSpacing:"0.08em" }}>{s.label}</span>
+            <span style={{ ...NUM, color:T.text, fontSize:12, fontWeight:700 }}>{s.value}</span>
           </div>
         ))}
       </div>
@@ -177,40 +177,40 @@ function DynastyDomainCard({ data, playerName }) {
   const entry = data?.players?.[playerName];
   if (!entry) return null;
 
-  const tierColor     = DD_TIER_COLORS[entry.tier]          || "#475569";
-  const categoryColor = DD_CATEGORY_COLORS[entry.category]  || "#475569";
+  const tierColor     = DD_TIER_COLORS[entry.tier]          || T.muted;
+  const categoryColor = DD_CATEGORY_COLORS[entry.category]  || T.muted;
   const snippet = entry.context?.length > 110
     ? entry.context.slice(0, 110) + "…"
     : entry.context;
 
   return (
-    <div style={{ background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, padding:"10px 12px", marginTop:12 }}>
+    <div style={{ background:T.surface, border:`1px solid ${T.border}`, borderRadius:8, padding:"10px 12px", marginTop:12 }}>
       <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:7 }}>
-        <span style={{ color:"#f59e0b", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.15em" }}>DYNASTY DOMAIN</span>
+        <span style={{ ...LABEL, color:T.muted, fontSize:"9px" }}>Dynasty Domain</span>
         <span style={{
           background: tierColor+"20", color: tierColor, border:`1px solid ${tierColor}40`,
           borderRadius:4, padding:"1px 7px", fontSize:11,
-          fontFamily:"'Space Mono',monospace", fontWeight:700,
+          fontFamily:MONO, fontWeight:700,
         }}>{entry.tier}</span>
       </div>
       <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:6 }}>
-        <span style={{ color: categoryColor, fontSize:12, fontFamily:"'Space Mono',monospace", fontWeight:700, letterSpacing:"0.06em" }}>
+        <span style={{ color: categoryColor, fontSize:12, fontFamily:MONO, fontWeight:700, letterSpacing:"0.06em" }}>
           {entry.category.toUpperCase()}
         </span>
         {entry.depreciating_pillar && (
           <span style={{
-            background:"#ef444418", color:"#ef4444", border:"1px solid #ef444440",
+            background:T.danger+"18", color:T.danger, border:`1px solid ${T.danger}40`,
             borderRadius:4, padding:"1px 5px", fontSize:8,
-            fontFamily:"'Space Mono',monospace", fontWeight:700, letterSpacing:"0.05em",
+            fontFamily:MONO, fontWeight:700, letterSpacing:"0.05em",
           }}>DEPRECIATING</span>
         )}
       </div>
       {snippet && (
-        <div style={{ color:"#475569", fontSize:10, fontFamily:"'DM Sans',sans-serif", lineHeight:1.5, marginBottom:6 }}>
+        <div style={{ color:T.muted, fontSize:11, lineHeight:1.5, marginBottom:6 }}>
           {snippet}
         </div>
       )}
-      <div style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>
+      <div style={{ ...NUM, color:T.muted, opacity:0.6, fontSize:9 }}>
         {entry.source_date && `${entry.source_date} · `}{entry.source_video}
       </div>
     </div>
@@ -229,9 +229,9 @@ export default function PlayerModal({ player, fcData, ktcLive, combineData, dyna
   const fc = fcData?.find(p => p.player?.name === player.name);
   const fcValue   = fc?.value ?? null;
   const fcRank    = fc?.overallRank ?? null;
-  const posColor  = POS_COLORS[player.pos] || "#64748b";
-  const slotColor = SLOT_COLORS[player.slot] || "#475569";
-  const ageColor  = player.age <= 22 ? "#10b981" : player.age <= 24 ? "#3b82f6" : player.age <= 26 ? "#f59e0b" : "#ef4444";
+  const posColor  = posColors[player.pos] || "#64748b";
+  const slotColor = slotColors[player.slot] || T.muted;
+  const ageColor  = player.age <= 23 ? T.accent : player.age >= 27 ? T.warm : T.muted;
 
   const combine    = combineData?.players?.[player.name] ?? null;
   const liveKtc    = ktcLive?.players?.[player.name];
@@ -249,23 +249,24 @@ export default function PlayerModal({ player, fcData, ktcLive, combineData, dyna
   return (
     <div
       onClick={onClose}
+      role="dialog" aria-modal="true" aria-label={`${player.name} details`}
       style={{
-        position:"fixed", inset:0, background:"rgba(0,0,0,0.7)", zIndex:1000,
+        position:"fixed", inset:0, background:"rgba(0,0,0,0.72)", zIndex:1000,
         display:"flex", alignItems:"center", justifyContent:"center", padding:16,
       }}
     >
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          background:"#0a1525", border:"1px solid #1a2d40", borderRadius:12,
+          background:"#070b14", border:`1px solid ${T.border}`, borderRadius:12,
           padding:24, width:"100%", maxWidth:400, position:"relative",
           maxHeight:"90vh", overflowY:"auto",
         }}
       >
-        {/* Close */}
-        <button onClick={onClose} style={{
-          position:"absolute", top:12, right:12, background:"transparent",
-          border:"none", color:"#334155", fontSize:18, cursor:"pointer", lineHeight:1,
+        {/* Close — 44px tap zone */}
+        <button onClick={onClose} aria-label="Close player details" style={{
+          position:"absolute", top:0, right:0, width:44, height:44, background:"transparent",
+          border:"none", color:T.muted, fontSize:18, cursor:"pointer", lineHeight:1,
         }}>✕</button>
 
         {/* Header */}
@@ -276,17 +277,17 @@ export default function PlayerModal({ player, fcData, ktcLive, combineData, dyna
               <span style={{
                 background: posColor+"20", color: posColor, border:`1px solid ${posColor}50`,
                 borderRadius:4, padding:"3px 8px", fontSize:12,
-                fontFamily:"'Space Mono',monospace", fontWeight:700,
+                fontFamily:MONO, fontWeight:700,
               }}>{player.pos}</span>
             </div>
-            <div style={{ color:"#f1f5f9", fontSize:20, fontFamily:"'Bebas Neue',cursive", letterSpacing:"0.04em", lineHeight:1.1 }}>{player.name}</div>
-            <div style={{ color:"#334155", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>
+            <div style={{ color:T.text, fontSize:20, fontFamily:GEORGIA, fontStyle:"italic", fontWeight:700, lineHeight:1.1 }}>{player.name}</div>
+            <div style={{ ...NUM, color:T.muted, fontSize:11, marginTop:4 }}>
               {player.team} · <span style={{ color: ageColor }}>Age {player.age}</span>
             </div>
             {(player.height || player.weight) && (
-              <div style={{ color:"#475569", fontSize:10, fontFamily:"'Space Mono',monospace", marginTop:2 }}>
+              <div style={{ ...NUM, color:T.muted, opacity:0.75, fontSize:10, marginTop:2 }}>
                 {fmtHeight(player.height)}{player.height && player.weight ? " · " : ""}{player.weight ? `${player.weight} lbs` : ""}
-                {combine?.forty != null && <span style={{ color:"#f59e0b", marginLeft:6 }}>⚡{combine.forty}s</span>}
+                {combine?.forty != null && <span style={{ color:T.warm, marginLeft:6 }}>⚡{combine.forty}s</span>}
               </div>
             )}
           </div>
@@ -297,30 +298,30 @@ export default function PlayerModal({ player, fcData, ktcLive, combineData, dyna
           <span style={{
             background: slotColor+"18", color: slotColor, border:`1px solid ${slotColor}40`,
             borderRadius:4, padding:"2px 8px", fontSize:10,
-            fontFamily:"'Space Mono',monospace", fontWeight:700,
+            fontFamily:MONO, fontWeight:700,
           }}>{player.slot}</span>
         </div>
 
         {/* Values */}
         <div style={{ display:"flex", gap:10, marginBottom:16 }}>
-          <div style={{ flex:1, background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, padding:"10px 12px" }}>
+          <div style={{ flex:1, background:T.surface, border:`1px solid ${T.border}`, borderRadius:8, padding:"10px 12px" }}>
             <div style={{ display:"flex", alignItems:"center", gap:5, marginBottom:4 }}>
-              <span style={{ color:"#c084fc", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.15em" }}>KTC VALUE</span>
-              {isLive && <span style={{ background:"#10b98120", color:"#10b981", border:"1px solid #10b98140", borderRadius:3, padding:"0px 4px", fontSize:8, fontFamily:"'Space Mono',monospace" }}>LIVE</span>}
+              <span style={{ ...LABEL, color:T.muted, fontSize:"9px" }}>KTC value</span>
+              {isLive && <span style={{ background:"rgba(0,229,255,0.12)", color:T.accent, border:`1px solid rgba(0,229,255,0.35)`, borderRadius:3, padding:"0px 4px", fontSize:8, fontFamily:MONO }}>LIVE</span>}
             </div>
-            <div style={{ color:"#f1f5f9", fontSize:26, fontFamily:"'Bebas Neue',cursive" }}>
+            <div style={{ ...NUM, color:T.text, fontSize:24, fontWeight:800 }}>
               {ktcValue.toLocaleString()}
-              {trend !== 0 && <span style={{ color: trend > 0 ? "#10b981" : "#ef4444", fontSize:12, marginLeft:4 }}>{trend > 0 ? "▲" : "▼"}{Math.abs(trend)}</span>}
+              {trend !== 0 && <span style={{ color: trend > 0 ? T.success : T.danger, fontSize:12, marginLeft:4 }}>{trend > 0 ? "▲" : "▼"}{Math.abs(trend)}</span>}
             </div>
-            <div style={{ color:"#334155", fontSize:10, fontFamily:"'Space Mono',monospace" }}>{ktcRankLbl}</div>
+            <div style={{ ...NUM, color:T.muted, opacity:0.75, fontSize:10 }}>{ktcRankLbl}</div>
           </div>
-          <div style={{ flex:1, background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, padding:"10px 12px" }}>
-            <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.15em", marginBottom:4 }}>FC VALUE</div>
-            <div style={{ color:"#f1f5f9", fontSize:26, fontFamily:"'Bebas Neue',cursive" }}>
+          <div style={{ flex:1, background:T.surface, border:`1px solid ${T.border}`, borderRadius:8, padding:"10px 12px" }}>
+            <div style={{ ...LABEL, color:T.muted, fontSize:"9px", marginBottom:4 }}>FC value</div>
+            <div style={{ ...NUM, color:T.text, fontSize:24, fontWeight:800 }}>
               {fcValue !== null ? fcValue.toLocaleString() : "—"}
             </div>
-            <div style={{ color:"#334155", fontSize:10, fontFamily:"'Space Mono',monospace" }}>
-              {fcRank !== null ? `RANK #${fcRank}` : "loading"}
+            <div style={{ ...NUM, color:T.muted, opacity:0.75, fontSize:10 }}>
+              {fcRank !== null ? `Rank #${fcRank}` : "loading"}
             </div>
           </div>
         </div>
@@ -328,25 +329,25 @@ export default function PlayerModal({ player, fcData, ktcLive, combineData, dyna
         {/* Value bars */}
         <div style={{ marginBottom:16 }}>
           <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:6 }}>
-            <div style={{ color:"#c084fc", fontSize:9, fontFamily:"'Space Mono',monospace", width:28 }}>KTC</div>
-            <div style={{ flex:1, background:"#060d16", borderRadius:3, height:6 }}>
-              <div style={{ width:`${ktcPct}%`, background:"#c084fc", borderRadius:3, height:"100%" }} />
+            <div style={{ ...NUM, color:T.muted, fontSize:9, width:28 }}>KTC</div>
+            <div style={{ flex:1, background:"rgba(255,255,255,0.06)", borderRadius:3, height:6 }}>
+              <div style={{ width:`${ktcPct}%`, background:T.accent, borderRadius:3, height:"100%" }} />
             </div>
-            <div style={{ color:"#c084fc", fontSize:9, fontFamily:"'Space Mono',monospace", width:32, textAlign:"right" }}>{ktcPct}%</div>
+            <div style={{ ...NUM, color:T.muted, fontSize:9, width:32, textAlign:"right" }}>{ktcPct}%</div>
           </div>
           <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-            <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", width:28 }}>FC</div>
-            <div style={{ flex:1, background:"#060d16", borderRadius:3, height:6 }}>
-              <div style={{ width:`${fcPct}%`, background:"#60a5fa", borderRadius:3, height:"100%" }} />
+            <div style={{ ...NUM, color:T.muted, fontSize:9, width:28 }}>FC</div>
+            <div style={{ flex:1, background:"rgba(255,255,255,0.06)", borderRadius:3, height:6 }}>
+              <div style={{ width:`${fcPct}%`, background:"rgba(0,229,255,0.45)", borderRadius:3, height:"100%" }} />
             </div>
-            <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", width:32, textAlign:"right" }}>{fcPct}%</div>
+            <div style={{ ...NUM, color:T.muted, fontSize:9, width:32, textAlign:"right" }}>{fcPct}%</div>
           </div>
         </div>
 
         {/* Trade value line */}
-        <div style={{ background:"#060d16", border:"1px solid #1a2d40", borderRadius:6, padding:"8px 12px" }}>
-          <div style={{ color:"#334155", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em", marginBottom:2 }}>TRADE VALUE (KTC)</div>
-          <div style={{ color:"#e2e8f0", fontSize:13, fontFamily:"'DM Sans',sans-serif" }}>
+        <div style={{ background:T.surface, border:`1px solid ${T.border}`, borderRadius:6, padding:"8px 12px" }}>
+          <div style={{ ...LABEL, color:T.muted, fontSize:"9px", marginBottom:2 }}>Trade value (KTC)</div>
+          <div style={{ color:T.text, fontSize:13 }}>
             {ktcRankLbl} · {ktcValue.toLocaleString()} pts
           </div>
         </div>
