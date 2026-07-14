@@ -329,21 +329,25 @@ function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, players
 
   const loading = Object.keys(playersDb).length === 0 && activeRoster.length === 0;
 
-  const columns = [
-    { key:"pos", label:"Pos", sortable:true, sortValue:p => POS_ORDER.indexOf(p.pos), render:p => <PosBadge pos={p.pos}/> },
-    { key:"player", label: isMyTeam ? "Player" : (rosterNameMap[selectedTeamId] || "Opponent"), sortable:true, sortValue:p => p.name,
-      render:p => (
-        <div style={{ display:"flex", alignItems:"center", gap:10, minWidth:0 }}>
-          <HeadshotThumb id={p.id} pos={p.pos} size={32}/>
-          <div style={{ minWidth:0 }}>
-            <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-              <span style={{ color:T.text, fontSize:14, fontWeight:600, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{p.name}</span>
-              <SlotBadge slot={p.slot}/>
-            </div>
-            <div style={{ ...NUM, color:T.muted, opacity:0.7, fontSize:11, marginTop:1 }}>{p.team}</div>
-          </div>
+  const playerCell = (p) => (
+    <div style={{ display:"flex", alignItems:"center", gap:10, minWidth:0 }}>
+      <HeadshotThumb id={p.id} pos={p.pos} size={32}/>
+      <div style={{ minWidth:0 }}>
+        <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+          <span style={{ color:T.text, fontSize:14, fontWeight:600, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{p.name}</span>
+          <SlotBadge slot={p.slot}/>
         </div>
-      ) },
+        <div style={{ display:"flex", alignItems:"center", gap:6, marginTop:2 }}>
+          {narrow && <PosBadge pos={p.pos}/>}
+          <span style={{ ...NUM, color:T.muted, opacity:0.7, fontSize:11 }}>{p.team}</span>
+        </div>
+      </div>
+    </div>
+  );
+
+  const columns = [
+    ...(!narrow ? [{ key:"pos", label:"Pos", sortable:true, sortValue:p => POS_ORDER.indexOf(p.pos), render:p => <PosBadge pos={p.pos}/> }] : []),
+    { key:"player", label: isMyTeam ? "Player" : (rosterNameMap[selectedTeamId] || "Opponent"), sortable:true, sortValue:p => p.name, render:playerCell },
     { key:"ktc", label:"KTC", numeric:true, sortable:true, sortValue:p => ktcVal(p, ktcLive),
       render:p => {
         const trend = ktcEntry(p.name, ktcLive)?.sf_trend_7d ?? 0;
@@ -354,7 +358,7 @@ function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, players
           </span>
         );
       } },
-    ...(effectiveFc ? [{ key:"fc", label:"FC", numeric:true, sortable:true, sortValue:fcValOf,
+    ...(effectiveFc && !narrow ? [{ key:"fc", label:"FC", numeric:true, sortable:true, sortValue:fcValOf,
       render:p => <span style={{ ...NUM, fontSize:13, color:T.muted }}>{fcValOf(p) ? fcValOf(p).toLocaleString() : "—"}</span> }] : []),
     { key:"age", label:"Age", numeric:true, sortable:true, sortValue:p => p.age, render:p => <AgeBadge age={p.age}/> },
   ];
