@@ -271,6 +271,17 @@ function HeadshotThumb({ id, pos, size = 32 }) {
 function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, playersDb, leagueUsers, myRosterId }) {
   const [filterTab,      setFilterTab]      = useState("ALL");
   const [selectedTeamId, setSelectedTeamId] = useState("mine");
+  // 5 columns overflow 390px — on narrow screens the pos badge moves into the
+  // player cell and FC drops (KTC is primary; FC is one tap away in the modal)
+  const [narrow, setNarrow] = useState(
+    typeof window !== "undefined" ? window.matchMedia("(max-width: 640px)").matches : true
+  );
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const onChange = (e) => setNarrow(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   const rosterNameMap = buildRosterNameMap(allRosters, leagueUsers);
   const teamOptions   = allRosters
