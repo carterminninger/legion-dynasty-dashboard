@@ -2,7 +2,8 @@
  * Toast — consumer copy for legion-dynasty-dashboard.
  * Source of truth: ~/.claude/skills/design/references/components/app/Toast.tsx
  * (2026-07-13, incl. the 44px dismiss tap-zone fix). Adaptations: TS types +
- * "use client" dropped.
+ * "use client" dropped; stack bottom offset 24px→72px so toasts clear the
+ * 56px mobile bottom tab bar.
  */
 import { useEffect, useRef, useState } from "react";
 import { MONO } from "./theme";
