@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Routes, Route, useParams, Link } from "react-router-dom";
 import { useRoster } from "./hooks/useRoster";
 import { PICKS }  from "./data/picks";
@@ -8,6 +8,13 @@ import NeedsAnalysis  from "./components/NeedsAnalysis";
 import ValueTrend     from "./components/ValueTrend";
 import TradeCalc      from "./components/TradeCalc";
 import LeagueLanding  from "./components/LeagueLanding";
+import { cosmicApp as T, LABEL, NUM, MONO, GEORGIA } from "./kit/theme";
+import { posColors, slotColors } from "./kit/tokens";
+import { NavShell }   from "./kit/NavShell";
+import { KpiCard }    from "./kit/KpiCard";
+import { DataTable }  from "./kit/DataTable";
+import { Skeleton }   from "./kit/Skeleton";
+import { ToastStack } from "./kit/Toast";
 
 const LEAGUE_NAME      = "Worm Up Dynasty 🪱🪱🪱";
 const LEAGUE_SEASON    = "2026";
@@ -84,25 +91,23 @@ function buildRosterNameMap(allRosters, leagueUsers) {
   );
 }
 
-const POS_COLORS  = { QB:"#f59e0b", RB:"#10b981", WR:"#3b82f6", TE:"#a855f7" };
-const SLOT_COLORS = { STARTER:"#10b981", BENCH:"#475569", TAXI:"#f59e0b", IR:"#ef4444" };
 const SLOT_ORDER  = ["STARTER","BENCH","TAXI","IR"];
 const POS_ORDER   = ["QB","RB","WR","TE","K"];
 const ALL_NAV_TABS = [
-  { key:"briefing",  label:"BRIEFING"   },
-  { key:"roster",    label:"ROSTER"     },
-  { key:"picks",     label:"PICKS"      },
-  { key:"trades",    label:"TRADES"     },
-  { key:"tradecalc", label:"TRADE CALC" },
+  { key:"briefing",  label:"Briefing", icon:"📡" },
+  { key:"roster",    label:"Roster",   icon:"👥" },
+  { key:"picks",     label:"Picks",    icon:"🎯" },
+  { key:"trades",    label:"Trades",   icon:"🔁" },
+  { key:"tradecalc", label:"Calc",     icon:"⚖️" },
 ];
 const navTabsFor = (isOwner) =>
   isOwner ? ALL_NAV_TABS : ALL_NAV_TABS.filter(t => t.key !== "picks");
 
 const ROSTER_FILTER_TABS = [
-  { key:"ALL",     label:"ALL"      },
-  { key:"STARTER", label:"STARTERS" },
-  { key:"BENCH",   label:"BENCH"    },
-  { key:"TAXI",    label:"TAXI"     },
+  { key:"ALL",     label:"All"      },
+  { key:"STARTER", label:"Starters" },
+  { key:"BENCH",   label:"Bench"    },
+  { key:"TAXI",    label:"Taxi"     },
   { key:"IR",      label:"IR"       },
   { key:"QB",      label:"QB"       },
   { key:"RB",      label:"RB"       },
@@ -112,44 +117,128 @@ const ROSTER_FILTER_TABS = [
 
 // ── Primitives ────────────────────────────────────────────────────────────────
 
+// Age is a data encoding: young asset = accent, aging = warm, else muted.
 function AgeBadge({ age }) {
-  const color = age <= 22 ? "#10b981" : age <= 24 ? "#3b82f6" : age <= 26 ? "#f59e0b" : "#ef4444";
-  return <span style={{ color, fontSize:12, fontFamily:"'Space Mono',monospace", fontWeight:700 }}>{age}</span>;
+  const color = age <= 23 ? T.accent : age >= 27 ? T.warm : T.muted;
+  return <span style={{ ...NUM, color, fontSize:12, fontWeight:700 }}>{age}</span>;
 }
 
 function PosBadge({ pos }) {
-  const c = POS_COLORS[pos] || "#64748b";
+  const c = posColors[pos] || "#64748b";
   return (
     <span style={{
       background:c+"20", color:c, border:`1px solid ${c}50`,
       borderRadius:4, padding:"2px 6px", fontSize:11,
-      fontFamily:"'Space Mono',monospace", fontWeight:700, letterSpacing:"0.06em",
+      fontFamily:MONO, fontWeight:700, letterSpacing:"0.06em",
     }}>{pos}</span>
   );
 }
 
 function SlotBadge({ slot }) {
   if (slot === "STARTER") return null;
-  const c = SLOT_COLORS[slot] || "#475569";
+  const c = slotColors[slot] || "#64748b";
   return (
     <span style={{
       background:c+"15", color:c, border:`1px solid ${c}40`,
       borderRadius:4, padding:"1px 5px", fontSize:9,
-      fontFamily:"'Space Mono',monospace", fontWeight:700, letterSpacing:"0.08em",
+      fontFamily:MONO, fontWeight:700, letterSpacing:"0.08em",
     }}>{slot}</span>
   );
 }
 
-function StatCard({ label, value, sub, color }) {
+function PanelLabel({ children, right }) {
   return (
-    <div style={{
-      background:"#0c1828", border:"1px solid #1a2d40", borderRadius:10,
-      padding:"12px 14px", flex:1, minWidth:75,
-    }}>
-      <div style={{ color:color||"#3b82f6", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.15em", marginBottom:4 }}>{label}</div>
-      <div style={{ color:"#f1f5f9", fontSize:24, fontFamily:"'Bebas Neue',cursive", lineHeight:1 }}>{value}</div>
-      {sub && <div style={{ color:"#334155", fontSize:10, fontFamily:"'Space Mono',monospace", marginTop:3 }}>{sub}</div>}
+    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
+      <div style={{ ...LABEL, color:T.muted, fontSize:"10px" }}>{children}</div>
+      {right}
     </div>
+  );
+}
+
+function Panel({ children, style }) {
+  return (
+    <div style={{ background:T.surface, border:`1px solid ${T.border}`, borderRadius:12, padding:"14px 16px", marginBottom:12, ...style }}>
+      {children}
+    </div>
+  );
+}
+
+// ── Signature element: featured asset + 30-day KTC sparkline ────────────────
+// The ONE restrained moment of this build (docs/design-revamp-plan.md).
+// Draws the localStorage KTC snapshots the app has saved daily since launch.
+
+function readKtcHistory(playerName) {
+  const keys = Object.keys(localStorage).filter(k => k.startsWith("ktc_snapshot_")).sort();
+  return keys
+    .map(key => {
+      try {
+        const snap = JSON.parse(localStorage.getItem(key) || "{}");
+        const val  = snap.players?.[playerName];
+        return val != null ? { date: snap.date || key.replace("ktc_snapshot_", ""), value: val } : null;
+      } catch { return null; }
+    })
+    .filter(Boolean);
+}
+
+function FeaturedAssetCard({ roster, ktcLive, onPlayerClick }) {
+  const top = useMemo(
+    () => [...roster].sort((a, b) => ktcVal(b, ktcLive) - ktcVal(a, ktcLive))[0] ?? null,
+    [roster, ktcLive]
+  );
+  const history = useMemo(() => (top ? readKtcHistory(top.name) : []), [top]);
+  if (!top) return null;
+
+  const value = ktcVal(top, ktcLive);
+  const W = 320, H = 56, PAD = 5;
+  let spark = null;
+  if (history.length >= 2) {
+    const values = history.map(d => d.value);
+    const min = Math.min(...values), max = Math.max(...values);
+    const range = max - min || 1;
+    const pts = history.map((d, i) => ({
+      x: PAD + (i / (history.length - 1)) * (W - PAD * 2),
+      y: H - PAD - ((d.value - min) / range) * (H - PAD * 2),
+    }));
+    const line = pts.map(p => `${p.x},${p.y}`).join(" ");
+    const last = pts[pts.length - 1];
+    spark = (
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={`${top.name} KTC value over the last ${history.length} days`}
+        style={{ width:"100%", height:H, display:"block", overflow:"visible", marginTop:10 }} preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="featGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={T.accent} stopOpacity="0.22"/>
+            <stop offset="100%" stopColor={T.accent} stopOpacity="0"/>
+          </linearGradient>
+        </defs>
+        <polygon points={`${pts[0].x},${H} ${line} ${last.x},${H}`} fill="url(#featGrad)"/>
+        <polyline points={line} fill="none" stroke={T.accent} strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round"/>
+        <circle cx={last.x} cy={last.y} r="3" fill={T.accent}/>
+      </svg>
+    );
+  }
+  const delta = history.length >= 2 ? history[history.length - 1].value - history[0].value : 0;
+
+  return (
+    <Panel style={{ cursor:"pointer" }}>
+      <div onClick={() => onPlayerClick && onPlayerClick(top)}>
+        <PanelLabel right={
+          history.length >= 2
+            ? <span style={{ ...NUM, fontSize:11, color: delta >= 0 ? T.success : T.danger }}>{delta >= 0 ? "▲" : "▼"} {Math.abs(delta).toLocaleString()} · {history.length}d</span>
+            : <span style={{ ...NUM, fontSize:10, color:T.muted, opacity:0.7 }}>day {Math.max(history.length,1)} of 30</span>
+        }>Top asset — 30-day KTC</PanelLabel>
+        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+          <PosBadge pos={top.pos}/>
+          <span style={{ fontFamily:GEORGIA, fontStyle:"italic", fontWeight:700, fontSize:18, color:T.text }}>{top.name}</span>
+          <span style={{ ...NUM, fontSize:18, fontWeight:800, color:T.text, marginLeft:"auto" }}>{value.toLocaleString()}</span>
+        </div>
+        <div style={{ ...NUM, fontSize:10, color:T.muted, opacity:0.7, marginTop:2 }}>{ktcRankStr(top, ktcLive) || top.team}</div>
+        {spark ?? (
+          <div style={{ fontFamily:GEORGIA, fontStyle:"italic", fontSize:13, color:T.muted, marginTop:10 }}>
+            Value history builds daily — the trend line appears after two days of snapshots.
+          </div>
+        )}
+      </div>
+    </Panel>
   );
 }
 
@@ -157,7 +246,7 @@ function StatCard({ label, value, sub, color }) {
 
 function HeadshotThumb({ id, pos, size = 32 }) {
   const [error, setError] = useState(false);
-  const c = POS_COLORS[pos] || "#475569";
+  const c = posColors[pos] || "#64748b";
   if (error || !id) {
     return (
       <div style={{
@@ -165,7 +254,7 @@ function HeadshotThumb({ id, pos, size = 32 }) {
         background:c+"28", border:`1.5px solid ${c}55`,
         display:"flex", alignItems:"center", justifyContent:"center",
       }}>
-        <span style={{ color:c, fontSize:8, fontFamily:"'Space Mono',monospace", fontWeight:700 }}>{pos}</span>
+        <span style={{ color:c, fontSize:8, fontFamily:MONO, fontWeight:700 }}>{pos}</span>
       </div>
     );
   }
@@ -179,61 +268,8 @@ function HeadshotThumb({ id, pos, size = 32 }) {
   );
 }
 
-function PlayerRow({ player, rank, fcData, ktcLive, onClick }) {
-  const fc      = fcData?.find(p => p.player?.name === player.name);
-  const fcVal   = fc?.value;
-  const liveKtc = ktcVal(player, ktcLive);
-  const delta   = fcVal != null ? fcVal - liveKtc : null;
-  const trend   = ktcEntry(player.name, ktcLive)?.sf_trend_7d ?? 0;
-  return (
-    <div
-      onClick={() => onClick && onClick(player)}
-      style={{
-        display:"flex", alignItems:"center", gap:10,
-        padding:"10px 16px", borderBottom:"1px solid #0d1825",
-        transition:"background 0.12s", cursor: onClick ? "pointer" : "default",
-      }}
-      onMouseEnter={e => { if (onClick) e.currentTarget.style.background = "#0d1825"; }}
-      onMouseLeave={e => e.currentTarget.style.background = "transparent"}
-    >
-      <div style={{ width:20, color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace", textAlign:"right" }}>{rank}</div>
-      <HeadshotThumb id={player.id} pos={player.pos} size={32} />
-      <div style={{ width:44 }}><PosBadge pos={player.pos} /></div>
-      <div style={{ flex:1, minWidth:0 }}>
-        <div style={{ color:"#e2e8f0", fontSize:14, fontWeight:600, fontFamily:"'DM Sans',sans-serif", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
-          {player.name}
-        </div>
-        <div style={{ color:"#334155", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:1 }}>{player.team}</div>
-      </div>
-      <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:3 }}>
-        <div style={{ display:"flex", gap:8, alignItems:"center" }}>
-          <span style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace" }}>
-            {liveKtc.toLocaleString()}
-            {trend !== 0 && (
-              <span style={{ color: trend > 0 ? "#10b981" : "#ef4444", fontSize:9, marginLeft:2 }}>
-                {trend > 0 ? "▲" : "▼"}
-              </span>
-            )}
-          </span>
-          {fcVal != null && <span style={{ color:"#60a5fa", fontSize:11, fontFamily:"'Space Mono',monospace" }}>{fcVal.toLocaleString()}</span>}
-          {delta != null && (
-            <span style={{ color: delta > 200 ? "#10b981" : delta < -200 ? "#ef4444" : "#334155", fontSize:10 }}>
-              {delta > 0 ? "▲" : delta < 0 ? "▼" : "·"}
-            </span>
-          )}
-        </div>
-        <div style={{ display:"flex", gap:4, alignItems:"center" }}>
-          <AgeBadge age={player.age} />
-          <SlotBadge slot={player.slot} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, playersDb, leagueUsers, myRosterId }) {
   const [filterTab,      setFilterTab]      = useState("ALL");
-  const [sortBy,         setSortBy]         = useState("slot");
   const [selectedTeamId, setSelectedTeamId] = useState("mine");
 
   const rosterNameMap = buildRosterNameMap(allRosters, leagueUsers);
@@ -248,6 +284,7 @@ function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, players
     if (!oppSleeperRoster || Object.keys(playersDb).length === 0) return [];
     return buildTeamRoster(oppSleeperRoster, playersDb);
   })();
+  const effectiveFc = isMyTeam ? fcData : null;
 
   const counts = Object.fromEntries(
     ROSTER_FILTER_TABS.map(t => [
@@ -265,38 +302,65 @@ function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, players
     return p.pos === filterTab;
   });
 
+  // Default order: slot then position (header sorts override via DataTable)
   filtered = [...filtered].sort((a, b) => {
-    if (sortBy === "age") return a.age - b.age;
-    if (sortBy === "pos") return POS_ORDER.indexOf(a.pos) - POS_ORDER.indexOf(b.pos);
-    if (sortBy === "ktc") return ktcVal(b, ktcLive) - ktcVal(a, ktcLive);
-    if (sortBy === "fc") {
-      const fa = fcData?.find(f => f.player?.name === a.name)?.value ?? 0;
-      const fb = fcData?.find(f => f.player?.name === b.name)?.value ?? 0;
-      return fb - fa;
-    }
     const sd = SLOT_ORDER.indexOf(a.slot) - SLOT_ORDER.indexOf(b.slot);
     return sd !== 0 ? sd : POS_ORDER.indexOf(a.pos) - POS_ORDER.indexOf(b.pos);
   });
 
+  const fcValOf = (p) => effectiveFc?.find(f => f.player?.name === p.name)?.value ?? 0;
+
   const tabColor = (key) => {
-    if (["STARTER","BENCH","TAXI","IR"].includes(key)) return SLOT_COLORS[key] || "#3b82f6";
-    if (["QB","RB","WR","TE"].includes(key))            return POS_COLORS[key]  || "#3b82f6";
-    return "#3b82f6";
+    if (["STARTER","BENCH","TAXI","IR"].includes(key)) return slotColors[key] || T.accent;
+    if (["QB","RB","WR","TE"].includes(key))            return posColors[key]  || T.accent;
+    return T.accent;
   };
+
+  const loading = Object.keys(playersDb).length === 0 && activeRoster.length === 0;
+
+  const columns = [
+    { key:"pos", label:"Pos", sortable:true, sortValue:p => POS_ORDER.indexOf(p.pos), render:p => <PosBadge pos={p.pos}/> },
+    { key:"player", label: isMyTeam ? "Player" : (rosterNameMap[selectedTeamId] || "Opponent"), sortable:true, sortValue:p => p.name,
+      render:p => (
+        <div style={{ display:"flex", alignItems:"center", gap:10, minWidth:0 }}>
+          <HeadshotThumb id={p.id} pos={p.pos} size={32}/>
+          <div style={{ minWidth:0 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+              <span style={{ color:T.text, fontSize:14, fontWeight:600, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{p.name}</span>
+              <SlotBadge slot={p.slot}/>
+            </div>
+            <div style={{ ...NUM, color:T.muted, opacity:0.7, fontSize:11, marginTop:1 }}>{p.team}</div>
+          </div>
+        </div>
+      ) },
+    { key:"ktc", label:"KTC", numeric:true, sortable:true, sortValue:p => ktcVal(p, ktcLive),
+      render:p => {
+        const trend = ktcEntry(p.name, ktcLive)?.sf_trend_7d ?? 0;
+        return (
+          <span style={{ ...NUM, fontSize:13 }}>
+            {ktcVal(p, ktcLive).toLocaleString()}
+            {trend !== 0 && <span style={{ color: trend > 0 ? T.success : T.danger, fontSize:9, marginLeft:2 }}>{trend > 0 ? "▲" : "▼"}</span>}
+          </span>
+        );
+      } },
+    ...(effectiveFc ? [{ key:"fc", label:"FC", numeric:true, sortable:true, sortValue:fcValOf,
+      render:p => <span style={{ ...NUM, fontSize:13, color:T.muted }}>{fcValOf(p) ? fcValOf(p).toLocaleString() : "—"}</span> }] : []),
+    { key:"age", label:"Age", numeric:true, sortable:true, sortValue:p => p.age, render:p => <AgeBadge age={p.age}/> },
+  ];
 
   return (
     <div>
       {/* Team selector */}
       {allRosters.length > 0 && (
-        <div style={{ paddingTop:14, marginBottom:4, display:"flex", alignItems:"center", gap:8 }}>
-          <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace", flexShrink:0 }}>SCOUTING</span>
+        <div style={{ paddingTop:14, marginBottom:8, display:"flex", alignItems:"center", gap:8 }}>
+          <span style={{ ...LABEL, color:T.muted, opacity:0.7, fontSize:"10px", flexShrink:0 }}>Scouting</span>
           <select
             value={isMyTeam ? "mine" : selectedTeamId}
             onChange={e => setSelectedTeamId(e.target.value === "mine" ? "mine" : Number(e.target.value))}
             style={{
-              background:"#0c1828", border:"1px solid #1a2d40", borderRadius:6,
-              color:"#94a3b8", fontSize:10, fontFamily:"'Space Mono',monospace",
-              padding:"5px 8px", cursor:"pointer", flex:1,
+              background:T.surface, border:`1px solid ${T.border}`, borderRadius:8,
+              color:T.text, fontSize:12, fontFamily:MONO,
+              padding:"0 10px", height:40, cursor:"pointer", flex:1,
             }}
           >
             <option value="mine">MY ROSTER</option>
@@ -310,27 +374,28 @@ function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, players
           {!isMyTeam && (
             <button
               onClick={() => setSelectedTeamId("mine")}
+              aria-label="Back to my roster"
               style={{
-                background:"transparent", border:"1px solid #1a2d40", borderRadius:4,
-                color:"#334155", fontSize:9, fontFamily:"'Space Mono',monospace",
-                padding:"4px 8px", cursor:"pointer", flexShrink:0,
+                background:"transparent", border:`1px solid ${T.border}`, borderRadius:8,
+                color:T.muted, fontSize:12, fontFamily:MONO,
+                minWidth:44, height:40, cursor:"pointer", flexShrink:0,
               }}
             >✕</button>
           )}
         </div>
       )}
 
-      <div style={{ display:"flex", gap:5, paddingTop: allRosters.length > 0 ? 8 : 14, overflowX:"auto", paddingBottom:4 }}>
+      <div style={{ display:"flex", gap:6, paddingTop:4, overflowX:"auto", paddingBottom:8 }}>
         {ROSTER_FILTER_TABS.map(tab => {
           const active = filterTab === tab.key;
           const c = tabColor(tab.key);
           return (
             <button key={tab.key} onClick={() => setFilterTab(tab.key)} style={{
-              background: active ? c+"18" : "#0c1828",
-              border:`1px solid ${active ? c+"66" : "#1a2d40"}`,
-              color: active ? c : "#334155",
-              borderRadius:6, padding:"5px 10px", fontSize:10,
-              fontFamily:"'Space Mono',monospace", fontWeight:700,
+              background: active ? c+"18" : T.surface,
+              border:`1px solid ${active ? c+"66" : T.border}`,
+              color: active ? c : T.muted,
+              borderRadius:8, padding:"0 12px", minHeight:44, fontSize:11,
+              fontFamily:MONO, fontWeight:700,
               letterSpacing:"0.06em", cursor:"pointer", whiteSpace:"nowrap",
             }}>
               {tab.label} <span style={{ opacity:0.6 }}>({counts[tab.key]})</span>
@@ -339,47 +404,15 @@ function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, players
         })}
       </div>
 
-      <div style={{ display:"flex", gap:5, marginTop:8, alignItems:"center" }}>
-        <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>SORT</span>
-        {[["slot","SLOT"],["pos","POS"],["age","AGE"],["ktc","KTC"],["fc","FC"]].map(([key,label]) => (
-          <button key={key} onClick={() => setSortBy(key)} style={{
-            background: sortBy===key ? "#1e3a5f" : "transparent",
-            border:`1px solid ${sortBy===key ? "#3b82f6" : "#1a2d40"}`,
-            color: sortBy===key ? "#93c5fd" : "#334155",
-            borderRadius:4, padding:"3px 8px", fontSize:9,
-            fontFamily:"'Space Mono',monospace", fontWeight:700, cursor:"pointer",
-          }}>{label}</button>
-        ))}
-        <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace", marginLeft:"auto" }}>
-          <span style={{ color:"#c084fc" }}>■</span> KTC <span style={{ color:"#60a5fa" }}>■</span> FC
-        </span>
-      </div>
-
-      <div style={{ marginTop:10, border:"1px solid #1a2d40", borderRadius:10, overflow:"hidden", background:"#080e1a" }}>
-        <div style={{ display:"flex", alignItems:"center", gap:10, padding:"7px 16px", background:"#0c1828", borderBottom:"1px solid #1a2d40" }}>
-          <div style={{ width:20 }} />
-          <div style={{ width:44, color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>POS</div>
-          <div style={{ flex:1,  color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>
-            {isMyTeam ? "PLAYER" : (rosterNameMap[selectedTeamId] || "OPPONENT").toUpperCase()}
-          </div>
-          <div style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>KTC / FC / AGE</div>
-        </div>
-        {filtered.length === 0 && (
-          <div style={{ padding:"20px 16px", color:"#334155", fontSize:11, fontFamily:"'Space Mono',monospace", textAlign:"center" }}>
-            {Object.keys(playersDb).length === 0 ? "LOADING..." : "NO PLAYERS"}
-          </div>
-        )}
-        {filtered.map((player, i) => (
-          <PlayerRow
-            key={player.id}
-            player={player}
-            rank={i+1}
-            fcData={isMyTeam ? fcData : null}
-            ktcLive={ktcLive}
-            onClick={onPlayerClick}
-          />
-        ))}
-      </div>
+      <DataTable
+        columns={columns}
+        rows={filtered}
+        loading={loading}
+        emptyTitle="No players match this filter"
+        emptyBody="Pick another filter, or clear it with All."
+        onRowClick={onPlayerClick}
+        theme={T}
+      />
     </div>
   );
 }
@@ -403,10 +436,11 @@ function timeAgo(ts) {
 function PlayerNewsSection({ news }) {
   if (news === null) {
     return (
-      <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
-        <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:8 }}>PLAYER NEWS</div>
-        <div style={{ color:"#1e3a5f", fontSize:10, fontFamily:"'Space Mono',monospace" }}>LOADING...</div>
-      </div>
+      <Panel>
+        <PanelLabel>Player news</PanelLabel>
+        <Skeleton height="14px" width="85%" style={{ marginBottom:8 }}/>
+        <Skeleton height="14px" width="60%"/>
+      </Panel>
     );
   }
   if (!news.length) return null;
@@ -432,41 +466,43 @@ function PlayerNewsSection({ news }) {
   if (!items.length) return null;
 
   return (
-    <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
-      <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:12 }}>PLAYER NEWS</div>
+    <Panel>
+      <PanelLabel>Player news</PanelLabel>
       {items.map((item, i) => (
         <div
           key={`${item.player.id}-${i}`}
           style={{
-            borderBottom: i < items.length - 1 ? "1px solid #0d1825" : "none",
+            borderBottom: i < items.length - 1 ? `1px solid ${T.border}` : "none",
             paddingBottom: i < items.length - 1 ? 12 : 0,
             marginBottom:  i < items.length - 1 ? 12 : 0,
           }}
         >
           <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:4 }}>
             <PosBadge pos={item.player.pos} />
-            <span style={{ color:"#94a3b8", fontSize:11, fontFamily:"'DM Sans',sans-serif", fontWeight:600 }}>
+            <span style={{ color:T.text, fontSize:12, fontWeight:600 }}>
               {item.player.name}
             </span>
-            <span style={{ marginLeft:"auto", color:"#1e3a5f", fontSize:10, fontFamily:"'Space Mono',monospace", flexShrink:0 }}>
+            <span style={{ ...NUM, marginLeft:"auto", color:T.muted, opacity:0.7, fontSize:10, flexShrink:0 }}>
               {timeAgo(item.published || item.date || 0)}
             </span>
           </div>
-          <div style={{ color:"#e2e8f0", fontSize:12, fontFamily:"'DM Sans',sans-serif", lineHeight:1.5, marginBottom:4 }}>
+          <div style={{ color:T.text, fontSize:13, lineHeight:1.5, marginBottom:4 }}>
             {item.title || item.headline || "—"}
           </div>
           {(item.source || item.source_type) && (
-            <div style={{ color:"#334155", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.06em" }}>
-              {(item.source || item.source_type).toUpperCase()}
+            <div style={{ ...LABEL, color:T.muted, opacity:0.6, fontSize:9 }}>
+              {(item.source || item.source_type)}
             </div>
           )}
         </div>
       ))}
-    </div>
+    </Panel>
   );
 }
 
 // ── League standings ──────────────────────────────────────────────────────────
+
+const RANK_COLORS = { 0:"#f59e0b", 1:"#94a3b8", 2:"#cd7c3b" }; // medal encodings
 
 function LeagueStandings({ allRosters, leagueUsers, playersDb, ktcLive, myRosterId }) {
   const ready = allRosters.length > 0 && Object.keys(playersDb).length > 0;
@@ -498,11 +534,15 @@ function LeagueStandings({ allRosters, leagueUsers, playersDb, ktcLive, myRoster
     : [];
 
   return (
-    <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
-      <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:10 }}>LEAGUE STANDINGS</div>
+    <Panel>
+      <PanelLabel>League standings — by roster KTC</PanelLabel>
 
       {!ready && (
-        <div style={{ color:"#1e3a5f", fontSize:10, fontFamily:"'Space Mono',monospace" }}>LOADING...</div>
+        <>
+          <Skeleton height="14px" style={{ marginBottom:8 }}/>
+          <Skeleton height="14px" width="80%" style={{ marginBottom:8 }}/>
+          <Skeleton height="14px" width="90%"/>
+        </>
       )}
 
       {ready && standings.map((team, i) => {
@@ -513,43 +553,41 @@ function LeagueStandings({ allRosters, leagueUsers, playersDb, ktcLive, myRoster
             style={{
               display:"flex", alignItems:"center", gap:8,
               padding:"6px 8px", marginBottom:3, borderRadius:6,
-              background: isMe ? "#1e3a5f18" : "transparent",
-              border: isMe ? "1px solid #3b82f620" : "1px solid transparent",
+              background: isMe ? "rgba(0,229,255,0.08)" : "transparent",
+              border: isMe ? `1px solid ${T.border}` : "1px solid transparent",
             }}
           >
             <div style={{
-              width:20, textAlign:"center", fontSize:11,
-              fontFamily:"'Space Mono',monospace",
-              color: i === 0 ? "#f59e0b" : i === 1 ? "#94a3b8" : i === 2 ? "#cd7c3b" : "#1e3a5f",
+              ...NUM, width:24, textAlign:"center", fontSize:11,
+              color: RANK_COLORS[i] ?? T.muted, opacity: RANK_COLORS[i] ? 1 : 0.6,
               fontWeight:700,
             }}>#{i+1}</div>
             <div style={{ flex:1, minWidth:0 }}>
               <div style={{
-                color: isMe ? "#93c5fd" : "#94a3b8",
-                fontSize: isMe ? 12 : 12,
-                fontFamily:"'DM Sans',sans-serif",
+                color: isMe ? T.accent : T.text,
+                fontSize:12,
                 fontWeight: isMe ? 700 : 400,
                 whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis",
               }}>
                 {team.teamName}{isMe ? " ★" : ""}
               </div>
             </div>
-            <div style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace", textAlign:"right", flexShrink:0 }}>
+            <div style={{ ...NUM, color:T.text, fontSize:11, textAlign:"right", flexShrink:0 }}>
               {team.totalKtc.toLocaleString()}
             </div>
-            <div style={{ color:"#475569", fontSize:10, fontFamily:"'Space Mono',monospace", minWidth:48, textAlign:"right" }}>
+            <div style={{ ...NUM, color:T.muted, opacity:0.7, fontSize:10, minWidth:48, textAlign:"right" }}>
               {team.wins}-{team.losses}{team.ties ? `-${team.ties}` : ""}
             </div>
           </div>
         );
       })}
-    </div>
+    </Panel>
   );
 }
 
 // ── Briefing tab ──────────────────────────────────────────────────────────────
 
-function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLive, today, allRosters, playersDb, leagueUsers, myRosterId }) {
+function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLive, today, allRosters, playersDb, leagueUsers, myRosterId, onPlayerClick }) {
   const starters   = roster.filter(p => p.slot === "STARTER");
   const topAssets  = [...roster].sort((a,b) => ktcVal(b, ktcLive) - ktcVal(a, ktcLive)).slice(0, 8);
   const irPlayers  = roster.filter(p => p.slot === "IR");
@@ -608,50 +646,50 @@ function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLi
       {/* Data status indicators */}
       <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:14, flexWrap:"wrap" }}>
         <div style={{ display:"flex", alignItems:"center", gap:6 }}>
-          <span style={{ width:6, height:6, borderRadius:"50%", background: fcData ? "#10b981" : "#ef4444", display:"inline-block" }} />
-          <span style={{ color:"#334155", fontSize:9, fontFamily:"'Space Mono',monospace" }}>
-            FC {fcData ? "LIVE" : "OFFLINE"}{lastUpdated ? ` · ${lastUpdated}` : ""}
+          <span style={{ width:6, height:6, borderRadius:"50%", background: fcData ? T.success : T.danger, display:"inline-block" }} />
+          <span style={{ ...NUM, color:T.muted, opacity:0.8, fontSize:10 }}>
+            FC {fcData ? "live" : "offline"}{lastUpdated ? ` · ${lastUpdated}` : ""}
           </span>
         </div>
         {(() => {
           const scrapedAt = ktcLive?.scraped_at;
           const isToday   = scrapedAt?.slice(0,10) === today;
-          const color     = ktcLive ? (isToday ? "#10b981" : "#f59e0b") : "#ef4444";
-          const label     = ktcLive ? (isToday ? "KTC LIVE" : "KTC STALE") : "KTC OFFLINE";
+          const color     = ktcLive ? (isToday ? T.success : T.warm) : T.danger;
+          const label     = ktcLive ? (isToday ? "KTC live" : "KTC stale") : "KTC offline";
           const time      = scrapedAt ? new Date(scrapedAt).toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }) : null;
           return (
             <div style={{ display:"flex", alignItems:"center", gap:6 }}>
               <span style={{ width:6, height:6, borderRadius:"50%", background:color, display:"inline-block" }} />
-              <span style={{ color:"#334155", fontSize:9, fontFamily:"'Space Mono',monospace" }}>
+              <span style={{ ...NUM, color:T.muted, opacity:0.8, fontSize:10 }}>
                 {label}{isToday && time ? ` · ${time}` : ""}
               </span>
             </div>
           );
         })()}
         <button onClick={onRefresh} disabled={refreshing} style={{
-          background:"transparent", border:"1px solid #1a2d40", borderRadius:4,
-          color: refreshing ? "#1e3a5f" : "#334155", fontSize:10, cursor:"pointer",
-          padding:"2px 8px", fontFamily:"'Space Mono',monospace",
-        }}>{refreshing ? "..." : "↺ REFRESH"}</button>
+          background:"transparent", border:`1px solid ${T.border}`, borderRadius:8,
+          color: refreshing ? T.muted : T.accent, fontSize:11, cursor: refreshing ? "default" : "pointer",
+          padding:"0 12px", minHeight:44, fontFamily:MONO, letterSpacing:"0.08em", marginLeft:"auto",
+        }}>{refreshing ? "Refreshing…" : "↺ Refresh values"}</button>
       </div>
 
       {/* IR alert */}
       {irPlayers.length > 0 && (
-        <div style={{ background:"#0c1020", border:"1px solid #2d1a3a", borderRadius:8, padding:"10px 14px", display:"flex", gap:10, alignItems:"flex-start", marginBottom:12 }}>
-          <span style={{ color:"#ef4444", fontSize:14 }}>⚠</span>
-          <div>
-            <div style={{ color:"#a855f7", fontSize:11, fontFamily:"'Space Mono',monospace", fontWeight:700, marginBottom:3 }}>IR WATCH</div>
-            <div style={{ color:"#64748b", fontSize:12 }}>
-              {irPlayers.map((p,i) => (
-                <span key={p.id}>
-                  <span style={{ color:"#e2e8f0", fontWeight:600 }}>{p.name}</span> ({p.pos} · {p.team} · {p.age})
-                  {i < irPlayers.length - 1 ? " and " : ""}
-                </span>
-              ))} {irPlayers.length === 1 ? "is" : "are"} on reserve.
-            </div>
+        <Panel style={{ borderLeft:`3px solid ${T.danger}` }}>
+          <PanelLabel>IR watch</PanelLabel>
+          <div style={{ color:T.muted, fontSize:13 }}>
+            {irPlayers.map((p,i) => (
+              <span key={p.id}>
+                <span style={{ color:T.text, fontWeight:600 }}>{p.name}</span> ({p.pos} · {p.team} · {p.age})
+                {i < irPlayers.length - 1 ? " and " : ""}
+              </span>
+            ))} {irPlayers.length === 1 ? "is" : "are"} on reserve.
           </div>
-        </div>
+        </Panel>
       )}
+
+      {/* SIGNATURE: featured asset + 30-day KTC sparkline */}
+      <FeaturedAssetCard roster={roster} ktcLive={ktcLive} onPlayerClick={onPlayerClick}/>
 
       <PlayerNewsSection news={playerNews} />
 
@@ -666,44 +704,44 @@ function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLi
       />
 
       {/* Top 8 assets */}
-      <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
-        <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:10 }}>TOP 8 ASSETS</div>
+      <Panel>
+        <PanelLabel>Top 8 assets</PanelLabel>
         {topAssets.map((p, i) => (
           <div key={p.id} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:8 }}>
-            <div style={{ color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace", width:16 }}>{i+1}</div>
+            <div style={{ ...NUM, color:T.muted, opacity:0.6, fontSize:11, width:16 }}>{i+1}</div>
             <PosBadge pos={p.pos} />
-            <div style={{ flex:1, color:"#e2e8f0", fontSize:13, fontFamily:"'DM Sans',sans-serif", fontWeight:600, display:"flex", alignItems:"center", gap:6 }}>
+            <div style={{ flex:1, color:T.text, fontSize:13, fontWeight:600, display:"flex", alignItems:"center", gap:6 }}>
               {p.name}
               {p.slot !== "STARTER" && <SlotBadge slot={p.slot} />}
             </div>
-            <span style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace" }}>{ktcVal(p, ktcLive).toLocaleString()}</span>
+            <span style={{ ...NUM, color:T.text, fontSize:12 }}>{ktcVal(p, ktcLive).toLocaleString()}</span>
           </div>
         ))}
-        <div style={{ marginTop:8, paddingTop:8, borderTop:"1px solid #1a2d40", display:"flex", justifyContent:"space-between" }}>
-          <span style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace" }}>TOTAL ROSTER KTC</span>
-          <span style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace" }}>{totalKtc.toLocaleString()}</span>
+        <div style={{ marginTop:8, paddingTop:8, borderTop:`1px solid ${T.border}`, display:"flex", justifyContent:"space-between" }}>
+          <span style={{ ...LABEL, color:T.muted, opacity:0.7, fontSize:"10px" }}>Total roster KTC</span>
+          <span style={{ ...NUM, color:T.text, fontSize:12, fontWeight:700 }}>{totalKtc.toLocaleString()}</span>
         </div>
-      </div>
+      </Panel>
 
       <ValueTrend fcData={fcData} roster={roster} />
 
       {/* FC vs KTC divergence */}
       {movers.length > 0 && (
-        <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
-          <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:10 }}>FC vs KTC DIVERGENCE</div>
+        <Panel>
+          <PanelLabel>FC vs KTC divergence</PanelLabel>
           {movers.map(p => (
             <div key={p.id} style={{ display:"flex", alignItems:"center", gap:10, marginBottom:7 }}>
               <PosBadge pos={p.pos} />
-              <div style={{ flex:1, color:"#94a3b8", fontSize:12, fontFamily:"'DM Sans',sans-serif" }}>{p.name}</div>
-              <span style={{ color:"#c084fc", fontSize:10, fontFamily:"'Space Mono',monospace" }}>{ktcVal(p, ktcLive).toLocaleString()}</span>
-              <span style={{ color:"#334155", fontSize:10 }}>→</span>
-              <span style={{ color:"#60a5fa", fontSize:10, fontFamily:"'Space Mono',monospace" }}>{p.fc.toLocaleString()}</span>
-              <span style={{ color: p.delta > 0 ? "#10b981" : "#ef4444", fontSize:10, fontFamily:"'Space Mono',monospace", minWidth:52, textAlign:"right" }}>
+              <div style={{ flex:1, color:T.text, fontSize:12 }}>{p.name}</div>
+              <span style={{ ...NUM, color:T.muted, fontSize:11 }}>{ktcVal(p, ktcLive).toLocaleString()}</span>
+              <span style={{ color:T.muted, opacity:0.5, fontSize:10 }}>→</span>
+              <span style={{ ...NUM, color:T.muted, fontSize:11 }}>{p.fc.toLocaleString()}</span>
+              <span style={{ ...NUM, color: p.delta > 0 ? T.success : T.danger, fontSize:11, minWidth:52, textAlign:"right" }}>
                 {p.delta > 0 ? "+" : ""}{p.delta.toLocaleString()}
               </span>
             </div>
           ))}
-        </div>
+        </Panel>
       )}
     </div>
   );
@@ -711,42 +749,43 @@ function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLi
 
 // ── Picks tab ─────────────────────────────────────────────────────────────────
 
+const ROUND_COLORS = { 1:"#f59e0b", 2:"#3b82f6" }; // draft-capital encodings
+
 function PicksTab() {
   const totalKtc = PICKS.reduce((s,p) => s + p.ktc, 0);
   const roundLabel = (r) => r === 1 ? "1ST" : r === 2 ? "2ND" : r === 3 ? "3RD" : "4TH";
-  const roundColor = (r) => r === 1 ? "#f59e0b" : r === 2 ? "#3b82f6" : "#64748b";
 
   return (
     <div style={{ paddingTop:14 }}>
-      <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, overflow:"hidden" }}>
-        <div style={{ padding:"10px 16px", background:"#0c1828", borderBottom:"1px solid #1a2d40", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
-          <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em" }}>DRAFT CAPITAL</div>
-          <div style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace" }}>TOTAL {totalKtc.toLocaleString()}</div>
+      <Panel style={{ padding:0, overflow:"hidden" }}>
+        <div style={{ padding:"12px 16px", background:T.bg, borderBottom:`1px solid ${T.border}`, display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+          <div style={{ ...LABEL, color:T.muted, fontSize:"10px" }}>Draft capital</div>
+          <div style={{ ...NUM, color:T.text, fontSize:12 }}>Total {totalKtc.toLocaleString()}</div>
         </div>
         {PICKS.map(pick => {
-          const c = roundColor(pick.round);
+          const c = ROUND_COLORS[pick.round] || T.muted;
           return (
-            <div key={pick.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"11px 16px", borderBottom:"1px solid #0d1825" }}>
+            <div key={pick.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"11px 16px", minHeight:44, borderBottom:`1px solid ${T.border}` }}>
               <span style={{
                 background:c+"20", color:c, border:`1px solid ${c}50`,
                 borderRadius:6, padding:"3px 10px", fontSize:11,
-                fontFamily:"'Space Mono',monospace", fontWeight:700, minWidth:36, textAlign:"center",
+                fontFamily:MONO, fontWeight:700, minWidth:44, textAlign:"center",
               }}>{roundLabel(pick.round)}</span>
               <div style={{ flex:1 }}>
-                <div style={{ color:"#e2e8f0", fontSize:13, fontFamily:"'DM Sans',sans-serif", fontWeight:600 }}>{pick.label}</div>
-                {pick.note && <div style={{ color:"#334155", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:1 }}>{pick.note}</div>}
+                <div style={{ color:T.text, fontSize:13, fontWeight:600 }}>{pick.label}</div>
+                {pick.note && <div style={{ ...NUM, color:T.muted, opacity:0.7, fontSize:11, marginTop:1 }}>{pick.note}</div>}
               </div>
-              <div style={{ color:"#c084fc", fontSize:13, fontFamily:"'Space Mono',monospace" }}>{pick.ktc.toLocaleString()}</div>
+              <div style={{ ...NUM, color:T.text, fontSize:13 }}>{pick.ktc.toLocaleString()}</div>
             </div>
           );
         })}
-      </div>
-      <div style={{ marginTop:12, background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, padding:"10px 14px" }}>
-        <div style={{ color:"#334155", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em", marginBottom:6 }}>CAPITAL OUTLOOK</div>
-        <div style={{ color:"#64748b", fontSize:12, fontFamily:"'DM Sans',sans-serif", lineHeight:1.6 }}>
+      </Panel>
+      <Panel>
+        <PanelLabel>Capital outlook</PanelLabel>
+        <div style={{ fontFamily:GEORGIA, fontStyle:"italic", color:T.muted, fontSize:13, lineHeight:1.6 }}>
           Strong 2027 1st from Pitts trade. Own all picks through 2027. Contend-and-reload posture — not selling picks.
         </div>
-      </div>
+      </Panel>
     </div>
   );
 }
@@ -850,47 +889,68 @@ function TradesTab({ playersDb, myRosterId, allRosters, leagueUsers, ktcLive }) 
     fetchTrades();
   }, [myRosterId, playersDb, ktcLive]);
 
-  const displayTrades = trades ?? FALLBACK_TRADES;
+  const displayTrades = trades ?? [];
 
   return (
     <div style={{ paddingTop:14 }}>
       {trades === null && (
-        <div style={{ color:"#334155", fontSize:10, fontFamily:"'Space Mono',monospace", marginBottom:10 }}>LOADING TRADES...</div>
+        <Panel>
+          <Skeleton height="16px" width="55%" style={{ marginBottom:10 }}/>
+          <Skeleton height="13px" width="80%" style={{ marginBottom:6 }}/>
+          <Skeleton height="13px" width="70%"/>
+        </Panel>
       )}
       {usingFallback && trades !== null && (
-        <div style={{ color:"#475569", fontSize:9, fontFamily:"'Space Mono',monospace", marginBottom:10, letterSpacing:"0.08em" }}>
-          ↳ NO IN-SEASON TRADES FOUND · SHOWING OFFSEASON HISTORY
+        <div style={{ fontFamily:GEORGIA, fontStyle:"italic", color:T.muted, fontSize:13, marginBottom:12 }}>
+          No in-season trades yet — offseason history below.
         </div>
       )}
       {displayTrades.map(trade => (
-        <div key={trade.id} style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:10 }}>
+        <Panel key={trade.id}>
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:10 }}>
-            <div style={{ color:"#e2e8f0", fontSize:15, fontFamily:"'DM Sans',sans-serif", fontWeight:700 }}>{trade.label}</div>
+            <div style={{ color:T.text, fontSize:15, fontWeight:700 }}>{trade.label}</div>
             <span style={{
               background:trade.verdictColor+"18", color:trade.verdictColor,
               border:`1px solid ${trade.verdictColor}40`,
               borderRadius:4, padding:"2px 8px", fontSize:10,
-              fontFamily:"'Space Mono',monospace", fontWeight:700,
+              fontFamily:MONO, fontWeight:700,
             }}>{trade.verdict}</span>
           </div>
           <div style={{ display:"flex", gap:12, marginBottom:10 }}>
             <div style={{ flex:1 }}>
-              <div style={{ color:"#ef4444", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em", marginBottom:4 }}>GAVE</div>
-              {(trade.gave || []).map(n => <div key={n} style={{ color:"#94a3b8", fontSize:12, fontFamily:"'DM Sans',sans-serif" }}>{n}</div>)}
-              {trade.gave?.length === 0 && <div style={{ color:"#334155", fontSize:11, fontFamily:"'Space Mono',monospace" }}>—</div>}
-              <div style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>{(trade.gaveKtc||0).toLocaleString()}</div>
+              <div style={{ ...LABEL, color:T.danger, fontSize:"9px", marginBottom:4 }}>Gave</div>
+              {(trade.gave || []).map(n => <div key={n} style={{ color:T.muted, fontSize:12 }}>{n}</div>)}
+              {trade.gave?.length === 0 && <div style={{ ...NUM, color:T.muted, opacity:0.5, fontSize:11 }}>—</div>}
+              <div style={{ ...NUM, color:T.text, fontSize:11, marginTop:4 }}>{(trade.gaveKtc||0).toLocaleString()}</div>
             </div>
             <div style={{ flex:1 }}>
-              <div style={{ color:"#10b981", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em", marginBottom:4 }}>GOT</div>
-              {(trade.got || []).map(n => <div key={n} style={{ color:"#94a3b8", fontSize:12, fontFamily:"'DM Sans',sans-serif" }}>{n}</div>)}
-              {trade.got?.length === 0 && <div style={{ color:"#334155", fontSize:11, fontFamily:"'Space Mono',monospace" }}>—</div>}
-              <div style={{ color:"#c084fc", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>{(trade.gotKtc||0).toLocaleString()}</div>
+              <div style={{ ...LABEL, color:T.success, fontSize:"9px", marginBottom:4 }}>Got</div>
+              {(trade.got || []).map(n => <div key={n} style={{ color:T.muted, fontSize:12 }}>{n}</div>)}
+              {trade.got?.length === 0 && <div style={{ ...NUM, color:T.muted, opacity:0.5, fontSize:11 }}>—</div>}
+              <div style={{ ...NUM, color:T.text, fontSize:11, marginTop:4 }}>{(trade.gotKtc||0).toLocaleString()}</div>
             </div>
           </div>
-          {trade.note && <div style={{ color:"#334155", fontSize:11, fontFamily:"'DM Sans',sans-serif" }}>{trade.note}</div>}
-          <div style={{ color:"#1e3a5f", fontSize:9, fontFamily:"'Space Mono',monospace", marginTop:6 }}>{trade.date}</div>
-        </div>
+          {trade.note && <div style={{ color:T.muted, fontSize:11 }}>{trade.note}</div>}
+          <div style={{ ...NUM, color:T.muted, opacity:0.6, fontSize:10, marginTop:6 }}>{trade.date}</div>
+        </Panel>
       ))}
+    </div>
+  );
+}
+
+// ── Not found (designed 404 — SPA catch-all route) ───────────────────────────
+
+function NotFound() {
+  return (
+    <div style={{ minHeight:"100vh", background:T.bg, color:T.text, display:"flex", alignItems:"center", justifyContent:"center", padding:24 }}>
+      <div style={{ textAlign:"center", maxWidth:420 }}>
+        <div style={{ ...NUM, fontSize:48, fontWeight:800, color:T.accent, marginBottom:12 }}>404</div>
+        <div style={{ fontFamily:GEORGIA, fontStyle:"italic", fontSize:17, marginBottom:8 }}>This route isn't on the roster.</div>
+        <div style={{ color:T.muted, fontSize:13, marginBottom:24 }}>The page you're after doesn't exist — it may have been traded away.</div>
+        <Link to="/" style={{ display:"inline-flex", alignItems:"center", justifyContent:"center", minHeight:44, padding:"0 24px", background:T.warm, color:T.bg, borderRadius:8, textDecoration:"none", fontFamily:MONO, fontWeight:700, letterSpacing:"0.08em", fontSize:12 }}>
+          ← Back to the league
+        </Link>
+      </div>
     </div>
   );
 }
@@ -910,9 +970,17 @@ function Dashboard() {
   const [ktcLive,         setKtcLive]        = useState(null);
   const [combineData,     setCombineData]    = useState(null);
   const [dynastyDomain,   setDynastyDomain]  = useState(null);
+  const [toasts,          setToasts]         = useState([]);
   const { roster, rosterLoading, record, allRosters, playersDb, leagueUsers, myRosterId } = useRoster(resolvedOwner);
 
   const today = new Date().toISOString().slice(0, 10);
+
+  const pushToast = useCallback((kind, text) => {
+    setToasts(prev => [...prev, { id: `${Date.now()}-${Math.random()}`, kind, text }]);
+  }, []);
+  const dismissToast = useCallback((id) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  }, []);
 
   const teamUser = leagueUsers.find(u => u.user_id === resolvedOwner);
   const teamName = teamUser?.metadata?.team_name || teamUser?.display_name || (isOwner ? "LEGION OF CMINN" : "UNKNOWN TEAM");
@@ -929,25 +997,28 @@ function Dashboard() {
     if (keys.length > 7) keys.slice(0, keys.length - 7).forEach(k => localStorage.removeItem(k));
   }, [today]);
 
-  const fetchFc = useCallback(async () => {
+  const fetchFc = useCallback(async (announce = false) => {
     setRefreshing(true);
     try {
       const res  = await fetch(FC_URL);
       const data = await res.json();
       setFcData(data);
       saveSnapshot(data);
-      setLastUpdated(new Date().toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }));
+      const time = new Date().toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" });
+      setLastUpdated(time);
       localStorage.setItem("fc_last_known", JSON.stringify(data));
+      if (announce) pushToast("success", `Values refreshed at ${time}.`);
     } catch {
       const cached = localStorage.getItem("fc_last_known");
       if (cached && !fcData) {
         setFcData(JSON.parse(cached));
         setLastUpdated("STALE");
       }
+      if (announce) pushToast("error", "Value refresh failed — showing the last saved values. Check your connection and try again.");
     } finally {
       setRefreshing(false);
     }
-  }, [saveSnapshot]);
+  }, [saveSnapshot, pushToast]);
 
   useEffect(() => {
     fetchFc();
@@ -993,95 +1064,69 @@ function Dashboard() {
   const starterCount  = roster.filter(p => p.slot === "STARTER").length;
   const avgAge        = roster.length ? (roster.reduce((s,p) => s + p.age, 0) / roster.length).toFixed(1) : "—";
   const starterAvgAge = starterCount  ? (roster.filter(p => p.slot === "STARTER").reduce((s,p) => s + p.age, 0) / starterCount).toFixed(1) : "—";
+  const totalKtc      = roster.reduce((s,p) => s + ktcVal(p, ktcLive), 0);
 
   return (
-    <div style={{ minHeight:"100vh", background:"#060d16", color:"#e2e8f0", fontFamily:"'DM Sans',sans-serif", paddingBottom:60 }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap');
-        * { box-sizing:border-box; margin:0; }
-        ::-webkit-scrollbar { height:3px; width:3px; }
-        ::-webkit-scrollbar-track { background:transparent; }
-        ::-webkit-scrollbar-thumb { background:#1e3a5f; border-radius:4px; }
-        input { outline:none; }
-        input:focus { border-color:#3b82f6 !important; }
-        select { outline:none; appearance:none; }
-      `}</style>
-
-      {/* HEADER */}
+    <NavShell
+      brand={LEAGUE_NAME}
+      brandSub={`Season ${LEAGUE_SEASON}`}
+      items={navTabs}
+      activeKey={navTab}
+      onSelect={setNavTab}
+      theme={T}
+    >
+      {/* HEADER BAND — compact, ≤200px */}
       <div style={{
-        background:"linear-gradient(135deg,#08152a 0%,#0c1e3d 60%,#08152a 100%)",
-        borderBottom:"1px solid #1a3050", padding:"24px 20px 20px",
-        position:"relative", overflow:"hidden",
+        background:`linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(123,47,255,0.08) 60%, transparent 100%)`,
+        border:`1px solid ${T.border}`, borderRadius:12, padding:"16px 16px 14px", marginBottom:16,
       }}>
-        <div style={{ position:"absolute", inset:0, opacity:0.04, backgroundImage:"linear-gradient(#3b82f6 1px,transparent 1px),linear-gradient(90deg,#3b82f6 1px,transparent 1px)", backgroundSize:"32px 32px" }} />
-        <div style={{ position:"relative" }}>
-          <Link to="/" style={{ display:"inline-block", color:"#1e3a5f", fontSize:10, fontFamily:"'Space Mono',monospace", letterSpacing:"0.14em", marginBottom:10, textDecoration:"none" }}
-            onMouseEnter={e => e.currentTarget.style.color = "#3b82f6"}
-            onMouseLeave={e => e.currentTarget.style.color = "#1e3a5f"}
-          >← ALL TEAMS</Link>
-          <div style={{ color:"#3b82f6", fontSize:10, fontFamily:"'Space Mono',monospace", letterSpacing:"0.22em", marginBottom:6 }}>DYNASTY COMMAND CENTER</div>
-          <h1 style={{ fontSize:40, fontFamily:"'Bebas Neue',cursive", letterSpacing:"0.06em", color:"#f1f5f9", lineHeight:1 }}>{teamName}</h1>
-          <div style={{ color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:4 }}>{LEAGUE_NAME} · {LEAGUE_SEASON}</div>
-          <div style={{ display:"flex", gap:8, marginTop:18, flexWrap:"wrap" }}>
-            <StatCard label="RECORD"  value={record}                color="#64748b" />
-            <StatCard label="ROSTER"  value={rosterLoading ? "…" : roster.length} sub="players" color="#a855f7" />
-            <StatCard label="AVG AGE" value={avgAge}                sub={`starters ${starterAvgAge}`} color="#10b981" />
-            {isOwner && <StatCard label="FAAB" value="$300" sub="unspent" color="#f59e0b" />}
-          </div>
+        <Link to="/" style={{ ...LABEL, display:"inline-flex", alignItems:"center", minHeight:24, color:T.muted, fontSize:"10px", marginBottom:6, textDecoration:"none" }}>
+          ← All teams
+        </Link>
+        <h1 style={{ fontFamily:GEORGIA, fontStyle:"italic", fontWeight:900, fontSize:"clamp(24px,6vw,32px)", letterSpacing:"-0.02em", color:T.text, lineHeight:1.05 }}>{teamName}</h1>
+        <div style={{ ...LABEL, color:T.muted, opacity:0.8, fontSize:"10px", marginTop:4 }}>{LEAGUE_NAME} · {LEAGUE_SEASON}</div>
+        <div style={{ display:"flex", gap:8, marginTop:14, flexWrap:"wrap" }}>
+          <KpiCard label="Record"     value={record} theme={T}/>
+          <KpiCard label="Roster KTC" value={rosterLoading ? "…" : totalKtc.toLocaleString()} sub={`${roster.length} players`} theme={T}/>
+          <KpiCard label="Avg age"    value={avgAge} sub={`starters ${starterAvgAge}`} theme={T}/>
+          {isOwner && <KpiCard label="FAAB" value="$300" sub="unspent" theme={T}/>}
         </div>
       </div>
 
-      {/* NAV TABS */}
-      <div style={{ display:"flex", gap:0, borderBottom:"1px solid #1a2d40", overflowX:"auto" }}>
-        {navTabs.map(tab => {
-          const active = navTab === tab.key;
-          return (
-            <button key={tab.key} onClick={() => setNavTab(tab.key)} style={{
-              background: active ? "#0a1525" : "transparent",
-              border:"none", borderBottom:`2px solid ${active ? "#3b82f6" : "transparent"}`,
-              color: active ? "#60a5fa" : "#334155",
-              padding:"12px 16px", fontSize:11,
-              fontFamily:"'Space Mono',monospace", fontWeight:700,
-              letterSpacing:"0.1em", cursor:"pointer", whiteSpace:"nowrap",
-              transition:"color 0.15s",
-            }}>{tab.label}</button>
-          );
-        })}
-      </div>
-
       {/* CONTENT */}
-      <div style={{ padding:"0 16px" }}>
-        {navTab === "briefing"  && (
-          <BriefingTab
-            roster={roster} fcData={fcData} lastUpdated={lastUpdated}
-            onRefresh={fetchFc} refreshing={refreshing} ktcLive={ktcLive} today={today}
-            allRosters={allRosters} playersDb={playersDb} leagueUsers={leagueUsers} myRosterId={myRosterId}
-          />
-        )}
-        {navTab === "roster"    && (
-          <RosterTab
-            roster={roster} fcData={fcData} ktcLive={ktcLive} onPlayerClick={setSelectedPlayer}
-            allRosters={allRosters} playersDb={playersDb} leagueUsers={leagueUsers} myRosterId={myRosterId}
-          />
-        )}
-        {navTab === "picks"     && <PicksTab />}
-        {navTab === "trades"    && (
-          <TradesTab
-            playersDb={playersDb} myRosterId={myRosterId}
-            allRosters={allRosters} leagueUsers={leagueUsers} ktcLive={ktcLive}
-          />
-        )}
-        {navTab === "tradecalc" && <TradeCalc  fcData={fcData} ktcLive={ktcLive} roster={roster} />}
-      </div>
+      {navTab === "briefing"  && (
+        <BriefingTab
+          roster={roster} fcData={fcData} lastUpdated={lastUpdated}
+          onRefresh={() => fetchFc(true)} refreshing={refreshing} ktcLive={ktcLive} today={today}
+          allRosters={allRosters} playersDb={playersDb} leagueUsers={leagueUsers} myRosterId={myRosterId}
+          onPlayerClick={setSelectedPlayer}
+        />
+      )}
+      {navTab === "roster"    && (
+        <RosterTab
+          roster={roster} fcData={fcData} ktcLive={ktcLive} onPlayerClick={setSelectedPlayer}
+          allRosters={allRosters} playersDb={playersDb} leagueUsers={leagueUsers} myRosterId={myRosterId}
+        />
+      )}
+      {navTab === "picks"     && <PicksTab />}
+      {navTab === "trades"    && (
+        <TradesTab
+          playersDb={playersDb} myRosterId={myRosterId}
+          allRosters={allRosters} leagueUsers={leagueUsers} ktcLive={ktcLive}
+        />
+      )}
+      {navTab === "tradecalc" && <TradeCalc  fcData={fcData} ktcLive={ktcLive} roster={roster} />}
 
       {selectedPlayer && (
         <PlayerModal player={selectedPlayer} fcData={fcData} ktcLive={ktcLive} combineData={combineData} dynastyDomain={dynastyDomain} onClose={() => setSelectedPlayer(null)} />
       )}
 
-      <div style={{ padding:"20px 16px 0", color:"#0f1f30", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em" }}>
-        WORM UP DYNASTY · SEASON 2026 · KTC 05/17/2026
+      <ToastStack items={toasts} onDismiss={dismissToast} theme={T}/>
+
+      <div style={{ ...LABEL, padding:"20px 0 0", color:T.muted, opacity:0.4, fontSize:"9px" }}>
+        {LEAGUE_NAME} · Season {LEAGUE_SEASON}{ktcLive?.scraped_at ? ` · KTC ${ktcLive.scraped_at.slice(0,10)}` : ""}
       </div>
-    </div>
+    </NavShell>
   );
 }
 
@@ -1092,6 +1137,7 @@ export default function App() {
     <Routes>
       <Route path="/"               element={<LeagueLanding />} />
       <Route path="/team/:ownerId"  element={<Dashboard />} />
+      <Route path="*"               element={<NotFound />} />
     </Routes>
   );
 }
