@@ -346,9 +346,9 @@ function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, players
   );
 
   const columns = [
-    ...(!narrow ? [{ key:"pos", label:"Pos", sortable:true, sortValue:p => POS_ORDER.indexOf(p.pos), render:p => <PosBadge pos={p.pos}/> }] : []),
+    ...(!narrow ? [{ key:"pos", label:"Pos", width:64, sortable:true, sortValue:p => POS_ORDER.indexOf(p.pos), render:p => <PosBadge pos={p.pos}/> }] : []),
     { key:"player", label: isMyTeam ? "Player" : (rosterNameMap[selectedTeamId] || "Opponent"), sortable:true, sortValue:p => p.name, render:playerCell },
-    { key:"ktc", label:"KTC", numeric:true, sortable:true, sortValue:p => ktcVal(p, ktcLive),
+    { key:"ktc", label:"KTC", width:narrow ? 92 : 104, numeric:true, sortable:true, sortValue:p => ktcVal(p, ktcLive),
       render:p => {
         const trend = ktcEntry(p.name, ktcLive)?.sf_trend_7d ?? 0;
         return (
