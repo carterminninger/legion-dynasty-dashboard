@@ -1,3 +1,5 @@
+import { cosmicApp as T, LABEL } from "../kit/theme";
+
 function lastName(name) { return name.split(" ").slice(-1)[0]; }
 
 function analyzeNeeds(roster) {
@@ -59,16 +61,15 @@ function analyzeNeeds(roster) {
 
 export default function NeedsAnalysis({ roster }) {
   const needs = analyzeNeeds(roster);
-  const iconColor = { "✅":"#10b981", "⚠":"#f59e0b", "🔵":"#60a5fa" };
 
   return (
-    <div style={{ background:"#0a1525", border:"1px solid #1a2d40", borderRadius:10, padding:"14px 16px", marginBottom:12 }}>
-      <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:10 }}>NEEDS ANALYSIS</div>
+    <div style={{ background:T.surface, border:`1px solid ${T.border}`, borderRadius:12, padding:"14px 16px", marginBottom:12 }}>
+      <div style={{ ...LABEL, color:T.muted, fontSize:"10px", marginBottom:10 }}>Needs analysis</div>
       <div style={{ display:"flex", flexDirection:"column", gap:7 }}>
         {needs.map(n => (
           <div key={n.pos} style={{ display:"flex", gap:8, alignItems:"flex-start" }}>
-            <span style={{ fontSize:14, lineHeight:1.4 }}>{n.icon}</span>
-            <span style={{ color:"#94a3b8", fontSize:12, fontFamily:"'DM Sans',sans-serif", lineHeight:1.5 }}>{n.text}</span>
+            <span aria-hidden style={{ fontSize:14, lineHeight:1.4 }}>{n.icon}</span>
+            <span style={{ color:T.muted, fontSize:13, lineHeight:1.5 }}>{n.text}</span>
           </div>
         ))}
       </div>
