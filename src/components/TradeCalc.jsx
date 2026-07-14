@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef, useMemo } from "react";
-
-const POS_COLORS = { QB:"#f59e0b", RB:"#10b981", WR:"#3b82f6", TE:"#a855f7" };
+import { cosmicApp as T, LABEL, NUM, MONO, GEORGIA, CONTROL_H, RADIUS } from "../kit/theme";
+import { posColors } from "../kit/tokens";
 
 function PosBadge({ pos }) {
-  const c = POS_COLORS[pos] || "#64748b";
+  const c = posColors[pos] || "#64748b";
   return (
     <span style={{
       background:c+"20", color:c, border:`1px solid ${c}50`,
       borderRadius:4, padding:"1px 5px", fontSize:10,
-      fontFamily:"'Space Mono',monospace", fontWeight:700,
+      fontFamily:MONO, fontWeight:700,
     }}>{pos}</span>
   );
 }
@@ -16,9 +16,9 @@ function PosBadge({ pos }) {
 function OnRosterBadge() {
   return (
     <span style={{
-      background:"#10b98115", color:"#10b981", border:"1px solid #10b98140",
+      background:"rgba(0,229,255,0.1)", color:T.accent, border:`1px solid rgba(0,229,255,0.35)`,
       borderRadius:3, padding:"0 4px", fontSize:9,
-      fontFamily:"'Space Mono',monospace", fontWeight:700, letterSpacing:"0.05em",
+      fontFamily:MONO, fontWeight:700, letterSpacing:"0.05em",
     }}>ON ROSTER</span>
   );
 }
@@ -26,23 +26,27 @@ function OnRosterBadge() {
 function PlayerCard({ item, onRemove }) {
   return (
     <div style={{
-      display:"flex", alignItems:"center", gap:8, padding:"8px 12px",
-      background:"#060d16", border:"1px solid #1a2d40", borderRadius:8, marginBottom:6,
+      display:"flex", alignItems:"center", gap:8, padding:"8px 12px", minHeight:52,
+      background:T.surface, border:`1px solid ${T.border}`, borderRadius:RADIUS, marginBottom:6,
     }}>
       <PosBadge pos={item.pos} />
       <div style={{ flex:1, minWidth:0 }}>
         <div style={{ display:"flex", alignItems:"center", gap:6, flexWrap:"wrap" }}>
-          <span style={{ color:"#e2e8f0", fontSize:13, fontFamily:"'DM Sans',sans-serif", fontWeight:600, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{item.name}</span>
+          <span style={{ color:T.text, fontSize:13, fontWeight:600, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>{item.name}</span>
           {item.isOnRoster && <OnRosterBadge />}
         </div>
         <div style={{ display:"flex", gap:8, marginTop:2 }}>
-          <span style={{ color:"#c084fc", fontSize:10, fontFamily:"'Space Mono',monospace" }}>KTC {item.ktc?.toLocaleString() ?? "—"}</span>
-          <span style={{ color:"#60a5fa", fontSize:10, fontFamily:"'Space Mono',monospace" }}>FC {item.fc?.toLocaleString() ?? "—"}</span>
+          <span style={{ ...NUM, color:T.muted, fontSize:10 }}>KTC {item.ktc?.toLocaleString() ?? "—"}</span>
+          <span style={{ ...NUM, color:T.muted, opacity:0.7, fontSize:10 }}>FC {item.fc?.toLocaleString() ?? "—"}</span>
         </div>
       </div>
-      <button onClick={() => onRemove(item.name)} style={{
-        background:"transparent", border:"none", color:"#334155", fontSize:16, cursor:"pointer", lineHeight:1, padding:"0 4px",
-      }}>✕</button>
+      {/* 44px tap zone painted around the glyph — card stays 52px */}
+      <span style={{ position:"relative", width:16, height:16, display:"inline-flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+        <button onClick={() => onRemove(item.name)} aria-label={`Remove ${item.name}`} style={{
+          position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:44, height:44,
+          background:"transparent", border:"none", color:T.muted, fontSize:16, cursor:"pointer", lineHeight:1, padding:0,
+        }}>✕</button>
+      </span>
     </div>
   );
 }
@@ -50,6 +54,7 @@ function PlayerCard({ item, onRemove }) {
 function SearchBox({ side, ktcLive, allFc, onAdd, added, rosterNames, roster }) {
   const [query,   setQuery]   = useState("");
   const [results, setResults] = useState([]);
+  const [focus,   setFocus]   = useState(false);
   const ref = useRef();
 
   useEffect(() => {
@@ -114,40 +119,42 @@ function SearchBox({ side, ktcLive, allFc, onAdd, added, rosterNames, roster }) 
       <input
         value={query}
         onChange={e => setQuery(e.target.value)}
-        placeholder={`Search all players — ${side}`}
+        onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
+        placeholder={`Search players to add — ${side}`}
+        aria-label={`Search players — ${side}`}
         style={{
-          width:"100%", background:"#060d16", border:"1px solid #1a2d40", borderRadius:6,
-          color:"#e2e8f0", padding:"8px 12px", fontSize:12, fontFamily:"'DM Sans',sans-serif",
-          outline:"none",
+          width:"100%", background:T.surface, border:`1px solid ${T.border}`, borderRadius:RADIUS,
+          color:T.text, padding:"0 12px", height:CONTROL_H, fontSize:13,
+          outline: focus ? `2px solid ${T.accent}` : "none", outlineOffset:2,
         }}
       />
       {results.length > 0 && (
         <div style={{
           position:"absolute", top:"100%", left:0, right:0, zIndex:50,
-          background:"#0a1525", border:"1px solid #1a2d40", borderRadius:6,
+          background:T.bg, border:`1px solid ${T.border}`, borderRadius:RADIUS,
           marginTop:2, maxHeight:260, overflowY:"auto",
         }}>
           {results.map(item => (
-            <div
+            <button
               key={item.name}
               onClick={() => pick(item)}
-              style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 12px", cursor:"pointer", borderBottom:"1px solid #0d1825" }}
-              onMouseEnter={e => e.currentTarget.style.background = "#0d1825"}
+              style={{ display:"flex", alignItems:"center", gap:8, padding:"8px 12px", minHeight:44, width:"100%", textAlign:"left", cursor:"pointer", border:"none", borderBottom:`1px solid ${T.border}`, background:"transparent", color:T.text }}
+              onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.05)"}
               onMouseLeave={e => e.currentTarget.style.background = "transparent"}
             >
               <PosBadge pos={item.pos} />
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:5, flexWrap:"wrap" }}>
-                  <span style={{ color:"#e2e8f0", fontSize:12, fontFamily:"'DM Sans',sans-serif" }}>{item.name}</span>
+                  <span style={{ color:T.text, fontSize:12 }}>{item.name}</span>
                   {item.isOnRoster && <OnRosterBadge />}
                 </div>
-                <div style={{ color:"#334155", fontSize:10, fontFamily:"'Space Mono',monospace", marginTop:1 }}>{item.team}</div>
+                <div style={{ ...NUM, color:T.muted, opacity:0.7, fontSize:10, marginTop:1 }}>{item.team}</div>
               </div>
               <div style={{ textAlign:"right", flexShrink:0 }}>
-                {item.ktc != null && <div style={{ color:"#c084fc", fontSize:10, fontFamily:"'Space Mono',monospace" }}>{item.ktc.toLocaleString()}</div>}
-                {item.fc  != null && <div style={{ color:"#60a5fa", fontSize:10, fontFamily:"'Space Mono',monospace" }}>{item.fc.toLocaleString()}</div>}
+                {item.ktc != null && <div style={{ ...NUM, color:T.text, fontSize:10 }}>{item.ktc.toLocaleString()}</div>}
+                {item.fc  != null && <div style={{ ...NUM, color:T.muted, fontSize:10 }}>{item.fc.toLocaleString()}</div>}
               </div>
-            </div>
+            </button>
           ))}
         </div>
       )}
@@ -180,10 +187,10 @@ export default function TradeCalc({ fcData, ktcLive, roster }) {
 
   // KTC is the primary verdict metric
   const verdict = (delta, total) => {
-    if (!total) return { label:"—", color:"#334155" };
+    if (!total) return { label:"—", color:T.muted };
     const pct = (delta / total) * 100;
-    if (pct > 5)  return { label:"WIN",  color:"#10b981" };
-    if (pct < -5) return { label:"LOSS", color:"#ef4444" };
+    if (pct > 5)  return { label:"WIN",  color:T.success };
+    if (pct < -5) return { label:"LOSS", color:T.danger };
     return { label:"FAIR", color:"#f59e0b" };
   };
   const v = verdict(deltaKtc, giveKtc || 1);
@@ -192,59 +199,60 @@ export default function TradeCalc({ fcData, ktcLive, roster }) {
 
   return (
     <div style={{ padding:"16px 0" }}>
-      <div style={{ display:"flex", gap:12 }}>
+      <h2 style={{ fontFamily:GEORGIA, fontStyle:"italic", fontWeight:700, fontSize:17, color:T.text, marginBottom:12 }}>Trade Calculator</h2>
+      <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
         {/* YOU GIVE */}
-        <div style={{ flex:1 }}>
-          <div style={{ color:"#ef4444", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:8 }}>YOU GIVE</div>
-          <SearchBox side="YOU GIVE" ktcLive={ktcLive} allFc={fcData} onAdd={item => addTo("give", item)} added={allAdded} rosterNames={rosterNames} roster={roster} />
+        <div style={{ flex:1, minWidth:260 }}>
+          <div style={{ ...LABEL, color:T.danger, fontSize:"10px", marginBottom:8 }}>You give</div>
+          <SearchBox side="you give" ktcLive={ktcLive} allFc={fcData} onAdd={item => addTo("give", item)} added={allAdded} rosterNames={rosterNames} roster={roster} />
           {give.map(item => <PlayerCard key={item.name} item={item} onRemove={name => removeFrom("give", name)} />)}
-          {give.length === 0 && <div style={{ color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace" }}>Search to add players</div>}
+          {give.length === 0 && <div style={{ fontFamily:GEORGIA, fontStyle:"italic", color:T.muted, fontSize:13 }}>Search above to add the players you'd send.</div>}
         </div>
 
         {/* YOU GET */}
-        <div style={{ flex:1 }}>
-          <div style={{ color:"#10b981", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.18em", marginBottom:8 }}>YOU GET</div>
-          <SearchBox side="YOU GET" ktcLive={ktcLive} allFc={fcData} onAdd={item => addTo("get", item)} added={allAdded} rosterNames={rosterNames} roster={roster} />
+        <div style={{ flex:1, minWidth:260 }}>
+          <div style={{ ...LABEL, color:T.success, fontSize:"10px", marginBottom:8 }}>You get</div>
+          <SearchBox side="you get" ktcLive={ktcLive} allFc={fcData} onAdd={item => addTo("get", item)} added={allAdded} rosterNames={rosterNames} roster={roster} />
           {get.map(item => <PlayerCard key={item.name} item={item} onRemove={name => removeFrom("get", name)} />)}
-          {get.length === 0 && <div style={{ color:"#1e3a5f", fontSize:11, fontFamily:"'Space Mono',monospace" }}>Search to add players</div>}
+          {get.length === 0 && <div style={{ fontFamily:GEORGIA, fontStyle:"italic", color:T.muted, fontSize:13 }}>Search above to add the players you'd receive.</div>}
         </div>
       </div>
 
       {/* Summary bar */}
       {(give.length > 0 || get.length > 0) && (
         <div style={{
-          marginTop:16, background:"#060d16", border:`1px solid ${v.color}40`,
-          borderRadius:10, padding:"12px 16px",
+          marginTop:16, background:T.surface, border:`1px solid ${v.color}40`,
+          borderRadius:12, padding:"12px 16px",
         }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:10 }}>
-            <div style={{ color:"#334155", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em" }}>TRADE VERDICT</div>
+            <div style={{ ...LABEL, color:T.muted, fontSize:"10px" }}>Trade verdict</div>
             <span style={{
               background:v.color+"18", color:v.color, border:`1px solid ${v.color}50`,
               borderRadius:4, padding:"3px 10px", fontSize:12,
-              fontFamily:"'Space Mono',monospace", fontWeight:700,
+              fontFamily:MONO, fontWeight:700,
             }}>{v.label}</span>
           </div>
           <div style={{ display:"flex", gap:16 }}>
             <div style={{ flex:1 }}>
-              <div style={{ color:"#c084fc", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em", marginBottom:4 }}>KTC · PRIMARY</div>
+              <div style={{ ...LABEL, color:T.muted, fontSize:"9px", marginBottom:4 }}>KTC · primary</div>
               <div style={{ display:"flex", justifyContent:"space-between" }}>
-                <span style={{ color:"#ef4444", fontSize:13, fontFamily:"'Bebas Neue',cursive" }}>{giveKtc.toLocaleString()}</span>
-                <span style={{ color:"#334155", fontSize:11 }}>→</span>
-                <span style={{ color:"#10b981", fontSize:13, fontFamily:"'Bebas Neue',cursive" }}>{getKtc.toLocaleString()}</span>
+                <span style={{ ...NUM, color:T.danger, fontSize:14, fontWeight:700 }}>{giveKtc.toLocaleString()}</span>
+                <span aria-hidden style={{ color:T.muted, opacity:0.5, fontSize:11 }}>→</span>
+                <span style={{ ...NUM, color:T.success, fontSize:14, fontWeight:700 }}>{getKtc.toLocaleString()}</span>
               </div>
-              <div style={{ color:deltaKtc >= 0 ? "#10b981" : "#ef4444", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:2 }}>
+              <div style={{ ...NUM, color:deltaKtc >= 0 ? T.success : T.danger, fontSize:11, marginTop:2 }}>
                 {deltaKtc >= 0 ? "+" : ""}{deltaKtc.toLocaleString()} pts
               </div>
             </div>
-            <div style={{ width:1, background:"#1a2d40" }} />
+            <div style={{ width:1, background:T.border }} />
             <div style={{ flex:1 }}>
-              <div style={{ color:"#60a5fa", fontSize:9, fontFamily:"'Space Mono',monospace", letterSpacing:"0.1em", marginBottom:4 }}>FC · SECONDARY</div>
+              <div style={{ ...LABEL, color:T.muted, fontSize:"9px", marginBottom:4 }}>FC · secondary</div>
               <div style={{ display:"flex", justifyContent:"space-between" }}>
-                <span style={{ color:"#ef4444", fontSize:13, fontFamily:"'Bebas Neue',cursive" }}>{giveFc.toLocaleString()}</span>
-                <span style={{ color:"#334155", fontSize:11 }}>→</span>
-                <span style={{ color:"#10b981", fontSize:13, fontFamily:"'Bebas Neue',cursive" }}>{getFc.toLocaleString()}</span>
+                <span style={{ ...NUM, color:T.danger, fontSize:14, fontWeight:700 }}>{giveFc.toLocaleString()}</span>
+                <span aria-hidden style={{ color:T.muted, opacity:0.5, fontSize:11 }}>→</span>
+                <span style={{ ...NUM, color:T.success, fontSize:14, fontWeight:700 }}>{getFc.toLocaleString()}</span>
               </div>
-              <div style={{ color:deltaFc >= 0 ? "#10b981" : "#ef4444", fontSize:11, fontFamily:"'Space Mono',monospace", marginTop:2 }}>
+              <div style={{ ...NUM, color:deltaFc >= 0 ? T.success : T.danger, fontSize:11, marginTop:2 }}>
                 {deltaFc >= 0 ? "+" : ""}{deltaFc.toLocaleString()} pts
               </div>
             </div>
@@ -255,10 +263,10 @@ export default function TradeCalc({ fcData, ktcLive, roster }) {
       {/* Clear */}
       {(give.length > 0 || get.length > 0) && (
         <button onClick={() => { setGive([]); setGet([]); }} style={{
-          marginTop:10, background:"transparent", border:"1px solid #1a2d40",
-          color:"#334155", borderRadius:6, padding:"6px 14px", fontSize:10,
-          fontFamily:"'Space Mono',monospace", cursor:"pointer",
-        }}>CLEAR</button>
+          marginTop:10, background:"transparent", border:`1px solid ${T.border}`,
+          color:T.muted, borderRadius:RADIUS, padding:"0 14px", minHeight:44, fontSize:11,
+          fontFamily:MONO, letterSpacing:"0.08em", cursor:"pointer",
+        }}>Clear trade</button>
       )}
     </div>
   );
