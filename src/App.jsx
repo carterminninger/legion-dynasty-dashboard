@@ -1085,7 +1085,7 @@ function Dashboard() {
         </Link>
         <h1 style={{ fontFamily:GEORGIA, fontStyle:"italic", fontWeight:900, fontSize:"clamp(24px,6vw,32px)", letterSpacing:"-0.02em", color:T.text, lineHeight:1.05 }}>{teamName}</h1>
         <div style={{ ...LABEL, color:T.muted, opacity:0.8, fontSize:"10px", marginTop:4 }}>{LEAGUE_NAME} · {LEAGUE_SEASON}</div>
-        <div style={{ display:"flex", gap:8, marginTop:14, flexWrap:"wrap" }}>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(140px, 1fr))", gap:8, marginTop:14 }}>
           <KpiCard label="Record"     value={record} theme={T}/>
           <KpiCard label="Roster KTC" value={rosterLoading ? "…" : totalKtc.toLocaleString()} sub={`${roster.length} players`} theme={T}/>
           <KpiCard label="Avg age"    value={avgAge} sub={`starters ${starterAvgAge}`} theme={T}/>
