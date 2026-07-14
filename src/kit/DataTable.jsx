@@ -6,7 +6,9 @@
  * cells — headshots/badges keep their anatomy inside table semantics, per
  * Phase 2 critique) and `sortValue(row)` (sort key when the cell isn't the
  * raw value); optional `onRowClick`; `maxHeight` prop (roster lists run
- * longer than the kit's 420px default); optional `initialSort`.
+ * longer than the kit's 420px default); optional `initialSort`; columns gain
+ * optional `width` with tableLayout:fixed when any width is set, so nowrap
+ * rich cells truncate instead of forcing horizontal scroll at 390px.
  */
 import { useState } from "react";
 import { LABEL, NUM } from "./theme";
