@@ -348,16 +348,11 @@ function RosterTab({ roster, fcData, ktcLive, onPlayerClick, allRosters, players
   const columns = [
     ...(!narrow ? [{ key:"pos", label:"Pos", width:64, sortable:true, sortValue:p => POS_ORDER.indexOf(p.pos), render:p => <PosBadge pos={p.pos}/> }] : []),
     { key:"player", label: isMyTeam ? "Player" : (rosterNameMap[selectedTeamId] || "Opponent"), sortable:true, sortValue:p => p.name, render:playerCell },
+    // Chanel cut (Phase 4): 7d trend micro-arrows removed from this column —
+    // illegible at 9px/table density; the signal stays full-size in the
+    // featured asset card and PlayerModal.
     { key:"ktc", label:"KTC", width:narrow ? 92 : 104, numeric:true, sortable:true, sortValue:p => ktcVal(p, ktcLive),
-      render:p => {
-        const trend = ktcEntry(p.name, ktcLive)?.sf_trend_7d ?? 0;
-        return (
-          <span style={{ ...NUM, fontSize:13 }}>
-            {ktcVal(p, ktcLive).toLocaleString()}
-            {trend !== 0 && <span style={{ color: trend > 0 ? T.success : T.danger, fontSize:9, marginLeft:2 }}>{trend > 0 ? "▲" : "▼"}</span>}
-          </span>
-        );
-      } },
+      render:p => <span style={{ ...NUM, fontSize:13 }}>{ktcVal(p, ktcLive).toLocaleString()}</span> },
     ...(effectiveFc && !narrow ? [{ key:"fc", label:"FC", width:96, numeric:true, sortable:true, sortValue:fcValOf,
       render:p => <span style={{ ...NUM, fontSize:13, color:T.muted }}>{fcValOf(p) ? fcValOf(p).toLocaleString() : "—"}</span> }] : []),
     { key:"age", label:"Age", width:narrow ? 72 : 80, numeric:true, sortable:true, sortValue:p => p.age, render:p => <AgeBadge age={p.age}/> },
