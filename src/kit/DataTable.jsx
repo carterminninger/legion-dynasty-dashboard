@@ -1,14 +1,12 @@
 /**
  * DataTable — consumer copy for legion-dynasty-dashboard.
  * Source of truth: ~/.claude/skills/design/references/components/app/DataTable.tsx
- * (2026-07-13, incl. the 44px sort-header tap-zone fix). Adaptations:
- * TS types + "use client" dropped; columns gain optional `render(row)` (rich
- * cells — headshots/badges keep their anatomy inside table semantics, per
- * Phase 2 critique) and `sortValue(row)` (sort key when the cell isn't the
- * raw value); optional `onRowClick`; `maxHeight` prop (roster lists run
- * longer than the kit's 420px default); optional `initialSort`; columns gain
- * optional `width` with tableLayout:fixed when any width is set, so nowrap
- * rich cells truncate instead of forcing horizontal scroll at 390px.
+ * (2026-07-15 — this copy's 2026-07-14 adaptations were upstreamed into the
+ * kit that day: render/sortValue/width columns, onRowClick + keyboard rows,
+ * maxHeight, initialSort, desc-first sort; harness datatable.spec.mjs 12/12).
+ * Remaining adaptations: TS types + "use client" dropped; maxHeight default
+ * "none" vs kit's 420px (roster lists run longer).
+ * Drift tracked by design-kit-harness kit-consumers.json (dashboard-DataTable).
  */
 import { useState } from "react";
 import { LABEL, NUM } from "./theme";
