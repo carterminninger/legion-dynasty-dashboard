@@ -115,6 +115,10 @@ export async function fixPlayerData(report) {
       else              manualReview.push(result.manualReview);
     } else if (error.type === "MISSING_FC") {
       manualReview.push({ ...error, suggestedFix: "Not in FC database — low-value backup or very recent roster addition" });
+    } else if (error.type === "PICK_VALUE_UNRESOLVED") {
+      // No auto-fix: pick values come from the KTC scrape — a miss means the
+      // scraper or naming drifted, which a browser fixer must not paper over.
+      manualReview.push({ ...error, suggestedFix: "Check scripts/ktc_scrape.py collects the picks table and pickToKtcName() still matches KTC's naming" });
     }
   }
 
