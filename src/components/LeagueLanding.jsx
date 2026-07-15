@@ -12,10 +12,12 @@ const SLEEPER_CDN  = "https://sleepercdn.com/avatars/thumbs";
 const MAX_ATTEMPTS = 3;
 
 const ISSUE_LABELS = {
-  MISSING_KTC:      { label: "Missing KTC",       color: "#ff6b35" },
-  MISSING_FC:       { label: "Missing FC",         color: "#ff6b35" },
-  NAME_MISMATCH:    { label: "Name Mismatch",      color: "#f59e0b" },
-  VALUE_DIVERGENCE: { label: "Value Divergence",   color: "#f59e0b" },
+  MISSING_KTC:           { label: "Missing KTC",       color: "#ff6b35" },
+  MISSING_FC:            { label: "Missing FC",         color: "#ff6b35" },
+  NAME_MISMATCH:         { label: "Name Mismatch",      color: "#f59e0b" },
+  VALUE_DIVERGENCE:      { label: "Value Divergence",   color: "#f59e0b" },
+  PICK_VALUE_UNRESOLVED: { label: "Pick Value Missing", color: "#ff6b35" },
+  TRADES_UNAVAILABLE:    { label: "Trades Unavailable", color: "#f59e0b" },
 };
 
 function teamRecord(rosters, userId) {
