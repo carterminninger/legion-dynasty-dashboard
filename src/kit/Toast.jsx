@@ -15,7 +15,12 @@ function ToastCard({ item, onDismiss, theme }) {
   const reduced = useReducedMotion();
   const [entered, setEntered] = useState(false);
   const hover = useRef(false);
-  useEffect(() => { setEntered(true); }, []);
+  // rAF defers the transition trigger past the effect's sync body — the
+  // browser paints the pre-enter state first, so the slide-in is reliable
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
   useEffect(() => {
     if (item.kind === "error") return; // errors persist until dismissed
     const started = Date.now();
