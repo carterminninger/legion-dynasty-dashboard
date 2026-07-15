@@ -53,13 +53,13 @@ function PlayerCard({ item, onRemove }) {
 
 function SearchBox({ side, ktcLive, allFc, onAdd, added, rosterNames, roster }) {
   const [query,   setQuery]   = useState("");
-  const [results, setResults] = useState([]);
   const [focus,   setFocus]   = useState(false);
   const ref = useRef();
 
-  useEffect(() => {
+  // Results are pure derived state — useMemo, not effect+setState
+  const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q || q.length < 2) { setResults([]); return; }
+    if (!q || q.length < 2) return [];
 
     let hits;
 
