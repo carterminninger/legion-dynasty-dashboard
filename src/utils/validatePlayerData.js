@@ -11,6 +11,7 @@
  */
 
 import { pickKtcValue, pickToKtcName } from "./pickValue";
+import fileAliases from "../data/aliases.json";
 
 const LEAGUE_ID  = "1321707192847450112";
 const FC_URL     = "https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=2&ppr=1";
@@ -39,10 +40,16 @@ function similarity(a, b) {
   return 1 - dp[m][n] / Math.max(m, n);
 }
 
-/** Load persisted name aliases from localStorage (written by fixPlayerData). */
+/**
+ * Load name aliases: versioned repo base (src/data/aliases.json, ruling
+ * 2026-07-15) merged with browser-learned entries from fixPlayerData —
+ * localStorage wins so runtime fixes can override the shipped base.
+ */
 function loadAliases() {
-  try { return JSON.parse(localStorage.getItem("player_aliases") ?? "{}"); }
-  catch { return {}; }
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem("player_aliases") ?? "{}"); }
+  catch { stored = {}; }
+  return { ...fileAliases, ...stored };
 }
 
 /** Build KTC lookup: normalisedName → { entry, originalKey }. */
