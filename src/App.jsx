@@ -911,7 +911,7 @@ function TradesTab({ playersDb, myRosterId, allRosters, leagueUsers, ktcLive }) 
     }
 
     fetchTrades();
-  }, [myRosterId, playersDb, ktcLive]);
+  }, [myRosterId, playersDb, ktcLive, rosterNameMap]);
 
   const displayTrades = trades ?? [];
 
