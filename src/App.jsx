@@ -853,8 +853,17 @@ function TradesTab({ playersDb, myRosterId, allRosters, leagueUsers, ktcLive }) 
             const got  = [...playersGot,  ...picksGot];
             const gave = [...playersGave, ...picksGave];
 
-            const gotKtc  = playersGot.reduce((s, name) => s + (ktcEntry(name, ktcLive)?.sf_value ?? 0), 0);
-            const gaveKtc = playersGave.reduce((s, name) => s + (ktcEntry(name, ktcLive)?.sf_value ?? 0), 0);
+            // Picks carry KTC market value too (Mid-tier RDP entries) — summing
+            // players only was the picks-valued-at-0 verdict bug (fixed 2026-07-14)
+            const picksGotVal = picks
+              .filter(pk => pk.owner_id === myRosterId)
+              .reduce((s, pk) => s + (pickKtcValue(pk.season, pk.round, ktcLive) ?? 0), 0);
+            const picksGaveVal = picks
+              .filter(pk => pk.previous_owner_id === myRosterId)
+              .reduce((s, pk) => s + (pickKtcValue(pk.season, pk.round, ktcLive) ?? 0), 0);
+
+            const gotKtc  = playersGot.reduce((s, name) => s + (ktcEntry(name, ktcLive)?.sf_value ?? 0), 0) + picksGotVal;
+            const gaveKtc = playersGave.reduce((s, name) => s + (ktcEntry(name, ktcLive)?.sf_value ?? 0), 0) + picksGaveVal;
 
             const oppRosterId = (t.roster_ids || []).find(id => id !== myRosterId);
             const oppName = rosterNameMap[oppRosterId] || "Opponent";
