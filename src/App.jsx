@@ -642,7 +642,7 @@ function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLi
       }
     }, 400);
     return () => clearTimeout(timer);
-  }, [roster]);
+  }, [starters]);
 
   const movers = roster
     .map(p => {
