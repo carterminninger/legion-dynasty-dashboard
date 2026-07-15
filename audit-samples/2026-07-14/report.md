@@ -6,7 +6,7 @@ Mode: **app** (gate: app-mode.md, 11 points, floor 8). Captures: canonical `scri
 
 | # | Item | Verdict | Evidence |
 |---|---|---|---|
-| 1 | Keyboard navigable end to end | PASS | every interactive is a native `button`/`a`/`input`/`select` in visual order (NavShell buttons, DataTable `th` buttons, TeamCard is a `<button>`, filter chips, toasts). Caveat noted: PlayerModal has Escape + `role="dialog"` but no focus trap |
+| 1 | Keyboard navigable end to end | PASS | every interactive is a native `button`/`a`/`input`/`select` in visual order (NavShell buttons, DataTable `th` buttons, TeamCard is a `<button>`, filter chips, toasts). 2026-07-14 update: roster rows keyboard-activatable (Enter/Space) and PlayerModal has a full focus trap (kit `useFocusTrap`) — **mechanically verified**: `focus-trap.spec.mjs` 7/7 assertions (focus entry, 15-Tab containment, Shift-Tab wrap, Escape close, focus restored to triggering row). Former no-focus-trap caveat CLOSED |
 | 2 | Visible focus ring everywhere | PASS | global `:focus-visible` 2px electric ring (src/index.css), inline focus outline on TradeCalc search inputs; no outline suppression anywhere |
 | 3 | Loading state per async surface | PASS | local-views/trades-390.png (trades skeleton); DataTable skeleton rows; landing team-list skeletons; news + standings skeletons (code + local/top-390 pre-resolve) |
 | 4 | Empty state per list/table | PASS | local/top-390.png (landing designed error state); DataTable designed empty ("No players match this filter"); sparkline sparse state "day 1 of 30" (local-team/top-390.png); ValueTrend day-0/1 sentences; trades fallback note |
