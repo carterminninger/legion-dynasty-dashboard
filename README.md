@@ -1,3 +1,13 @@
+# legion-dynasty-dashboard
+
+**Production:** https://legion-dynasty-dashboard.vercel.app (Vercel, auto-deploys on push to main)
+
+Dynasty league command center — Sleeper rosters + KTC/FantasyCalc values, trade
+verdicts, and a data validator (Validator tab → RUN FULL CHECK). Kit consumer of
+the design-system component kit; drift tracked in design-kit-harness/kit-consumers.json.
+
+---
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
