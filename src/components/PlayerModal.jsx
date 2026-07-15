@@ -219,11 +219,8 @@ function DynastyDomainCard({ data, playerName }) {
 }
 
 export default function PlayerModal({ player, fcData, ktcLive, combineData, dynastyDomain, onClose }) {
-  useEffect(() => {
-    const handler = (e) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [onClose]);
+  // Focus trap owns Escape too — replaces the old window-level listener
+  const trapRef = useFocusTrap(onClose);
 
   if (!player) return null;
 
