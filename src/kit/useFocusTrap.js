@@ -11,7 +11,9 @@ const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:n
 export function useFocusTrap(onClose) {
   const ref = useRef(null);
   const closeRef = useRef(onClose);
-  closeRef.current = onClose;
+  // ref updated in an effect, not during render (react-hooks/refs rule); a ref
+  // (not a dep) so an inline onClose doesn't re-init the trap every render
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
 
   useEffect(() => {
     const el = ref.current;
