@@ -60,9 +60,14 @@ export function DataTable({ columns, rows, loading = false, emptyTitle = "Nothin
               {columns.map(c => <td key={c.key} style={{ padding: "14px" }}><Skeleton height="14px"/></td>)}
             </tr>
           ))}
+          {/* clickable rows are keyboard-activatable (2026-07-14): tabIndex +
+              Enter/Space — also gives modal focus-restoration a real target */}
           {!loading && sorted.map((r, i) => (
             <tr key={r.id ?? i}
               onClick={onRowClick ? () => onRowClick(r) : undefined}
+              tabIndex={onRowClick ? 0 : undefined}
+              role={onRowClick ? "button" : undefined}
+              onKeyDown={onRowClick ? (e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onRowClick(r); } }) : undefined}
               style={{ cursor: onRowClick ? "pointer" : "default" }}
               onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.04)")}
               onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
