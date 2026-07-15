@@ -599,7 +599,9 @@ function LeagueStandings({ allRosters, leagueUsers, playersDb, ktcLive, myRoster
 // ── Briefing tab ──────────────────────────────────────────────────────────────
 
 function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLive, today, allRosters, playersDb, leagueUsers, myRosterId, onPlayerClick }) {
-  const starters   = roster.filter(p => p.slot === "STARTER");
+  // memoized so the news effect can depend on it without refiring every render
+  // (identity changes only with roster — exhaustive-deps ruling 2026-07-15)
+  const starters   = useMemo(() => roster.filter(p => p.slot === "STARTER"), [roster]);
   const topAssets  = [...roster].sort((a,b) => ktcVal(b, ktcLive) - ktcVal(a, ktcLive)).slice(0, 8);
   const irPlayers  = roster.filter(p => p.slot === "IR");
   const totalKtc   = roster.reduce((s,p) => s + ktcVal(p, ktcLive), 0);
