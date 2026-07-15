@@ -18,6 +18,10 @@ const ISSUE_LABELS = {
   VALUE_DIVERGENCE:      { label: "Value Divergence",   color: "#f59e0b" },
   PICK_VALUE_UNRESOLVED: { label: "Pick Value Missing", color: "#ff6b35" },
   TRADES_UNAVAILABLE:    { label: "Trades Unavailable", color: "#f59e0b" },
+  // KNOWN_ABSENT is info, deliberately NOT success green — acceptance is
+  // visible, never blessed (ruling 2026-07-15)
+  KNOWN_ABSENT:          { label: "Known Absent",       color: "#a0c4d8" },
+  ALLOWLIST_STALE:       { label: "Allowlist Stale",    color: "#f59e0b" },
 };
 
 function teamRecord(rosters, userId) {
@@ -63,7 +67,7 @@ function StatPill({ label, value, color }) {
   );
 }
 
-function IssueGroup({ type, issues, isError }) {
+function IssueGroup({ type, issues, isError, noun }) {
   const [open, setOpen] = useState(false);
   const meta = ISSUE_LABELS[type] ?? { label: type, color: T.muted };
   return (
@@ -74,7 +78,7 @@ function IssueGroup({ type, issues, isError }) {
         style={{ width: "100%", background: T.surface, border: "none", padding: "10px 14px", minHeight: 44, display: "flex", alignItems: "center", gap: 10, cursor: "pointer", color: T.text }}
       >
         <span style={{ background: meta.color + "20", color: meta.color, border: `1px solid ${meta.color}50`, borderRadius: 4, padding: "2px 8px", fontSize: 10, fontFamily: MONO, fontWeight: 700 }}>{meta.label}</span>
-        <span style={{ ...NUM, color: T.muted, fontSize: 11 }}>{issues.length} {isError ? "errors" : "warnings"}</span>
+        <span style={{ ...NUM, color: T.muted, fontSize: 11 }}>{issues.length} {noun ?? (isError ? "errors" : "warnings")}</span>
         <span aria-hidden style={{ marginLeft: "auto", color: T.muted, fontSize: 12 }}>{open ? "▲" : "▼"}</span>
       </button>
       {open && (
@@ -88,6 +92,16 @@ function IssueGroup({ type, issues, isError }) {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/** Formally accepted absences (knownAbsent.json) — info chip, expandable list. */
+function AcceptedSection({ accepted }) {
+  if (!accepted?.length) return null;
+  return (
+    <div style={{ marginBottom: 8 }}>
+      <IssueGroup type="KNOWN_ABSENT" issues={accepted} isError={false} noun="accepted absences" />
     </div>
   );
 }
@@ -191,7 +205,11 @@ function DeltaValue({ before, after }) {
 function StatusBanner({ before, after, stopped, attempts }) {
   const style = { ...NUM, textAlign: "center", paddingTop: 16, paddingBottom: 4, fontSize: 12 };
   if (after.errors.length === 0)
-    return <div style={{ ...style, color: T.success }}>ALL CLEAR ✓</div>;
+    return (
+      <div style={{ ...style, color: T.success }}>
+        ALL CLEAR ✓{after.accepted?.length > 0 && <span style={{ color: "#a0c4d8" }}> · {after.accepted.length} accepted absences</span>}
+      </div>
+    );
   if (stopped)
     return <div style={{ ...style, color: T.danger }}>Stopped after {attempts} attempt{attempts !== 1 ? "s" : ""} — {after.errors.length} error{after.errors.length !== 1 ? "s" : ""} remain. Open the groups below to review them.</div>;
   if (after.errors.length === before.errors.length)
@@ -231,6 +249,7 @@ function BeforeSection({ report }) {
         <StatPill label="Checked"  value={report.checked}         color={T.accent} />
         <StatPill label="Errors"   value={report.errors.length}   color={T.danger} />
         <StatPill label="Warnings" value={report.warnings.length} color={T.warm} />
+        {report.accepted?.length > 0 && <StatPill label="Accepted" value={report.accepted.length} color="#a0c4d8" />}
         <StatPill label="Clean"    value={report.clean}           color={T.success} />
       </div>
     </>
@@ -275,6 +294,7 @@ function AfterSection({ beforeReport, afterReport, stopped, attempts }) {
           ))}
         </div>
       )}
+      <AcceptedSection accepted={afterReport.accepted} />
       <StatusBanner before={beforeReport} after={afterReport} stopped={stopped} attempts={attempts} />
     </div>
   );
@@ -288,9 +308,12 @@ function FullCheckReport({ result }) {
       {fixReport   && <FixesSection fixReport={fixReport} />}
       {afterReport && <AfterSection beforeReport={beforeReport} afterReport={afterReport} stopped={stopped} attempts={attempts} />}
       {!fixReport && beforeReport.errors.length === 0 && (
-        <div style={{ ...NUM, color: T.success, fontSize: 12, textAlign: "center", paddingTop: 20 }}>
-          ALL {beforeReport.checked} PLAYERS CLEAN ✓
-        </div>
+        <>
+          <AcceptedSection accepted={beforeReport.accepted} />
+          <div style={{ ...NUM, color: T.success, fontSize: 12, textAlign: "center", paddingTop: 20 }}>
+            ALL {beforeReport.checked} PLAYERS CLEAN ✓{beforeReport.accepted?.length > 0 && <span style={{ color: "#a0c4d8" }}> · {beforeReport.accepted.length} accepted absences</span>}
+          </div>
+        </>
       )}
     </div>
   );
@@ -319,7 +342,8 @@ function ValidatorPanel({ pushToast }) {
       setFullCheckResult(result);
       const after = result.afterReport ?? result.beforeReport;
       if (after.errors.length === 0) {
-        pushToast("success", `Full check passed — all ${after.checked} players clean.`);
+        const acceptedNote = after.accepted?.length > 0 ? ` (${after.accepted.length} accepted absences)` : "";
+        pushToast("success", `Full check passed — all ${after.checked} players clean${acceptedNote}.`);
       } else {
         pushToast("error", `Full check stopped with ${after.errors.length} error${after.errors.length !== 1 ? "s" : ""} after ${result.attempts} attempt${result.attempts !== 1 ? "s" : ""} — review the report below.`);
       }
@@ -408,6 +432,7 @@ function ValidatorPanel({ pushToast }) {
                   <StatPill label="Checked"  value={report.checked}         color={T.accent} />
                   <StatPill label="Errors"   value={report.errors.length}   color={T.danger} />
                   <StatPill label="Warnings" value={report.warnings.length} color={T.warm} />
+                  {report.accepted?.length > 0 && <StatPill label="Accepted" value={report.accepted.length} color="#a0c4d8" />}
                   <StatPill label="Clean"    value={report.clean}           color={T.success} />
                 </div>
                 {report.errors.length > 0 && (
@@ -426,8 +451,11 @@ function ValidatorPanel({ pushToast }) {
                     ))}
                   </div>
                 )}
+                <AcceptedSection accepted={report.accepted} />
                 {report.errors.length === 0 && report.warnings.length === 0 && (
-                  <div style={{ ...NUM, color: T.success, fontSize: 12, textAlign: "center", paddingTop: 20 }}>ALL {report.checked} PLAYERS CLEAN ✓</div>
+                  <div style={{ ...NUM, color: T.success, fontSize: 12, textAlign: "center", paddingTop: 20 }}>
+                    ALL {report.checked} PLAYERS CLEAN ✓{report.accepted?.length > 0 && <span style={{ color: "#a0c4d8" }}> · {report.accepted.length} accepted absences</span>}
+                  </div>
                 )}
                 {fixReport && <FixReportDisplay fixReport={fixReport} />}
               </>
