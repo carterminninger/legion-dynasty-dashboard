@@ -809,7 +809,9 @@ function TradesTab({ playersDb, myRosterId, allRosters, leagueUsers, ktcLive }) 
   const [trades,  setTrades]  = useState(null); // null = loading
   const [usingFallback, setUsingFallback] = useState(false);
 
-  const rosterNameMap = buildRosterNameMap(allRosters, leagueUsers);
+  // memoized so the trades effect can depend on it: opponent names re-resolve
+  // when rosters/users arrive instead of staying stale (ruling 2026-07-15)
+  const rosterNameMap = useMemo(() => buildRosterNameMap(allRosters, leagueUsers), [allRosters, leagueUsers]);
 
   useEffect(() => {
     if (!myRosterId) return; // wait for roster data
