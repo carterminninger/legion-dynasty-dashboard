@@ -10,6 +10,8 @@
  *               and api.fantasycalc.com (all used by existing dashboard code).
  */
 
+import { pickKtcValue, pickToKtcName } from "./pickValue";
+
 const LEAGUE_ID  = "1321707192847450112";
 const FC_URL     = "https://api.fantasycalc.com/values/current?isDynasty=true&numQbs=2&ppr=1";
 const KTC_URL    = "/ktc_live.json";
