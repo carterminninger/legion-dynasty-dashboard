@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { cosmicApp as T, LABEL, NUM, MONO, GEORGIA } from "../kit/theme";
 import { posColors, slotColors } from "../kit/tokens";
 import { useFocusTrap } from "../kit/useFocusTrap";
