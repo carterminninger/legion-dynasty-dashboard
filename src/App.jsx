@@ -8,6 +8,7 @@ import NeedsAnalysis  from "./components/NeedsAnalysis";
 import ValueTrend     from "./components/ValueTrend";
 import TradeCalc      from "./components/TradeCalc";
 import LeagueLanding  from "./components/LeagueLanding";
+import { pickKtcValue } from "./utils/pickValue";
 import { cosmicApp as T, LABEL, NUM, MONO, GEORGIA } from "./kit/theme";
 import { posColors, slotColors } from "./kit/tokens";
 import { NavShell }   from "./kit/NavShell";
