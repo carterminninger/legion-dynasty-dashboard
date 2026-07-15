@@ -1042,6 +1042,11 @@ function Dashboard() {
     } finally {
       setRefreshing(false);
     }
+    // fcData is read at call time only as an error-path don't-clobber guard;
+    // adding it as a dep would recreate fetchFc after every successful fetch
+    // and the [fetchFc] polling effect below would refetch in a tight loop.
+    // Suppressed per exhaustive-deps ruling 2026-07-15 (W3).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saveSnapshot, pushToast]);
 
   useEffect(() => {
