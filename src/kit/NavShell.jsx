@@ -6,20 +6,11 @@
  * component state, not routes — anatomy, sizes, and active treatment
  * unchanged); optional headerSlot renders above the sidebar items.
  */
-import { useEffect, useState } from "react";
 import { GEORGIA, LABEL } from "./theme";
+import { useMediaQuery } from "./hooks";
 
 export function NavShell({ brand, brandSub, items, activeKey, onSelect, theme, children }) {
-  const [narrow, setNarrow] = useState(
-    typeof window !== "undefined" ? window.matchMedia("(max-width: 1023px)").matches : true
-  );
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 1023px)");
-    setNarrow(mq.matches);
-    const onChange = (e) => setNarrow(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+  const narrow = useMediaQuery("(max-width: 1023px)");
   return (
     <div style={{ minHeight: "100vh", background: theme.bg, color: theme.text }}>
       {!narrow && (
