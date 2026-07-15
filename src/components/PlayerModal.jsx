@@ -254,6 +254,8 @@ export default function PlayerModal({ player, fcData, ktcLive, combineData, dyna
       }}
     >
       <div
+        ref={trapRef}
+        tabIndex={-1}
         onClick={e => e.stopPropagation()}
         style={{
           background:"#070b14", border:`1px solid ${T.border}`, borderRadius:12,
