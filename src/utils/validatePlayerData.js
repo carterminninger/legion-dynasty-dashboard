@@ -51,7 +51,7 @@ function similarity(a, b) {
  * localStorage wins so runtime fixes can override the shipped base.
  */
 function loadAliases() {
-  let stored = {};
+  let stored;
   try { stored = JSON.parse(localStorage.getItem("player_aliases") ?? "{}"); }
   catch { stored = {}; }
   return { ...fileAliases, ...stored };
