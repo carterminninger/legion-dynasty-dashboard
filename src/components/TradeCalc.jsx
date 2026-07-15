@@ -105,13 +105,12 @@ function SearchBox({ side, ktcLive, allFc, onAdd, added, rosterNames, roster }) 
       hits = [...rosterHits, ...fcHits].slice(0, 10);
     }
 
-    setResults(hits);
-  }, [query, ktcLive, allFc, added]);
+    return hits;
+  }, [query, ktcLive, allFc, added, rosterNames, roster]);
 
   const pick = (item) => {
     onAdd(item);
-    setQuery("");
-    setResults([]);
+    setQuery(""); // results derive from query — clearing it clears the list
   };
 
   return (
