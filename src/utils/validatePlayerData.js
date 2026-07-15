@@ -153,6 +153,35 @@ export async function validatePlayerData() {
     }
   }
 
+  // Trade-pick rule (2026-07-14, picks-valued-at-0 regression guard): any pick
+  // in a completed trade must resolve to a real KTC value — unknown ≠ zero.
+  // Endpoint failure degrades to a warning; it never silently skips.
+  try {
+    const txRes = await fetch(`/api/sleeper?path=/league/${LEAGUE_ID}/transactions/1`);
+    if (!txRes.ok) throw new Error("transactions fetch failed");
+    const txns = await txRes.json();
+    for (const t of txns) {
+      if (t.type !== "trade" || t.status !== "complete") continue;
+      for (const pk of (t.draft_picks ?? [])) {
+        if (pickKtcValue(pk.season, pk.round, ktcLive) == null) {
+          errors.push({
+            type: "PICK_VALUE_UNRESOLVED",
+            playerName: `${pk.season} Round ${pk.round}`,
+            sleeperId: t.transaction_id ?? "unknown-txn",
+            detail: `Trade pick has no KTC value (looked up "${pickToKtcName(pk.season, pk.round)}") — pick table missing from scrape or naming drift`,
+          });
+        }
+      }
+    }
+  } catch {
+    warnings.push({
+      type: "TRADES_UNAVAILABLE",
+      playerName: "—",
+      sleeperId: "—",
+      detail: "Transactions endpoint unavailable — trade pick-value check skipped this run",
+    });
+  }
+
   return {
     checked: seen.size, errors, warnings, clean, timestamp: new Date().toISOString(),
     aliasesLoaded: Object.keys(aliases).length, aliasesApplied,
