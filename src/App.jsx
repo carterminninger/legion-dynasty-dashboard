@@ -1041,9 +1041,11 @@ function Dashboard() {
   }, [saveSnapshot, pushToast]);
 
   useEffect(() => {
-    fetchFc();
+    // deferred a tick: fetchFc's first line is setRefreshing(true), which must
+    // not run inside the effect's sync body (react-hooks/set-state-in-effect)
+    const initial = setTimeout(fetchFc, 0);
     const interval = setInterval(fetchFc, REFRESH_INTERVAL);
-    return () => clearInterval(interval);
+    return () => { clearTimeout(initial); clearInterval(interval); };
   }, [fetchFc]);
 
   useEffect(() => {
