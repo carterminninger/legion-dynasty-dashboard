@@ -28,3 +28,8 @@ __pycache__/
 *.sln
 *.sw?
 .vercel
+
+# Environment — never commit API keys (added 2026-07-17; *.local covered
+# .env.local but not .env / .env.production)
+.env
+.env.*
