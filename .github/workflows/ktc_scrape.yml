@@ -6,6 +6,14 @@ on:
     - cron: '15 */6 * * *'
   workflow_dispatch:
 
+# Scheduled and workflow_dispatch runs push refreshed data back to the repo, which needs
+# a write-scoped GITHUB_TOKEN. The repo's default token is read-only, which is why every
+# scheduled run has been 403-ing at the push step (exit 128). The commit/push step below
+# is gated off for pull_request events, so a PR-triggered run (should one ever be added to
+# the triggers above) stays a read-only, scrape-only dry-run and never needs this scope.
+permissions:
+  contents: write
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
@@ -28,13 +36,15 @@ jobs:
         run: python3 scripts/ktc_scrape.py
 
       - name: Commit and push if changed
+        # PR runs are scrape-only dry-runs: validate the scraper without pushing (and
+        # without needing a write token). schedule / workflow_dispatch runs push data.
+        if: github.event_name != 'pull_request'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if ! git diff --quiet public/ktc_live.json; then
-            git add public/ktc_live.json
-            git commit -m "chore: ktc data refresh $(date -u '+%Y-%m-%d %H:%M UTC')"
-            git push
-          else
-            echo "public/ktc_live.json unchanged — skipping commit"
-          fi
+          git add public/ktc_live.json
+          # Idempotent: a no-change scrape stages nothing, so the commit is skipped and
+          # the step exits 0 instead of erroring on an empty commit. A push with nothing
+          # new is a no-op ("Everything up-to-date", exit 0).
+          git diff --staged --quiet || git commit -m "chore: ktc data refresh $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push
