@@ -30,7 +30,11 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install cloudscraper
+        # Pinned: this job carries a write-scoped token, so an unpinned install is
+        # supply-chain surface. 1.2.71 is the version every green run installs —
+        # read from both repos' latest green scheduled-run install logs
+        # (2026-07-22 UTC) and matching the local scripts/venv, not guessed.
+        run: pip install cloudscraper==1.2.71
 
       - name: Run KTC scraper
         run: python3 scripts/ktc_scrape.py
