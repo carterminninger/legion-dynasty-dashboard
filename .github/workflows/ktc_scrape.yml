@@ -35,6 +35,21 @@ jobs:
       - name: Run KTC scraper
         run: python3 scripts/ktc_scrape.py
 
+      - name: Validate scraped data against contract
+        # Product gate (data-retrieval-loop Phase 2): a green scrape that wrote bad
+        # data must not be committed. Exit 1 (contract violated) and exit 2 (could
+        # not evaluate) both fail the job — fail-closed either way.
+        # Bounds are EVIDENCE-BASED AS OF 2026-07-21, verified against live data:
+        # exactly 500 players in every commit of both dashboards 2026-07-12→07-21,
+        # sf_value aggregate-max at KTC's 9999 cap. If this starts failing on a
+        # count/bound drift after a KTC page change, the bounds need
+        # re-verification against live data — they are dated evidence, not
+        # eternal truth.
+        # Source of truth for both vendored files is ~/Projects/tools/
+        # (data_contract.py + contracts/ktc_live.json); the copies under scripts/
+        # are vendored byte-identical — fix upstream first, then re-vendor.
+        run: python3 scripts/data_contract.py --contract scripts/contracts/ktc_live.json
+
       - name: Commit and push if changed
         # PR runs are scrape-only dry-runs: validate the scraper without pushing (and
         # without needing a write token). schedule / workflow_dispatch runs push data.
