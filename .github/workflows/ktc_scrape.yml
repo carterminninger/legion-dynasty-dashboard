@@ -50,6 +50,22 @@ jobs:
         # are vendored byte-identical — fix upstream first, then re-vendor.
         run: python3 scripts/data_contract.py --contract scripts/contracts/ktc_live.json
 
+      - name: Upload evidence on failure
+        # Investigability: the raw fetched HTML (teed to scrape_evidence/ by
+        # ktc_scrape.py) plus the rejected public/ktc_live.json, kept 7 days.
+        # Fires on any earlier step's failure; caveat — if the scrape died before
+        # writing output, public/ktc_live.json here is the prior committed data,
+        # not rejected output (the HTML is the primary evidence in that case).
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ktc-scrape-evidence-${{ github.run_id }}
+          path: |
+            scrape_evidence/
+            public/ktc_live.json
+          retention-days: 7
+          if-no-files-found: ignore
+
       - name: Commit and push if changed
         # PR runs are scrape-only dry-runs: validate the scraper without pushing (and
         # without needing a write token). schedule / workflow_dispatch runs push data.
