@@ -14,9 +14,22 @@ on:
 permissions:
   contents: write
 
+# A cron fire and a manual workflow_dispatch can overlap; two concurrent runs would
+# race each other at the push step (non-fast-forward reject on the second push).
+# Queue runs instead — cancel-in-progress stays false so a run is never killed
+# mid-push.
+concurrency:
+  group: ktc-scrape
+  cancel-in-progress: false
+
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    # Hung-runner guard (advisor review 2026-07-21, recommendation R2): without
+    # this, a hung run holds the concurrency slot for GitHub's 360-minute default
+    # — exactly the 6h cron cadence. Observed runtime is seconds; 10 minutes is
+    # generous headroom, not a tuned constant.
+    timeout-minutes: 10
 
     steps:
       - name: Checkout
