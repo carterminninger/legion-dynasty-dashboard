@@ -1,0 +1,31 @@
+{
+  "name": "ktc_live",
+  "description": "KTC dynasty rankings scrape output (legion + diego dashboards). Every bound below is evidence-based from live data inspected 2026-07-21; provenance in notes.",
+  "target": "public/ktc_live.json",
+  "required_keys": ["scraped_at", "player_count", "players"],
+  "records": {
+    "key": "players",
+    "min_count": 450,
+    "max_count": 600
+  },
+  "freshness": {
+    "key": "scraped_at",
+    "max_age_hours": 8
+  },
+  "field_checks": [
+    {
+      "records_key": "players",
+      "field": "sf_value",
+      "aggregate": "max",
+      "min": 6000,
+      "max": 9999,
+      "note": "KTC caps SF value at 9999; the top player sat at exactly 9999 on 2026-05-30, 2026-07-14, and 2026-07-21 while the identity churned (Bijan Robinson -> Jahmyr Gibbs) — hence an aggregate-max check, not a named record. min 6000 catches a value-scale collapse; max 9999 catches a scale change."
+    }
+  ],
+  "notes": [
+    "record count: player_count == 500 EXACTLY in every commit of both dashboard repos (2026-07-12 -> 2026-07-21, incl. fresh origin/main data scraped 2026-07-21T03:48Z) — KTC's embedded playersArray carries the top 500, not the full ~1284 ranking. min_count 450 tolerates minor churn; max_count 600 catches a parse-format change. Supersedes the ~1284/1100 planning premise, corrected against live evidence 2026-07-21.",
+    "freshness: scraper cron is '15 */6 * * *' (6h) + 2h margin = 8h.",
+    "the scraper's own floor (abort below 100 players) is deliberately weaker than min_count — the contract is the product gate, the scraper floor is only a crash guard.",
+    "source of truth: ~/Projects/tools/contracts/ktc_live.json — the dashboard repos carry vendored copies (data-retrieval-loop Phase 2)."
+  ]
+}
