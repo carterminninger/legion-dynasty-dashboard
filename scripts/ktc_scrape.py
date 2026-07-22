@@ -21,6 +21,9 @@ import cloudscraper
 
 KTC_URL    = "https://keeptradecut.com/dynasty-rankings"
 OUT_PATH   = Path(__file__).parent.parent / "public" / "ktc_live.json"
+# Raw-page tee for CI failure evidence — gitignored, never committed; uploaded
+# as a workflow artifact when the scrape or contract-validate step fails.
+EVIDENCE_PATH = Path(__file__).parent.parent / "scrape_evidence" / "ktc_raw.html"
 LOG_FORMAT = "%(asctime)s  %(levelname)-8s  %(message)s"
 
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
@@ -36,6 +39,10 @@ def fetch_html() -> str:
     res = scraper.get(KTC_URL, timeout=30)
     res.raise_for_status()
     log.info("HTTP %s  %d bytes", res.status_code, len(res.text))
+    # Tee the raw page to disk so a downstream failure (parse abort, contract
+    # violation) is investigable after the CI runner is gone.
+    EVIDENCE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    EVIDENCE_PATH.write_text(res.text)
     return res.text
 
 
@@ -128,3 +135,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+# CHANGELOG
+# 2026-07-21  Tee raw fetched HTML to scrape_evidence/ktc_raw.html for CI failure
+#             artifacts (data-retrieval-loop Phase 2). No scraper-logic change.
