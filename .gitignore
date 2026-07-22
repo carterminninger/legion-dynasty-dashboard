@@ -17,6 +17,9 @@ scripts/venv/
 __pycache__/
 *.pyc
 
+# Scrape failure evidence (raw HTML tee) — CI-artifact material, never committed
+scrape_evidence/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
