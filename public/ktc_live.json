@@ -1,5 +1,5 @@
 {
-  "scraped_at": "2026-08-09T07:17:57.408946+00:00",
+  "scraped_at": "2026-08-09T13:16:46.934603+00:00",
   "player_count": 500,
   "players": {
     "Josh Allen": {
@@ -12,22 +12,22 @@
       "sf_pos_rank": 1,
       "sf_trend_7d": 0
     },
-    "Bijan Robinson": {
-      "playerID": 1414,
-      "position": "RB",
-      "team": "ATL",
-      "age": 24.5,
-      "sf_value": 9991,
-      "sf_rank": 2,
-      "sf_pos_rank": 1,
-      "sf_trend_7d": 0
-    },
     "Jahmyr Gibbs": {
       "playerID": 1415,
       "position": "RB",
       "team": "DET",
       "age": 24.4,
-      "sf_value": 9981,
+      "sf_value": 9994,
+      "sf_rank": 2,
+      "sf_pos_rank": 1,
+      "sf_trend_7d": 0
+    },
+    "Bijan Robinson": {
+      "playerID": 1414,
+      "position": "RB",
+      "team": "ATL",
+      "age": 24.5,
+      "sf_value": 9988,
       "sf_rank": 3,
       "sf_pos_rank": 2,
       "sf_trend_7d": -1
@@ -37,7 +37,7 @@
       "position": "WR",
       "team": "CIN",
       "age": 26.4,
-      "sf_value": 9978,
+      "sf_value": 9975,
       "sf_rank": 4,
       "sf_pos_rank": 1,
       "sf_trend_7d": 0
@@ -47,7 +47,7 @@
       "position": "WR",
       "team": "SEA",
       "age": 24.5,
-      "sf_value": 9305,
+      "sf_value": 9302,
       "sf_rank": 5,
       "sf_pos_rank": 2,
       "sf_trend_7d": 0
@@ -67,7 +67,7 @@
       "position": "WR",
       "team": "LAR",
       "age": 25.2,
-      "sf_value": 8938,
+      "sf_value": 8943,
       "sf_rank": 7,
       "sf_pos_rank": 3,
       "sf_trend_7d": 0
@@ -77,7 +77,7 @@
       "position": "TE",
       "team": "LVR",
       "age": 23.6,
-      "sf_value": 8288,
+      "sf_value": 8283,
       "sf_rank": 8,
       "sf_pos_rank": 1,
       "sf_trend_7d": 0
@@ -87,7 +87,7 @@
       "position": "QB",
       "team": "CHI",
       "age": 24.7,
-      "sf_value": 7926,
+      "sf_value": 7924,
       "sf_rank": 9,
       "sf_pos_rank": 3,
       "sf_trend_7d": 0
@@ -97,7 +97,7 @@
       "position": "WR",
       "team": "DET",
       "age": 26.8,
-      "sf_value": 7888,
+      "sf_value": 7883,
       "sf_rank": 10,
       "sf_pos_rank": 4,
       "sf_trend_7d": 0
@@ -107,7 +107,7 @@
       "position": "RB",
       "team": "LVR",
       "age": 22.7,
-      "sf_value": 7587,
+      "sf_value": 7584,
       "sf_rank": 11,
       "sf_pos_rank": 3,
       "sf_trend_7d": 1
@@ -117,7 +117,7 @@
       "position": "QB",
       "team": "BAL",
       "age": 29.6,
-      "sf_value": 7566,
+      "sf_value": 7569,
       "sf_rank": 12,
       "sf_pos_rank": 4,
       "sf_trend_7d": -1
@@ -127,7 +127,7 @@
       "position": "QB",
       "team": "WAS",
       "age": 25.6,
-      "sf_value": 7547,
+      "sf_value": 7559,
       "sf_rank": 13,
       "sf_pos_rank": 5,
       "sf_trend_7d": 1
@@ -137,7 +137,7 @@
       "position": "WR",
       "team": "MIN",
       "age": 27.2,
-      "sf_value": 7504,
+      "sf_value": 7508,
       "sf_rank": 14,
       "sf_pos_rank": 5,
       "sf_trend_7d": -1
@@ -147,7 +147,7 @@
       "position": "WR",
       "team": "NYG",
       "age": 23.0,
-      "sf_value": 7400,
+      "sf_value": 7415,
       "sf_rank": 15,
       "sf_pos_rank": 6,
       "sf_trend_7d": 3
@@ -157,19 +157,9 @@
       "position": "QB",
       "team": "CIN",
       "age": 29.7,
-      "sf_value": 7395,
+      "sf_value": 7397,
       "sf_rank": 16,
       "sf_pos_rank": 6,
-      "sf_trend_7d": 0
-    },
-    "Trey McBride": {
-      "playerID": 1253,
-      "position": "TE",
-      "team": "ARI",
-      "age": 26.7,
-      "sf_value": 7359,
-      "sf_rank": 17,
-      "sf_pos_rank": 2,
       "sf_trend_7d": 0
     },
     "Jeremiyah Love": {
@@ -177,10 +167,20 @@
       "position": "RB",
       "team": "ARI",
       "age": 21.2,
-      "sf_value": 7346,
-      "sf_rank": 18,
+      "sf_value": 7341,
+      "sf_rank": 17,
       "sf_pos_rank": 4,
-      "sf_trend_7d": -3
+      "sf_trend_7d": -2
+    },
+    "Trey McBride": {
+      "playerID": 1253,
+      "position": "TE",
+      "team": "ARI",
+      "age": 26.7,
+      "sf_value": 7339,
+      "sf_rank": 18,
+      "sf_pos_rank": 2,
+      "sf_trend_7d": -1
     },
     "CeeDee Lamb": {
       "playerID": 546,
@@ -207,7 +207,7 @@
       "position": "RB",
       "team": "LAC",
       "age": 23.4,
-      "sf_value": 7028,
+      "sf_value": 7015,
       "sf_rank": 21,
       "sf_pos_rank": 5,
       "sf_trend_7d": 1
@@ -217,7 +217,7 @@
       "position": "WR",
       "team": "ATL",
       "age": 25.0,
-      "sf_value": 7008,
+      "sf_value": 7012,
       "sf_rank": 22,
       "sf_pos_rank": 8,
       "sf_trend_7d": 1
@@ -227,7 +227,7 @@
       "position": "QB",
       "team": "LAC",
       "age": 28.4,
-      "sf_value": 6994,
+      "sf_value": 6978,
       "sf_rank": 23,
       "sf_pos_rank": 7,
       "sf_trend_7d": -2
@@ -237,7 +237,7 @@
       "position": "RB",
       "team": "MIA",
       "age": 24.8,
-      "sf_value": 6852,
+      "sf_value": 6868,
       "sf_rank": 24,
       "sf_pos_rank": 6,
       "sf_trend_7d": 0
@@ -247,37 +247,37 @@
       "position": "WR",
       "team": "CAR",
       "age": 23.3,
-      "sf_value": 6338,
+      "sf_value": 6348,
       "sf_rank": 25,
       "sf_pos_rank": 9,
       "sf_trend_7d": 0
-    },
-    "Emeka Egbuka": {
-      "playerID": 1781,
-      "position": "WR",
-      "team": "TBB",
-      "age": 23.8,
-      "sf_value": 6298,
-      "sf_rank": 26,
-      "sf_pos_rank": 10,
-      "sf_trend_7d": 1
     },
     "Colston Loveland": {
       "playerID": 1804,
       "position": "TE",
       "team": "CHI",
       "age": 22.3,
-      "sf_value": 6291,
-      "sf_rank": 27,
+      "sf_value": 6299,
+      "sf_rank": 26,
       "sf_pos_rank": 3,
-      "sf_trend_7d": 1
+      "sf_trend_7d": 2
+    },
+    "Emeka Egbuka": {
+      "playerID": 1781,
+      "position": "WR",
+      "team": "TBB",
+      "age": 23.8,
+      "sf_value": 6296,
+      "sf_rank": 27,
+      "sf_pos_rank": 10,
+      "sf_trend_7d": 0
     },
     "Jonathan Taylor": {
       "playerID": 634,
       "position": "RB",
       "team": "IND",
       "age": 27.6,
-      "sf_value": 6264,
+      "sf_value": 6274,
       "sf_rank": 28,
       "sf_pos_rank": 7,
       "sf_trend_7d": 4
@@ -287,7 +287,7 @@
       "position": "QB",
       "team": "KCC",
       "age": 30.9,
-      "sf_value": 6253,
+      "sf_value": 6248,
       "sf_rank": 29,
       "sf_pos_rank": 8,
       "sf_trend_7d": -3
@@ -297,7 +297,7 @@
       "position": "QB",
       "team": "JAC",
       "age": 26.8,
-      "sf_value": 6251,
+      "sf_value": 6243,
       "sf_rank": 30,
       "sf_pos_rank": 9,
       "sf_trend_7d": -1
@@ -307,7 +307,7 @@
       "position": "QB",
       "team": "NYG",
       "age": 23.2,
-      "sf_value": 6213,
+      "sf_value": 6218,
       "sf_rank": 31,
       "sf_pos_rank": 10,
       "sf_trend_7d": -1
@@ -317,7 +317,7 @@
       "position": "WR",
       "team": "DAL",
       "age": 25.4,
-      "sf_value": 6183,
+      "sf_value": 6179,
       "sf_rank": 32,
       "sf_pos_rank": 11,
       "sf_trend_7d": 2
@@ -327,7 +327,7 @@
       "position": "RB",
       "team": "BUF",
       "age": 26.9,
-      "sf_value": 6178,
+      "sf_value": 6169,
       "sf_rank": 33,
       "sf_pos_rank": 8,
       "sf_trend_7d": 0
@@ -337,30 +337,30 @@
       "position": "QB",
       "team": "PHI",
       "age": 28.0,
-      "sf_value": 6086,
+      "sf_value": 6098,
       "sf_rank": 34,
       "sf_pos_rank": 11,
       "sf_trend_7d": -3
-    },
-    "Carnell Tate": {
-      "playerID": 1959,
-      "position": "WR",
-      "team": "TEN",
-      "age": 21.6,
-      "sf_value": 5965,
-      "sf_rank": 35,
-      "sf_pos_rank": 12,
-      "sf_trend_7d": 1
     },
     "Bo Nix": {
       "playerID": 1553,
       "position": "QB",
       "team": "DEN",
       "age": 26.4,
+      "sf_value": 5960,
+      "sf_rank": 35,
+      "sf_pos_rank": 12,
+      "sf_trend_7d": 0
+    },
+    "Carnell Tate": {
+      "playerID": 1959,
+      "position": "WR",
+      "team": "TEN",
+      "age": 21.6,
       "sf_value": 5958,
       "sf_rank": 36,
       "sf_pos_rank": 12,
-      "sf_trend_7d": -1
+      "sf_trend_7d": 0
     },
     "Tyler Warren": {
       "playerID": 1802,
@@ -377,7 +377,7 @@
       "position": "QB",
       "team": "SFO",
       "age": 26.6,
-      "sf_value": 5654,
+      "sf_value": 5656,
       "sf_rank": 38,
       "sf_pos_rank": 13,
       "sf_trend_7d": 0
@@ -387,7 +387,7 @@
       "position": "WR",
       "team": "HOU",
       "age": 27.4,
-      "sf_value": 5609,
+      "sf_value": 5614,
       "sf_rank": 39,
       "sf_pos_rank": 13,
       "sf_trend_7d": 6
@@ -397,37 +397,37 @@
       "position": "WR",
       "team": "LAC",
       "age": 24.8,
-      "sf_value": 5598,
+      "sf_value": 5611,
       "sf_rank": 40,
       "sf_pos_rank": 14,
       "sf_trend_7d": 1
-    },
-    "Kenneth Walker III": {
-      "playerID": 1227,
-      "position": "RB",
-      "team": "KCC",
-      "age": 25.8,
-      "sf_value": 5575,
-      "sf_rank": 41,
-      "sf_pos_rank": 9,
-      "sf_trend_7d": -1
     },
     "Chris Olave": {
       "playerID": 1271,
       "position": "WR",
       "team": "NOS",
       "age": 26.1,
-      "sf_value": 5574,
-      "sf_rank": 42,
+      "sf_value": 5579,
+      "sf_rank": 41,
       "sf_pos_rank": 15,
-      "sf_trend_7d": 1
+      "sf_trend_7d": 2
+    },
+    "Kenneth Walker III": {
+      "playerID": 1227,
+      "position": "RB",
+      "team": "KCC",
+      "age": 25.8,
+      "sf_value": 5564,
+      "sf_rank": 42,
+      "sf_pos_rank": 9,
+      "sf_trend_7d": -2
     },
     "Luther Burden": {
       "playerID": 1770,
       "position": "WR",
       "team": "CHI",
       "age": 22.6,
-      "sf_value": 5560,
+      "sf_value": 5564,
       "sf_rank": 43,
       "sf_pos_rank": 16,
       "sf_trend_7d": 4
@@ -437,7 +437,7 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 5557,
+      "sf_value": 5552,
       "sf_rank": 44,
       "sf_pos_rank": null,
       "sf_trend_7d": -5
@@ -457,7 +457,7 @@
       "position": "WR",
       "team": "NYJ",
       "age": 26.0,
-      "sf_value": 5543,
+      "sf_value": 5541,
       "sf_rank": 46,
       "sf_pos_rank": 17,
       "sf_trend_7d": 0
@@ -467,7 +467,7 @@
       "position": "WR",
       "team": "PHI",
       "age": 27.7,
-      "sf_value": 5535,
+      "sf_value": 5524,
       "sf_rank": 47,
       "sf_pos_rank": 18,
       "sf_trend_7d": 2
@@ -477,7 +477,7 @@
       "position": "RB",
       "team": "CIN",
       "age": 26.4,
-      "sf_value": 5478,
+      "sf_value": 5473,
       "sf_rank": 48,
       "sf_pos_rank": 10,
       "sf_trend_7d": 3
@@ -497,7 +497,7 @@
       "position": "QB",
       "team": "GBP",
       "age": 27.8,
-      "sf_value": 5434,
+      "sf_value": 5433,
       "sf_rank": 50,
       "sf_pos_rank": 14,
       "sf_trend_7d": -2
@@ -507,7 +507,7 @@
       "position": "QB",
       "team": "LVR",
       "age": 22.8,
-      "sf_value": 5416,
+      "sf_value": 5404,
       "sf_rank": 51,
       "sf_pos_rank": 15,
       "sf_trend_7d": -1
@@ -517,7 +517,7 @@
       "position": "WR",
       "team": "NOS",
       "age": 22.0,
-      "sf_value": 5335,
+      "sf_value": 5344,
       "sf_rank": 52,
       "sf_pos_rank": 19,
       "sf_trend_7d": 1
@@ -527,7 +527,7 @@
       "position": "RB",
       "team": "SFO",
       "age": 30.2,
-      "sf_value": 5329,
+      "sf_value": 5334,
       "sf_rank": 53,
       "sf_pos_rank": 12,
       "sf_trend_7d": 1
@@ -537,7 +537,7 @@
       "position": "WR",
       "team": "BAL",
       "age": 25.9,
-      "sf_value": 5319,
+      "sf_value": 5317,
       "sf_rank": 54,
       "sf_pos_rank": 20,
       "sf_trend_7d": 7
@@ -547,7 +547,7 @@
       "position": "WR",
       "team": "CHI",
       "age": 24.2,
-      "sf_value": 5267,
+      "sf_value": 5268,
       "sf_rank": 55,
       "sf_pos_rank": 21,
       "sf_trend_7d": 1
@@ -567,7 +567,7 @@
       "position": "RB",
       "team": "NYJ",
       "age": 25.2,
-      "sf_value": 5222,
+      "sf_value": 5210,
       "sf_rank": 57,
       "sf_pos_rank": 14,
       "sf_trend_7d": -3
@@ -577,7 +577,7 @@
       "position": "QB",
       "team": "TEN",
       "age": 24.2,
-      "sf_value": 5119,
+      "sf_value": 5126,
       "sf_rank": 58,
       "sf_pos_rank": 16,
       "sf_trend_7d": -1
@@ -587,7 +587,7 @@
       "position": "RB",
       "team": "PHI",
       "age": 29.5,
-      "sf_value": 5113,
+      "sf_value": 5104,
       "sf_rank": 59,
       "sf_pos_rank": 15,
       "sf_trend_7d": 0
@@ -597,7 +597,7 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 5075,
+      "sf_value": 5079,
       "sf_rank": 60,
       "sf_pos_rank": null,
       "sf_trend_7d": -2
@@ -607,7 +607,7 @@
       "position": "WR",
       "team": "NEP",
       "age": 29.1,
-      "sf_value": 5037,
+      "sf_value": 5043,
       "sf_rank": 61,
       "sf_pos_rank": 22,
       "sf_trend_7d": 1
@@ -617,7 +617,7 @@
       "position": "WR",
       "team": "PHI",
       "age": 22.2,
-      "sf_value": 5009,
+      "sf_value": 5007,
       "sf_rank": 62,
       "sf_pos_rank": 23,
       "sf_trend_7d": -2
@@ -637,7 +637,7 @@
       "position": "WR",
       "team": "KCC",
       "age": 26.3,
-      "sf_value": 4986,
+      "sf_value": 4983,
       "sf_rank": 64,
       "sf_pos_rank": 24,
       "sf_trend_7d": 1
@@ -647,7 +647,7 @@
       "position": "WR",
       "team": "CIN",
       "age": 27.6,
-      "sf_value": 4939,
+      "sf_value": 4952,
       "sf_rank": 65,
       "sf_pos_rank": 25,
       "sf_trend_7d": -1
@@ -657,37 +657,37 @@
       "position": "TE",
       "team": "GBP",
       "age": 25.8,
-      "sf_value": 4933,
+      "sf_value": 4931,
       "sf_rank": 66,
       "sf_pos_rank": 5,
       "sf_trend_7d": 0
-    },
-    "Kyren Williams": {
-      "playerID": 1226,
-      "position": "RB",
-      "team": "LAR",
-      "age": 26.0,
-      "sf_value": 4909,
-      "sf_rank": 67,
-      "sf_pos_rank": 16,
-      "sf_trend_7d": -4
     },
     "Jadarian Price": {
       "playerID": 1935,
       "position": "RB",
       "team": "SEA",
       "age": 22.8,
-      "sf_value": 4904,
+      "sf_value": 4906,
+      "sf_rank": 67,
+      "sf_pos_rank": 16,
+      "sf_trend_7d": 4
+    },
+    "Kyren Williams": {
+      "playerID": 1226,
+      "position": "RB",
+      "team": "LAR",
+      "age": 26.0,
+      "sf_value": 4901,
       "sf_rank": 68,
       "sf_pos_rank": 17,
-      "sf_trend_7d": 3
+      "sf_trend_7d": -5
     },
     "Jaylen Waddle": {
       "playerID": 1007,
       "position": "WR",
       "team": "DEN",
       "age": 27.7,
-      "sf_value": 4889,
+      "sf_value": 4888,
       "sf_rank": 69,
       "sf_pos_rank": 26,
       "sf_trend_7d": -2
@@ -697,7 +697,7 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 4869,
+      "sf_value": 4872,
       "sf_rank": 70,
       "sf_pos_rank": null,
       "sf_trend_7d": -1
@@ -707,7 +707,7 @@
       "position": "RB",
       "team": "NYG",
       "age": 24.5,
-      "sf_value": 4838,
+      "sf_value": 4843,
       "sf_rank": 71,
       "sf_pos_rank": 18,
       "sf_trend_7d": 4
@@ -717,7 +717,7 @@
       "position": "WR",
       "team": "JAC",
       "age": 23.8,
-      "sf_value": 4837,
+      "sf_value": 4833,
       "sf_rank": 72,
       "sf_pos_rank": 27,
       "sf_trend_7d": -2
@@ -727,7 +727,7 @@
       "position": "WR",
       "team": "ARI",
       "age": 24.0,
-      "sf_value": 4817,
+      "sf_value": 4820,
       "sf_rank": 73,
       "sf_pos_rank": 28,
       "sf_trend_7d": 1
@@ -737,7 +737,7 @@
       "position": "QB",
       "team": "NOS",
       "age": 26.9,
-      "sf_value": 4763,
+      "sf_value": 4757,
       "sf_rank": 74,
       "sf_pos_rank": 18,
       "sf_trend_7d": -2
@@ -747,7 +747,7 @@
       "position": "TE",
       "team": "CLE",
       "age": 22.0,
-      "sf_value": 4752,
+      "sf_value": 4755,
       "sf_rank": 75,
       "sf_pos_rank": 6,
       "sf_trend_7d": -2
@@ -757,7 +757,7 @@
       "position": "RB",
       "team": "TBB",
       "age": 24.0,
-      "sf_value": 4732,
+      "sf_value": 4726,
       "sf_rank": 76,
       "sf_pos_rank": 19,
       "sf_trend_7d": 1
@@ -767,7 +767,7 @@
       "position": "WR",
       "team": "DET",
       "age": 25.4,
-      "sf_value": 4701,
+      "sf_value": 4703,
       "sf_rank": 77,
       "sf_pos_rank": 29,
       "sf_trend_7d": -1
@@ -777,7 +777,7 @@
       "position": "QB",
       "team": "HOU",
       "age": 24.8,
-      "sf_value": 4653,
+      "sf_value": 4670,
       "sf_rank": 78,
       "sf_pos_rank": 19,
       "sf_trend_7d": 2
@@ -787,10 +787,20 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 4641,
+      "sf_value": 4645,
       "sf_rank": 79,
       "sf_pos_rank": null,
       "sf_trend_7d": 2
+    },
+    "Baker Mayfield": {
+      "playerID": 215,
+      "position": "QB",
+      "team": "TBB",
+      "age": 31.3,
+      "sf_value": 4642,
+      "sf_rank": 80,
+      "sf_pos_rank": 20,
+      "sf_trend_7d": -1
     },
     "Jared Goff": {
       "playerID": 388,
@@ -798,56 +808,46 @@
       "team": "DET",
       "age": 31.8,
       "sf_value": 4640,
-      "sf_rank": 80,
-      "sf_pos_rank": 20,
-      "sf_trend_7d": -2
-    },
-    "Baker Mayfield": {
-      "playerID": 215,
-      "position": "QB",
-      "team": "TBB",
-      "age": 31.3,
-      "sf_value": 4639,
       "sf_rank": 81,
       "sf_pos_rank": 21,
-      "sf_trend_7d": -2
-    },
-    "Sam LaPorta": {
-      "playerID": 1429,
-      "position": "TE",
-      "team": "DET",
-      "age": 25.6,
-      "sf_value": 4593,
-      "sf_rank": 82,
-      "sf_pos_rank": 7,
-      "sf_trend_7d": 0
+      "sf_trend_7d": -3
     },
     "Javonte Williams": {
       "playerID": 1033,
       "position": "RB",
       "team": "DAL",
       "age": 26.3,
-      "sf_value": 4591,
-      "sf_rank": 83,
+      "sf_value": 4592,
+      "sf_rank": 82,
       "sf_pos_rank": 20,
-      "sf_trend_7d": 0
+      "sf_trend_7d": 1
     },
     "Kyle Pitts": {
       "playerID": 1051,
       "position": "TE",
       "team": "ATL",
       "age": 25.8,
-      "sf_value": 4585,
+      "sf_value": 4591,
+      "sf_rank": 83,
+      "sf_pos_rank": 7,
+      "sf_trend_7d": 2
+    },
+    "Sam LaPorta": {
+      "playerID": 1429,
+      "position": "TE",
+      "team": "DET",
+      "age": 25.6,
+      "sf_value": 4589,
       "sf_rank": 84,
       "sf_pos_rank": 8,
-      "sf_trend_7d": 1
+      "sf_trend_7d": -2
     },
     "2028 Mid 1st": {
       "playerID": 1883,
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 4547,
+      "sf_value": 4560,
       "sf_rank": 85,
       "sf_pos_rank": null,
       "sf_trend_7d": -1
@@ -857,7 +857,7 @@
       "position": "RB",
       "team": "JAC",
       "age": 23.5,
-      "sf_value": 4423,
+      "sf_value": 4431,
       "sf_rank": 86,
       "sf_pos_rank": 21,
       "sf_trend_7d": 3
@@ -867,7 +867,7 @@
       "position": "QB",
       "team": "SEA",
       "age": 29.2,
-      "sf_value": 4366,
+      "sf_value": 4354,
       "sf_rank": 87,
       "sf_pos_rank": 22,
       "sf_trend_7d": -1
@@ -877,7 +877,7 @@
       "position": "RB",
       "team": "NOS",
       "age": 27.5,
-      "sf_value": 4259,
+      "sf_value": 4253,
       "sf_rank": 88,
       "sf_pos_rank": 22,
       "sf_trend_7d": -1
@@ -887,7 +887,7 @@
       "position": "WR",
       "team": "CLE",
       "age": 21.9,
-      "sf_value": 4253,
+      "sf_value": 4250,
       "sf_rank": 89,
       "sf_pos_rank": 30,
       "sf_trend_7d": -1
@@ -897,7 +897,7 @@
       "position": "RB",
       "team": "BAL",
       "age": 32.6,
-      "sf_value": 4128,
+      "sf_value": 4129,
       "sf_rank": 90,
       "sf_pos_rank": 23,
       "sf_trend_7d": 0
@@ -907,9 +907,19 @@
       "position": "RB",
       "team": "GBP",
       "age": 28.5,
-      "sf_value": 4126,
+      "sf_value": 4121,
       "sf_rank": 91,
       "sf_pos_rank": 24,
+      "sf_trend_7d": 0
+    },
+    "2028 Late 1st": {
+      "playerID": 1884,
+      "position": "RDP",
+      "team": "FA",
+      "age": 0.0,
+      "sf_value": 4007,
+      "sf_rank": 92,
+      "sf_pos_rank": null,
       "sf_trend_7d": 0
     },
     "Parker Washington": {
@@ -917,27 +927,17 @@
       "position": "WR",
       "team": "JAC",
       "age": 24.4,
-      "sf_value": 4009,
-      "sf_rank": 92,
-      "sf_pos_rank": 31,
-      "sf_trend_7d": 10
-    },
-    "2028 Late 1st": {
-      "playerID": 1884,
-      "position": "RDP",
-      "team": "FA",
-      "age": 0.0,
-      "sf_value": 4009,
+      "sf_value": 3999,
       "sf_rank": 93,
-      "sf_pos_rank": null,
-      "sf_trend_7d": -1
+      "sf_pos_rank": 31,
+      "sf_trend_7d": 9
     },
     "2026 Late 1st": {
       "playerID": 1529,
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 3960,
+      "sf_value": 3955,
       "sf_rank": 94,
       "sf_pos_rank": null,
       "sf_trend_7d": 1
@@ -947,7 +947,7 @@
       "position": "QB",
       "team": "IND",
       "age": 29.2,
-      "sf_value": 3911,
+      "sf_value": 3906,
       "sf_rank": 95,
       "sf_pos_rank": 23,
       "sf_trend_7d": 2
@@ -957,30 +957,30 @@
       "position": "WR",
       "team": "MIN",
       "age": 24.5,
-      "sf_value": 3891,
+      "sf_value": 3900,
       "sf_rank": 96,
       "sf_pos_rank": 32,
       "sf_trend_7d": 4
-    },
-    "Kenyon Sadiq": {
-      "playerID": 2005,
-      "position": "TE",
-      "team": "NYJ",
-      "age": 21.4,
-      "sf_value": 3891,
-      "sf_rank": 97,
-      "sf_pos_rank": 9,
-      "sf_trend_7d": -3
     },
     "Christian Watson": {
       "playerID": 1248,
       "position": "WR",
       "team": "GBP",
       "age": 27.2,
+      "sf_value": 3898,
+      "sf_rank": 97,
+      "sf_pos_rank": 33,
+      "sf_trend_7d": 1
+    },
+    "Kenyon Sadiq": {
+      "playerID": 2005,
+      "position": "TE",
+      "team": "NYJ",
+      "age": 21.4,
       "sf_value": 3888,
       "sf_rank": 98,
-      "sf_pos_rank": 33,
-      "sf_trend_7d": 0
+      "sf_pos_rank": 9,
+      "sf_trend_7d": -4
     },
     "Bryce Young": {
       "playerID": 1456,
@@ -997,7 +997,7 @@
       "position": "QB",
       "team": "LAR",
       "age": 38.5,
-      "sf_value": 3856,
+      "sf_value": 3863,
       "sf_rank": 100,
       "sf_pos_rank": 25,
       "sf_trend_7d": 1
@@ -1007,7 +1007,7 @@
       "position": "QB",
       "team": "MIN",
       "age": 29.0,
-      "sf_value": 3843,
+      "sf_value": 3834,
       "sf_rank": 101,
       "sf_pos_rank": 26,
       "sf_trend_7d": -5
@@ -1017,37 +1017,37 @@
       "position": "WR",
       "team": "IND",
       "age": 26.3,
-      "sf_value": 3796,
+      "sf_value": 3795,
       "sf_rank": 102,
       "sf_pos_rank": 34,
       "sf_trend_7d": -3
-    },
-    "Michael Wilson": {
-      "playerID": 1421,
-      "position": "WR",
-      "team": "ARI",
-      "age": 26.4,
-      "sf_value": 3744,
-      "sf_rank": 103,
-      "sf_pos_rank": 35,
-      "sf_trend_7d": 1
     },
     "D'Andre Swift": {
       "playerID": 639,
       "position": "RB",
       "team": "CHI",
       "age": 27.6,
-      "sf_value": 3740,
-      "sf_rank": 104,
+      "sf_value": 3743,
+      "sf_rank": 103,
       "sf_pos_rank": 25,
-      "sf_trend_7d": 1
+      "sf_trend_7d": 2
+    },
+    "Michael Wilson": {
+      "playerID": 1421,
+      "position": "WR",
+      "team": "ARI",
+      "age": 26.4,
+      "sf_value": 3741,
+      "sf_rank": 104,
+      "sf_pos_rank": 35,
+      "sf_trend_7d": 0
     },
     "2027 Early 2nd": {
       "playerID": 1705,
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 3713,
+      "sf_value": 3710,
       "sf_rank": 105,
       "sf_pos_rank": null,
       "sf_trend_7d": -2
@@ -1057,7 +1057,7 @@
       "position": "QB",
       "team": "MIA",
       "age": 27.2,
-      "sf_value": 3692,
+      "sf_value": 3689,
       "sf_rank": 106,
       "sf_pos_rank": 27,
       "sf_trend_7d": 0
@@ -1067,7 +1067,7 @@
       "position": "WR",
       "team": "IND",
       "age": 25.0,
-      "sf_value": 3650,
+      "sf_value": 3654,
       "sf_rank": 107,
       "sf_pos_rank": 36,
       "sf_trend_7d": 3
@@ -1077,7 +1077,7 @@
       "position": "WR",
       "team": "GBP",
       "age": 23.0,
-      "sf_value": 3631,
+      "sf_value": 3625,
       "sf_rank": 108,
       "sf_pos_rank": 37,
       "sf_trend_7d": 0
@@ -1087,7 +1087,7 @@
       "position": "WR",
       "team": "CLE",
       "age": 22.7,
-      "sf_value": 3611,
+      "sf_value": 3617,
       "sf_rank": 109,
       "sf_pos_rank": 38,
       "sf_trend_7d": 8
@@ -1097,7 +1097,7 @@
       "position": "WR",
       "team": "BUF",
       "age": 29.3,
-      "sf_value": 3587,
+      "sf_value": 3593,
       "sf_rank": 110,
       "sf_pos_rank": 39,
       "sf_trend_7d": -3
@@ -1107,10 +1107,20 @@
       "position": "WR",
       "team": "WAS",
       "age": 30.9,
-      "sf_value": 3514,
+      "sf_value": 3517,
       "sf_rank": 111,
       "sf_pos_rank": 40,
       "sf_trend_7d": -2
+    },
+    "Omar Cooper Jr.": {
+      "playerID": 1964,
+      "position": "WR",
+      "team": "NYJ",
+      "age": 22.6,
+      "sf_value": 3503,
+      "sf_rank": 112,
+      "sf_pos_rank": 41,
+      "sf_trend_7d": 1
     },
     "Jonathon Brooks": {
       "playerID": 1568,
@@ -1118,19 +1128,9 @@
       "team": "CAR",
       "age": 23.0,
       "sf_value": 3502,
-      "sf_rank": 112,
-      "sf_pos_rank": 26,
-      "sf_trend_7d": -1
-    },
-    "Omar Cooper Jr.": {
-      "playerID": 1964,
-      "position": "WR",
-      "team": "NYJ",
-      "age": 22.6,
-      "sf_value": 3499,
       "sf_rank": 113,
-      "sf_pos_rank": 41,
-      "sf_trend_7d": 0
+      "sf_pos_rank": 26,
+      "sf_trend_7d": -2
     },
     "Quentin Johnston": {
       "playerID": 1441,
@@ -1147,7 +1147,7 @@
       "position": "RB",
       "team": "CHI",
       "age": 24.2,
-      "sf_value": 3468,
+      "sf_value": 3465,
       "sf_rank": 115,
       "sf_pos_rank": 27,
       "sf_trend_7d": -1
@@ -1162,102 +1162,102 @@
       "sf_pos_rank": 28,
       "sf_trend_7d": 0
     },
-    "2027 Mid 2nd": {
-      "playerID": 1706,
-      "position": "RDP",
-      "team": "FA",
-      "age": 0.0,
-      "sf_value": 3447,
+    "Blake Corum": {
+      "playerID": 1564,
+      "position": "RB",
+      "team": "LAR",
+      "age": 25.7,
+      "sf_value": 3443,
       "sf_rank": 117,
-      "sf_pos_rank": null,
-      "sf_trend_7d": 11
+      "sf_pos_rank": 29,
+      "sf_trend_7d": 2
     },
     "Isaiah Likely": {
       "playerID": 1257,
       "position": "TE",
       "team": "NYG",
       "age": 26.3,
-      "sf_value": 3443,
+      "sf_value": 3440,
       "sf_rank": 118,
       "sf_pos_rank": 10,
       "sf_trend_7d": 4
     },
-    "Blake Corum": {
-      "playerID": 1564,
-      "position": "RB",
-      "team": "LAR",
-      "age": 25.7,
-      "sf_value": 3439,
+    "2027 Mid 2nd": {
+      "playerID": 1706,
+      "position": "RDP",
+      "team": "FA",
+      "age": 0.0,
+      "sf_value": 3440,
       "sf_rank": 119,
-      "sf_pos_rank": 29,
-      "sf_trend_7d": 0
-    },
-    "Davante Adams": {
-      "playerID": 277,
-      "position": "WR",
-      "team": "LAR",
-      "age": 33.6,
-      "sf_value": 3427,
-      "sf_rank": 120,
-      "sf_pos_rank": 43,
-      "sf_trend_7d": 4
+      "sf_pos_rank": null,
+      "sf_trend_7d": 9
     },
     "DK Metcalf": {
       "playerID": 224,
       "position": "WR",
       "team": "PIT",
       "age": 28.6,
-      "sf_value": 3426,
+      "sf_value": 3432,
+      "sf_rank": 120,
+      "sf_pos_rank": 43,
+      "sf_trend_7d": -5
+    },
+    "Davante Adams": {
+      "playerID": 277,
+      "position": "WR",
+      "team": "LAR",
+      "age": 33.6,
+      "sf_value": 3430,
       "sf_rank": 121,
       "sf_pos_rank": 44,
-      "sf_trend_7d": -6
-    },
-    "Jayden Reed": {
-      "playerID": 1419,
-      "position": "WR",
-      "team": "GBP",
-      "age": 26.3,
-      "sf_value": 3415,
-      "sf_rank": 122,
-      "sf_pos_rank": 45,
-      "sf_trend_7d": 10
-    },
-    "Ty Simpson": {
-      "playerID": 1925,
-      "position": "QB",
-      "team": "LAR",
-      "age": 23.6,
-      "sf_value": 3413,
-      "sf_rank": 123,
-      "sf_pos_rank": 28,
-      "sf_trend_7d": -3
+      "sf_trend_7d": 3
     },
     "RJ Harvey": {
       "playerID": 1768,
       "position": "RB",
       "team": "DEN",
       "age": 25.5,
-      "sf_value": 3411,
-      "sf_rank": 124,
+      "sf_value": 3414,
+      "sf_rank": 122,
       "sf_pos_rank": 30,
-      "sf_trend_7d": 1
+      "sf_trend_7d": 3
     },
     "Wan'Dale Robinson": {
       "playerID": 1274,
       "position": "WR",
       "team": "TEN",
       "age": 25.6,
-      "sf_value": 3402,
+      "sf_value": 3411,
+      "sf_rank": 123,
+      "sf_pos_rank": 45,
+      "sf_trend_7d": -2
+    },
+    "Ty Simpson": {
+      "playerID": 1925,
+      "position": "QB",
+      "team": "LAR",
+      "age": 23.6,
+      "sf_value": 3407,
+      "sf_rank": 124,
+      "sf_pos_rank": 28,
+      "sf_trend_7d": -4
+    },
+    "Jayden Reed": {
+      "playerID": 1419,
+      "position": "WR",
+      "team": "GBP",
+      "age": 26.3,
+      "sf_value": 3403,
       "sf_rank": 125,
       "sf_pos_rank": 46,
-      "sf_trend_7d": -4
+      "sf_trend_7d": 7
     },
     "Jayden Higgins": {
       "playerID": 1783,
       "position": "WR",
       "team": "HOU",
       "age": 23.6,
-      "sf_value": 3401,
+      "sf_value": 3397,
       "sf_rank": 126,
       "sf_pos_rank": 47,
       "sf_trend_7d": -3
@@ -1267,7 +1267,7 @@
       "position": "WR",
       "team": "PIT",
       "age": 28.8,
-      "sf_value": 3396,
+      "sf_value": 3393,
       "sf_rank": 127,
       "sf_pos_rank": 48,
       "sf_trend_7d": 0
@@ -1277,7 +1277,7 @@
       "position": "RB",
       "team": "SEA",
       "age": 25.6,
-      "sf_value": 3395,
+      "sf_value": 3392,
       "sf_rank": 128,
       "sf_pos_rank": 31,
       "sf_trend_7d": 5
@@ -1287,7 +1287,7 @@
       "position": "TE",
       "team": "PHI",
       "age": 23.3,
-      "sf_value": 3386,
+      "sf_value": 3392,
       "sf_rank": 129,
       "sf_pos_rank": 11,
       "sf_trend_7d": 2
@@ -1297,30 +1297,20 @@
       "position": "TE",
       "team": "SFO",
       "age": 32.8,
-      "sf_value": 3382,
+      "sf_value": 3379,
       "sf_rank": 130,
       "sf_pos_rank": 12,
       "sf_trend_7d": 0
-    },
-    "Jaylen Warren": {
-      "playerID": 1201,
-      "position": "RB",
-      "team": "PIT",
-      "age": 27.8,
-      "sf_value": 3340,
-      "sf_rank": 131,
-      "sf_pos_rank": 32,
-      "sf_trend_7d": 4
     },
     "Travis Hunter": {
       "playerID": 1774,
       "position": "WR",
       "team": "JAC",
       "age": 23.2,
-      "sf_value": 3340,
-      "sf_rank": 132,
+      "sf_value": 3343,
+      "sf_rank": 131,
       "sf_pos_rank": 49,
-      "sf_trend_7d": -3
+      "sf_trend_7d": -2
     },
     "Mike Evans": {
       "playerID": 275,
@@ -1328,36 +1318,46 @@
       "team": "SFO",
       "age": 33.0,
       "sf_value": 3339,
-      "sf_rank": 133,
+      "sf_rank": 132,
       "sf_pos_rank": 50,
-      "sf_trend_7d": -7
-    },
-    "Oronde Gadsden": {
-      "playerID": 1799,
-      "position": "TE",
-      "team": "LAC",
-      "age": 23.1,
-      "sf_value": 3328,
-      "sf_rank": 134,
-      "sf_pos_rank": 13,
-      "sf_trend_7d": -16
+      "sf_trend_7d": -6
     },
     "Xavier Worthy": {
       "playerID": 1591,
       "position": "WR",
       "team": "KCC",
       "age": 23.3,
-      "sf_value": 3327,
-      "sf_rank": 135,
+      "sf_value": 3335,
+      "sf_rank": 133,
       "sf_pos_rank": 51,
-      "sf_trend_7d": -1
+      "sf_trend_7d": 1
+    },
+    "Jaylen Warren": {
+      "playerID": 1201,
+      "position": "RB",
+      "team": "PIT",
+      "age": 27.8,
+      "sf_value": 3334,
+      "sf_rank": 134,
+      "sf_pos_rank": 32,
+      "sf_trend_7d": 1
+    },
+    "Oronde Gadsden": {
+      "playerID": 1799,
+      "position": "TE",
+      "team": "LAC",
+      "age": 23.1,
+      "sf_value": 3333,
+      "sf_rank": 135,
+      "sf_pos_rank": 13,
+      "sf_trend_7d": -17
     },
     "2026 Early 2nd": {
       "playerID": 1530,
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 3314,
+      "sf_value": 3299,
       "sf_rank": 136,
       "sf_pos_rank": null,
       "sf_trend_7d": 0
@@ -1367,29 +1367,9 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 3193,
+      "sf_value": 3187,
       "sf_rank": 137,
       "sf_pos_rank": null,
-      "sf_trend_7d": 0
-    },
-    "De'Zhaun Stribling": {
-      "playerID": 1976,
-      "position": "WR",
-      "team": "SFO",
-      "age": 23.6,
-      "sf_value": 3155,
-      "sf_rank": 138,
-      "sf_pos_rank": 52,
-      "sf_trend_7d": 4
-    },
-    "Dalton Kincaid": {
-      "playerID": 1428,
-      "position": "TE",
-      "team": "BUF",
-      "age": 26.8,
-      "sf_value": 3152,
-      "sf_rank": 139,
-      "sf_pos_rank": 14,
       "sf_trend_7d": 0
     },
     "2027 Late 2nd": {
@@ -1397,18 +1377,48 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 3149,
-      "sf_rank": 140,
+      "sf_value": 3158,
+      "sf_rank": 138,
       "sf_pos_rank": null,
-      "sf_trend_7d": -2
+      "sf_trend_7d": 0
+    },
+    "Dalton Kincaid": {
+      "playerID": 1428,
+      "position": "TE",
+      "team": "BUF",
+      "age": 26.8,
+      "sf_value": 3153,
+      "sf_rank": 139,
+      "sf_pos_rank": 14,
+      "sf_trend_7d": 0
     },
     "Jalen Coker": {
       "playerID": 1653,
       "position": "WR",
       "team": "CAR",
       "age": 24.8,
-      "sf_value": 3147,
+      "sf_value": 3153,
+      "sf_rank": 140,
+      "sf_pos_rank": 52,
+      "sf_trend_7d": 1
+    },
+    "Jonah Coleman": {
+      "playerID": 1939,
+      "position": "RB",
+      "team": "DEN",
+      "age": 23.0,
+      "sf_value": 3144,
       "sf_rank": 141,
+      "sf_pos_rank": 33,
+      "sf_trend_7d": 4
+    },
+    "De'Zhaun Stribling": {
+      "playerID": 1976,
+      "position": "WR",
+      "team": "SFO",
+      "age": 23.6,
+      "sf_value": 3138,
+      "sf_rank": 142,
       "sf_pos_rank": 53,
       "sf_trend_7d": 0
     },
@@ -1418,26 +1428,16 @@
       "team": "CAR",
       "age": 27.2,
       "sf_value": 3137,
-      "sf_rank": 142,
-      "sf_pos_rank": 33,
-      "sf_trend_7d": 1
-    },
-    "Jonah Coleman": {
-      "playerID": 1939,
-      "position": "RB",
-      "team": "DEN",
-      "age": 23.0,
-      "sf_value": 3129,
       "sf_rank": 143,
       "sf_pos_rank": 34,
-      "sf_trend_7d": 2
+      "sf_trend_7d": 0
     },
     "Rico Dowdle": {
       "playerID": 555,
       "position": "RB",
       "team": "PIT",
       "age": 28.2,
-      "sf_value": 3124,
+      "sf_value": 3121,
       "sf_rank": 144,
       "sf_pos_rank": 35,
       "sf_trend_7d": 0
@@ -1447,7 +1447,7 @@
       "position": "RB",
       "team": "DEN",
       "age": 27.6,
-      "sf_value": 3123,
+      "sf_value": 3120,
       "sf_rank": 145,
       "sf_pos_rank": 36,
       "sf_trend_7d": 4
@@ -1457,7 +1457,7 @@
       "position": "TE",
       "team": "DAL",
       "age": 27.6,
-      "sf_value": 3109,
+      "sf_value": 3103,
       "sf_rank": 146,
       "sf_pos_rank": 15,
       "sf_trend_7d": -6
@@ -1467,7 +1467,7 @@
       "position": "WR",
       "team": "DEN",
       "age": 30.8,
-      "sf_value": 3091,
+      "sf_value": 3085,
       "sf_rank": 147,
       "sf_pos_rank": 54,
       "sf_trend_7d": -1
@@ -1497,7 +1497,7 @@
       "position": "TE",
       "team": "JAC",
       "age": 25.6,
-      "sf_value": 3043,
+      "sf_value": 3048,
       "sf_rank": 150,
       "sf_pos_rank": 16,
       "sf_trend_7d": 3
@@ -1507,7 +1507,7 @@
       "position": "RB",
       "team": "NEP",
       "age": 28.4,
-      "sf_value": 3039,
+      "sf_value": 3042,
       "sf_rank": 151,
       "sf_pos_rank": 38,
       "sf_trend_7d": 0
@@ -1517,7 +1517,7 @@
       "position": "WR",
       "team": "NEP",
       "age": 26.3,
-      "sf_value": 3031,
+      "sf_value": 3023,
       "sf_rank": 152,
       "sf_pos_rank": 55,
       "sf_trend_7d": 2
@@ -1537,7 +1537,7 @@
       "position": "WR",
       "team": "TBB",
       "age": 24.7,
-      "sf_value": 3015,
+      "sf_value": 3018,
       "sf_rank": 154,
       "sf_pos_rank": 57,
       "sf_trend_7d": -5
@@ -1547,7 +1547,7 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 2978,
+      "sf_value": 2981,
       "sf_rank": 155,
       "sf_pos_rank": null,
       "sf_trend_7d": 4
@@ -1557,7 +1557,7 @@
       "position": "WR",
       "team": "MIA",
       "age": 22.2,
-      "sf_value": 2962,
+      "sf_value": 2959,
       "sf_rank": 156,
       "sf_pos_rank": 58,
       "sf_trend_7d": 0
@@ -1567,10 +1567,30 @@
       "position": "RB",
       "team": "TBB",
       "age": 27.4,
-      "sf_value": 2943,
+      "sf_value": 2949,
       "sf_rank": 157,
       "sf_pos_rank": 39,
       "sf_trend_7d": 1
+    },
+    "Jakobi Meyers": {
+      "playerID": 13,
+      "position": "WR",
+      "team": "JAC",
+      "age": 29.8,
+      "sf_value": 2939,
+      "sf_rank": 158,
+      "sf_pos_rank": 59,
+      "sf_trend_7d": -6
+    },
+    "Chris Godwin": {
+      "playerID": 299,
+      "position": "WR",
+      "team": "TBB",
+      "age": 30.4,
+      "sf_value": 2939,
+      "sf_rank": 159,
+      "sf_pos_rank": 60,
+      "sf_trend_7d": -2
     },
     "Nicholas Singleton": {
       "playerID": 1938,
@@ -1578,36 +1598,16 @@
       "team": "TEN",
       "age": 22.6,
       "sf_value": 2939,
-      "sf_rank": 158,
-      "sf_pos_rank": 40,
-      "sf_trend_7d": 3
-    },
-    "Chris Godwin": {
-      "playerID": 299,
-      "position": "WR",
-      "team": "TBB",
-      "age": 30.4,
-      "sf_value": 2936,
-      "sf_rank": 159,
-      "sf_pos_rank": 59,
-      "sf_trend_7d": -2
-    },
-    "Jakobi Meyers": {
-      "playerID": 13,
-      "position": "WR",
-      "team": "JAC",
-      "age": 29.8,
-      "sf_value": 2933,
       "sf_rank": 160,
-      "sf_pos_rank": 60,
-      "sf_trend_7d": -8
+      "sf_pos_rank": 40,
+      "sf_trend_7d": 1
     },
     "Khalil Shakir": {
       "playerID": 1278,
       "position": "WR",
       "team": "BUF",
       "age": 26.5,
-      "sf_value": 2878,
+      "sf_value": 2875,
       "sf_rank": 161,
       "sf_pos_rank": 61,
       "sf_trend_7d": 1
@@ -1632,35 +1632,45 @@
       "sf_pos_rank": null,
       "sf_trend_7d": 2
     },
+    "Chigoziem Okonkwo": {
+      "playerID": 1320,
+      "position": "TE",
+      "team": "WAS",
+      "age": 26.9,
+      "sf_value": 2859,
+      "sf_rank": 164,
+      "sf_pos_rank": 17,
+      "sf_trend_7d": 7
+    },
     "Zachariah Branch": {
       "playerID": 1969,
       "position": "WR",
       "team": "ATL",
       "age": 22.4,
-      "sf_value": 2861,
-      "sf_rank": 164,
+      "sf_value": 2855,
+      "sf_rank": 165,
       "sf_pos_rank": 63,
-      "sf_trend_7d": 13
+      "sf_trend_7d": 12
     },
     "Germie Bernard": {
       "playerID": 1965,
       "position": "WR",
       "team": "PIT",
       "age": 22.7,
-      "sf_value": 2856,
-      "sf_rank": 165,
-      "sf_pos_rank": 64,
-      "sf_trend_7d": -5
-    },
-    "Chigoziem Okonkwo": {
-      "playerID": 1320,
-      "position": "TE",
-      "team": "WAS",
-      "age": 26.9,
-      "sf_value": 2853,
+      "sf_value": 2850,
       "sf_rank": 166,
-      "sf_pos_rank": 17,
-      "sf_trend_7d": 5
+      "sf_pos_rank": 64,
+      "sf_trend_7d": -6
+    },
+    "Terrance Ferguson": {
+      "playerID": 1807,
+      "position": "TE",
+      "team": "LAR",
+      "age": 23.4,
+      "sf_value": 2845,
+      "sf_rank": 167,
+      "sf_pos_rank": 18,
+      "sf_trend_7d": 3
     },
     "2028 Late 2nd": {
       "playerID": 1887,
@@ -1668,26 +1678,16 @@
       "team": "FA",
       "age": 0.0,
       "sf_value": 2845,
-      "sf_rank": 167,
-      "sf_pos_rank": null,
-      "sf_trend_7d": 1
-    },
-    "Terrance Ferguson": {
-      "playerID": 1807,
-      "position": "TE",
-      "team": "LAR",
-      "age": 23.4,
-      "sf_value": 2842,
       "sf_rank": 168,
-      "sf_pos_rank": 18,
-      "sf_trend_7d": 2
+      "sf_pos_rank": null,
+      "sf_trend_7d": 0
     },
     "Michael Penix Jr.": {
       "playerID": 1554,
       "position": "QB",
       "team": "ATL",
       "age": 26.2,
-      "sf_value": 2818,
+      "sf_value": 2822,
       "sf_rank": 169,
       "sf_pos_rank": 29,
       "sf_trend_7d": 0
@@ -1697,7 +1697,7 @@
       "position": "RB",
       "team": "MIN",
       "age": 27.2,
-      "sf_value": 2808,
+      "sf_value": 2811,
       "sf_rank": 170,
       "sf_pos_rank": 41,
       "sf_trend_7d": 8
@@ -1707,7 +1707,7 @@
       "position": "WR",
       "team": "WAS",
       "age": 32.7,
-      "sf_value": 2806,
+      "sf_value": 2800,
       "sf_rank": 171,
       "sf_pos_rank": 65,
       "sf_trend_7d": 87
@@ -1717,7 +1717,7 @@
       "position": "RB",
       "team": "WAS",
       "age": 27.6,
-      "sf_value": 2803,
+      "sf_value": 2793,
       "sf_rank": 172,
       "sf_pos_rank": 42,
       "sf_trend_7d": -5
@@ -1727,7 +1727,7 @@
       "position": "RB",
       "team": "TEN",
       "age": 29.3,
-      "sf_value": 2781,
+      "sf_value": 2778,
       "sf_rank": 173,
       "sf_pos_rank": 43,
       "sf_trend_7d": -9
@@ -1737,7 +1737,7 @@
       "position": "RB",
       "team": "HOU",
       "age": 25.6,
-      "sf_value": 2769,
+      "sf_value": 2772,
       "sf_rank": 174,
       "sf_pos_rank": 44,
       "sf_trend_7d": 0
@@ -1747,7 +1747,7 @@
       "position": "TE",
       "team": "SEA",
       "age": 24.3,
-      "sf_value": 2750,
+      "sf_value": 2747,
       "sf_rank": 175,
       "sf_pos_rank": 19,
       "sf_trend_7d": -9
@@ -1757,7 +1757,7 @@
       "position": "TE",
       "team": "BAL",
       "age": 30.9,
-      "sf_value": 2715,
+      "sf_value": 2721,
       "sf_rank": 176,
       "sf_pos_rank": 20,
       "sf_trend_7d": -3
@@ -1777,7 +1777,7 @@
       "position": "WR",
       "team": "DET",
       "age": 24.5,
-      "sf_value": 2692,
+      "sf_value": 2695,
       "sf_rank": 178,
       "sf_pos_rank": 66,
       "sf_trend_7d": -6
@@ -1792,42 +1792,42 @@
       "sf_pos_rank": 45,
       "sf_trend_7d": -4
     },
-    "Shedeur Sanders": {
-      "playerID": 1731,
-      "position": "QB",
+    "Dylan Sampson": {
+      "playerID": 1747,
+      "position": "RB",
       "team": "CLE",
-      "age": 24.5,
-      "sf_value": 2674,
+      "age": 21.9,
+      "sf_value": 2676,
       "sf_rank": 180,
-      "sf_pos_rank": 31,
-      "sf_trend_7d": 1
+      "sf_pos_rank": 46,
+      "sf_trend_7d": -5
     },
     "Tre Harris": {
       "playerID": 1772,
       "position": "WR",
       "team": "LAC",
       "age": 24.4,
-      "sf_value": 2673,
+      "sf_value": 2676,
       "sf_rank": 181,
       "sf_pos_rank": 67,
       "sf_trend_7d": -2
     },
-    "Dylan Sampson": {
-      "playerID": 1747,
-      "position": "RB",
+    "Shedeur Sanders": {
+      "playerID": 1731,
+      "position": "QB",
       "team": "CLE",
-      "age": 21.9,
-      "sf_value": 2669,
+      "age": 24.5,
+      "sf_value": 2665,
       "sf_rank": 182,
-      "sf_pos_rank": 46,
-      "sf_trend_7d": -7
+      "sf_pos_rank": 31,
+      "sf_trend_7d": -1
     },
     "Keaton Mitchell": {
       "playerID": 1393,
       "position": "RB",
       "team": "LAC",
       "age": 24.6,
-      "sf_value": 2656,
+      "sf_value": 2648,
       "sf_rank": 183,
       "sf_pos_rank": 47,
       "sf_trend_7d": 20
@@ -1837,120 +1837,80 @@
       "position": "WR",
       "team": "MIA",
       "age": 25.6,
-      "sf_value": 2643,
+      "sf_value": 2646,
       "sf_rank": 184,
       "sf_pos_rank": 68,
       "sf_trend_7d": 23
-    },
-    "Malachi Fields": {
-      "playerID": 1973,
-      "position": "WR",
-      "team": "NYG",
-      "age": 23.0,
-      "sf_value": 2641,
-      "sf_rank": 185,
-      "sf_pos_rank": 69,
-      "sf_trend_7d": 12
     },
     "Chris Rodriguez": {
       "playerID": 1389,
       "position": "RB",
       "team": "JAC",
       "age": 25.9,
-      "sf_value": 2636,
-      "sf_rank": 186,
+      "sf_value": 2643,
+      "sf_rank": 185,
       "sf_pos_rank": 48,
-      "sf_trend_7d": 1
-    },
-    "Dallas Goedert": {
-      "playerID": 382,
-      "position": "TE",
-      "team": "PHI",
-      "age": 31.6,
-      "sf_value": 2634,
-      "sf_rank": 187,
-      "sf_pos_rank": 21,
-      "sf_trend_7d": 5
+      "sf_trend_7d": 2
     },
     "Elijah Sarratt": {
       "playerID": 1967,
       "position": "WR",
       "team": "BAL",
       "age": 23.2,
-      "sf_value": 2634,
-      "sf_rank": 188,
+      "sf_value": 2637,
+      "sf_rank": 186,
+      "sf_pos_rank": 69,
+      "sf_trend_7d": -1
+    },
+    "Malachi Fields": {
+      "playerID": 1973,
+      "position": "WR",
+      "team": "NYG",
+      "age": 23.0,
+      "sf_value": 2635,
+      "sf_rank": 187,
       "sf_pos_rank": 70,
-      "sf_trend_7d": -3
+      "sf_trend_7d": 10
+    },
+    "Dallas Goedert": {
+      "playerID": 382,
+      "position": "TE",
+      "team": "PHI",
+      "age": 31.6,
+      "sf_value": 2631,
+      "sf_rank": 188,
+      "sf_pos_rank": 21,
+      "sf_trend_7d": 4
     },
     "Tank Bigsby": {
       "playerID": 1401,
       "position": "RB",
       "team": "PHI",
       "age": 24.9,
-      "sf_value": 2621,
+      "sf_value": 2630,
       "sf_rank": 189,
       "sf_pos_rank": 49,
       "sf_trend_7d": 6
-    },
-    "Gunnar Helm": {
-      "playerID": 1805,
-      "position": "TE",
-      "team": "TEN",
-      "age": 23.9,
-      "sf_value": 2615,
-      "sf_rank": 190,
-      "sf_pos_rank": 22,
-      "sf_trend_7d": -8
     },
     "Ja'Kobi Lane": {
       "playerID": 1979,
       "position": "WR",
       "team": "BAL",
       "age": 22.0,
-      "sf_value": 2613,
-      "sf_rank": 191,
+      "sf_value": 2622,
+      "sf_rank": 190,
       "sf_pos_rank": 71,
-      "sf_trend_7d": 25
+      "sf_trend_7d": 26
     },
-    "Ted Hurst": {
-      "playerID": 1982,
-      "position": "WR",
-      "team": "TBB",
-      "age": 22.1,
-      "sf_value": 2606,
-      "sf_rank": 192,
-      "sf_pos_rank": 72,
-      "sf_trend_7d": 8
-    },
-    "Adonai Mitchell": {
-      "playerID": 1597,
-      "position": "WR",
-      "team": "NYJ",
-      "age": 23.8,
-      "sf_value": 2604,
-      "sf_rank": 193,
-      "sf_pos_rank": 73,
-      "sf_trend_7d": -2
-    },
-    "Tyrone Tracy": {
-      "playerID": 1632,
-      "position": "RB",
-      "team": "NYG",
-      "age": 26.7,
-      "sf_value": 2602,
-      "sf_rank": 194,
-      "sf_pos_rank": 50,
-      "sf_trend_7d": 5
-    },
-    "2027 Early 3rd": {
-      "playerID": 1708,
-      "position": "RDP",
-      "team": "FA",
-      "age": 0.0,
-      "sf_value": 2602,
-      "sf_rank": 195,
-      "sf_pos_rank": null,
-      "sf_trend_7d": 1
+    "Gunnar Helm": {
+      "playerID": 1805,
+      "position": "TE",
+      "team": "TEN",
+      "age": 23.9,
+      "sf_value": 2618,
+      "sf_rank": 191,
+      "sf_pos_rank": 22,
+      "sf_trend_7d": -9
     },
     "Tua Tagovailoa": {
       "playerID": 600,
@@ -1958,9 +1918,49 @@
       "team": "ATL",
       "age": 28.4,
       "sf_value": 2601,
-      "sf_rank": 196,
+      "sf_rank": 192,
       "sf_pos_rank": 32,
-      "sf_trend_7d": -16
+      "sf_trend_7d": -12
+    },
+    "Adonai Mitchell": {
+      "playerID": 1597,
+      "position": "WR",
+      "team": "NYJ",
+      "age": 23.8,
+      "sf_value": 2601,
+      "sf_rank": 193,
+      "sf_pos_rank": 72,
+      "sf_trend_7d": -2
+    },
+    "Ted Hurst": {
+      "playerID": 1982,
+      "position": "WR",
+      "team": "TBB",
+      "age": 22.1,
+      "sf_value": 2600,
+      "sf_rank": 194,
+      "sf_pos_rank": 73,
+      "sf_trend_7d": 6
+    },
+    "Tyrone Tracy": {
+      "playerID": 1632,
+      "position": "RB",
+      "team": "NYG",
+      "age": 26.7,
+      "sf_value": 2599,
+      "sf_rank": 195,
+      "sf_pos_rank": 50,
+      "sf_trend_7d": 4
+    },
+    "2027 Early 3rd": {
+      "playerID": 1708,
+      "position": "RDP",
+      "team": "FA",
+      "age": 0.0,
+      "sf_value": 2599,
+      "sf_rank": 196,
+      "sf_pos_rank": null,
+      "sf_trend_7d": 0
     },
     "Tory Horton": {
       "playerID": 1798,
@@ -1972,45 +1972,35 @@
       "sf_pos_rank": 74,
       "sf_trend_7d": 9
     },
-    "T.J. Hockenson": {
-      "playerID": 247,
-      "position": "TE",
-      "team": "MIN",
-      "age": 29.1,
-      "sf_value": 2591,
-      "sf_rank": 198,
-      "sf_pos_rank": 23,
-      "sf_trend_7d": -16
-    },
     "Kayshon Boutte": {
       "playerID": 1446,
       "position": "WR",
       "team": "NEP",
       "age": 24.2,
       "sf_value": 2590,
-      "sf_rank": 199,
+      "sf_rank": 198,
       "sf_pos_rank": 75,
-      "sf_trend_7d": 1
+      "sf_trend_7d": 2
     },
     "Tank Dell": {
       "playerID": 1438,
       "position": "WR",
       "team": "HOU",
       "age": 26.8,
-      "sf_value": 2580,
-      "sf_rank": 200,
+      "sf_value": 2586,
+      "sf_rank": 199,
       "sf_pos_rank": 76,
-      "sf_trend_7d": -10
+      "sf_trend_7d": -9
     },
-    "Jaylin Noel": {
-      "playerID": 1780,
-      "position": "WR",
-      "team": "HOU",
-      "age": 23.9,
-      "sf_value": 2574,
-      "sf_rank": 201,
-      "sf_pos_rank": 77,
-      "sf_trend_7d": -15
+    "T.J. Hockenson": {
+      "playerID": 247,
+      "position": "TE",
+      "team": "MIN",
+      "age": 29.1,
+      "sf_value": 2585,
+      "sf_rank": 200,
+      "sf_pos_rank": 23,
+      "sf_trend_7d": -18
     },
     "Travis Kelce": {
       "playerID": 264,
@@ -2018,19 +2008,39 @@
       "team": "KCC",
       "age": 36.8,
       "sf_value": 2572,
-      "sf_rank": 202,
+      "sf_rank": 201,
       "sf_pos_rank": 24,
-      "sf_trend_7d": -20
+      "sf_trend_7d": -19
+    },
+    "Jaylin Noel": {
+      "playerID": 1780,
+      "position": "WR",
+      "team": "HOU",
+      "age": 23.9,
+      "sf_value": 2568,
+      "sf_rank": 202,
+      "sf_pos_rank": 77,
+      "sf_trend_7d": -16
     },
     "J.J. McCarthy": {
       "playerID": 1555,
       "position": "QB",
       "team": "MIN",
       "age": 23.6,
-      "sf_value": 2564,
+      "sf_value": 2567,
       "sf_rank": 203,
       "sf_pos_rank": 33,
       "sf_trend_7d": -15
+    },
+    "Jacoby Brissett": {
+      "playerID": 20,
+      "position": "QB",
+      "team": "ARI",
+      "age": 33.7,
+      "sf_value": 2556,
+      "sf_rank": 204,
+      "sf_pos_rank": 34,
+      "sf_trend_7d": -12
     },
     "Braelon Allen": {
       "playerID": 1567,
@@ -2038,26 +2048,16 @@
       "team": "NYJ",
       "age": 22.6,
       "sf_value": 2554,
-      "sf_rank": 204,
-      "sf_pos_rank": 51,
-      "sf_trend_7d": -6
-    },
-    "Jacoby Brissett": {
-      "playerID": 20,
-      "position": "QB",
-      "team": "ARI",
-      "age": 33.7,
-      "sf_value": 2550,
       "sf_rank": 205,
-      "sf_pos_rank": 34,
-      "sf_trend_7d": -13
+      "sf_pos_rank": 51,
+      "sf_trend_7d": -7
     },
     "Ricky Pearsall": {
       "playerID": 1593,
       "position": "WR",
       "team": "SFO",
       "age": 25.9,
-      "sf_value": 2538,
+      "sf_value": 2532,
       "sf_rank": 206,
       "sf_pos_rank": 78,
       "sf_trend_7d": -4
@@ -2067,7 +2067,7 @@
       "position": "WR",
       "team": "LVR",
       "age": 27.4,
-      "sf_value": 2529,
+      "sf_value": 2526,
       "sf_rank": 207,
       "sf_pos_rank": 79,
       "sf_trend_7d": -13
@@ -2077,7 +2077,7 @@
       "position": "WR",
       "team": "PHI",
       "age": 25.2,
-      "sf_value": 2518,
+      "sf_value": 2524,
       "sf_rank": 208,
       "sf_pos_rank": 80,
       "sf_trend_7d": 4
@@ -2087,7 +2087,7 @@
       "position": "WR",
       "team": "DEN",
       "age": 23.5,
-      "sf_value": 2517,
+      "sf_value": 2520,
       "sf_rank": 209,
       "sf_pos_rank": 81,
       "sf_trend_7d": 4
@@ -2097,7 +2097,7 @@
       "position": "QB",
       "team": "SFO",
       "age": 27.9,
-      "sf_value": 2514,
+      "sf_value": 2517,
       "sf_rank": 210,
       "sf_pos_rank": 35,
       "sf_trend_7d": -21
@@ -2107,7 +2107,7 @@
       "position": "WR",
       "team": "DEN",
       "age": 23.7,
-      "sf_value": 2511,
+      "sf_value": 2508,
       "sf_rank": 211,
       "sf_pos_rank": 82,
       "sf_trend_7d": 3
@@ -2127,7 +2127,7 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 2500,
+      "sf_value": 2498,
       "sf_rank": 213,
       "sf_pos_rank": null,
       "sf_trend_7d": -8
@@ -2137,7 +2137,7 @@
       "position": "WR",
       "team": "LVR",
       "age": 25.4,
-      "sf_value": 2483,
+      "sf_value": 2486,
       "sf_rank": 214,
       "sf_pos_rank": 83,
       "sf_trend_7d": -5
@@ -2147,39 +2147,29 @@
       "position": "WR",
       "team": "CLE",
       "age": 27.3,
-      "sf_value": 2476,
+      "sf_value": 2469,
       "sf_rank": 215,
       "sf_pos_rank": 84,
       "sf_trend_7d": -5
-    },
-    "Emmett Johnson": {
-      "playerID": 1936,
-      "position": "RB",
-      "team": "KCC",
-      "age": 22.8,
-      "sf_value": 2476,
-      "sf_rank": 216,
-      "sf_pos_rank": 53,
-      "sf_trend_7d": 1
     },
     "Elijah Arroyo": {
       "playerID": 1808,
       "position": "TE",
       "team": "SEA",
       "age": 23.3,
-      "sf_value": 2470,
-      "sf_rank": 217,
+      "sf_value": 2469,
+      "sf_rank": 216,
       "sf_pos_rank": 25,
-      "sf_trend_7d": -3
+      "sf_trend_7d": -2
     },
-    "Elic Ayomanor": {
-      "playerID": 1773,
-      "position": "WR",
-      "team": "TEN",
-      "age": 23.2,
+    "Emmett Johnson": {
+      "playerID": 1936,
+      "position": "RB",
+      "team": "KCC",
+      "age": 22.8,
       "sf_value": 2467,
-      "sf_rank": 218,
-      "sf_pos_rank": 85,
+      "sf_rank": 217,
+      "sf_pos_rank": 53,
       "sf_trend_7d": 0
     },
     "Kaytron Allen": {
@@ -2187,17 +2177,27 @@
       "position": "RB",
       "team": "WAS",
       "age": 23.6,
-      "sf_value": 2452,
-      "sf_rank": 219,
+      "sf_value": 2467,
+      "sf_rank": 218,
       "sf_pos_rank": 54,
-      "sf_trend_7d": -8
+      "sf_trend_7d": -7
+    },
+    "Elic Ayomanor": {
+      "playerID": 1773,
+      "position": "WR",
+      "team": "TEN",
+      "age": 23.2,
+      "sf_value": 2460,
+      "sf_rank": 219,
+      "sf_pos_rank": 85,
+      "sf_trend_7d": -1
     },
     "2026 Early 3rd": {
       "playerID": 1533,
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 2416,
+      "sf_value": 2420,
       "sf_rank": 220,
       "sf_pos_rank": null,
       "sf_trend_7d": 0
@@ -2227,7 +2227,7 @@
       "position": "TE",
       "team": "NOS",
       "age": 29.9,
-      "sf_value": 2356,
+      "sf_value": 2350,
       "sf_rank": 223,
       "sf_pos_rank": 26,
       "sf_trend_7d": 7
@@ -2237,30 +2237,30 @@
       "position": "TE",
       "team": "NEP",
       "age": 31.7,
-      "sf_value": 2340,
+      "sf_value": 2344,
       "sf_rank": 224,
       "sf_pos_rank": 27,
       "sf_trend_7d": 1
-    },
-    "Mike Washington Jr.": {
-      "playerID": 1944,
-      "position": "RB",
-      "team": "LVR",
-      "age": 23.1,
-      "sf_value": 2340,
-      "sf_rank": 225,
-      "sf_pos_rank": 55,
-      "sf_trend_7d": 8
     },
     "Brian Robinson": {
       "playerID": 1232,
       "position": "RB",
       "team": "ATL",
       "age": 27.4,
+      "sf_value": 2340,
+      "sf_rank": 225,
+      "sf_pos_rank": 55,
+      "sf_trend_7d": -2
+    },
+    "Mike Washington Jr.": {
+      "playerID": 1944,
+      "position": "RB",
+      "team": "LVR",
+      "age": 23.1,
       "sf_value": 2337,
       "sf_rank": 226,
       "sf_pos_rank": 56,
-      "sf_trend_7d": -3
+      "sf_trend_7d": 7
     },
     "Chris Brazzell II": {
       "playerID": 1971,
@@ -2277,7 +2277,7 @@
       "position": "WR",
       "team": "BUF",
       "age": 23.2,
-      "sf_value": 2320,
+      "sf_value": 2318,
       "sf_rank": 228,
       "sf_pos_rank": 89,
       "sf_trend_7d": -4
@@ -2287,7 +2287,7 @@
       "position": "RB",
       "team": "MIA",
       "age": 22.6,
-      "sf_value": 2317,
+      "sf_value": 2318,
       "sf_rank": 229,
       "sf_pos_rank": 57,
       "sf_trend_7d": 14
@@ -2302,25 +2302,25 @@
       "sf_pos_rank": 28,
       "sf_trend_7d": 2
     },
-    "Aaron Jones": {
-      "playerID": 301,
-      "position": "RB",
-      "team": "MIN",
-      "age": 31.7,
-      "sf_value": 2292,
-      "sf_rank": 231,
-      "sf_pos_rank": 58,
-      "sf_trend_7d": -5
-    },
     "Jauan Jennings": {
       "playerID": 576,
       "position": "WR",
       "team": "MIN",
       "age": 29.1,
-      "sf_value": 2287,
-      "sf_rank": 232,
+      "sf_value": 2293,
+      "sf_rank": 231,
       "sf_pos_rank": 90,
-      "sf_trend_7d": -13
+      "sf_trend_7d": -12
+    },
+    "Aaron Jones": {
+      "playerID": 301,
+      "position": "RB",
+      "team": "MIN",
+      "age": 31.7,
+      "sf_value": 2286,
+      "sf_rank": 232,
+      "sf_pos_rank": 58,
+      "sf_trend_7d": -6
     },
     "Mason Taylor": {
       "playerID": 1806,
@@ -2332,95 +2332,95 @@
       "sf_pos_rank": 29,
       "sf_trend_7d": -4
     },
-    "Greg Dulcich": {
-      "playerID": 1256,
-      "position": "TE",
-      "team": "MIA",
-      "age": 26.4,
-      "sf_value": 2280,
-      "sf_rank": 234,
-      "sf_pos_rank": 30,
-      "sf_trend_7d": -8
-    },
-    "Jaylen Wright": {
-      "playerID": 1581,
+    "Jaydon Blue": {
+      "playerID": 1769,
       "position": "RB",
-      "team": "MIA",
-      "age": 23.4,
-      "sf_value": 2280,
-      "sf_rank": 235,
+      "team": "DAL",
+      "age": 22.6,
+      "sf_value": 2285,
+      "sf_rank": 234,
       "sf_pos_rank": 59,
-      "sf_trend_7d": 9
+      "sf_trend_7d": 21
     },
     "Isiah Pacheco": {
       "playerID": 1266,
       "position": "RB",
       "team": "DET",
       "age": 27.4,
-      "sf_value": 2279,
-      "sf_rank": 236,
+      "sf_value": 2282,
+      "sf_rank": 235,
       "sf_pos_rank": 60,
-      "sf_trend_7d": 2
+      "sf_trend_7d": 3
     },
-    "Jaydon Blue": {
-      "playerID": 1769,
+    "Greg Dulcich": {
+      "playerID": 1256,
+      "position": "TE",
+      "team": "MIA",
+      "age": 26.4,
+      "sf_value": 2280,
+      "sf_rank": 236,
+      "sf_pos_rank": 30,
+      "sf_trend_7d": -10
+    },
+    "Jaylen Wright": {
+      "playerID": 1581,
       "position": "RB",
-      "team": "DAL",
-      "age": 22.6,
+      "team": "MIA",
+      "age": 23.4,
       "sf_value": 2277,
       "sf_rank": 237,
       "sf_pos_rank": 61,
-      "sf_trend_7d": 18
-    },
-    "Jack Bech": {
-      "playerID": 1778,
-      "position": "WR",
-      "team": "LVR",
-      "age": 23.6,
-      "sf_value": 2254,
-      "sf_rank": 238,
-      "sf_pos_rank": 91,
-      "sf_trend_7d": -17
+      "sf_trend_7d": 7
     },
     "2027 Late 3rd": {
       "playerID": 1710,
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 2253,
-      "sf_rank": 239,
+      "sf_value": 2256,
+      "sf_rank": 238,
       "sf_pos_rank": null,
-      "sf_trend_7d": -4
+      "sf_trend_7d": -3
+    },
+    "Jack Bech": {
+      "playerID": 1778,
+      "position": "WR",
+      "team": "LVR",
+      "age": 23.6,
+      "sf_value": 2248,
+      "sf_rank": 239,
+      "sf_pos_rank": 91,
+      "sf_trend_7d": -18
     },
     "Kaelon Black": {
       "playerID": 1947,
       "position": "RB",
       "team": "SFO",
       "age": 24.8,
-      "sf_value": 2241,
+      "sf_value": 2247,
       "sf_rank": 240,
       "sf_pos_rank": 62,
       "sf_trend_7d": 12
-    },
-    "Max Klare": {
-      "playerID": 2009,
-      "position": "TE",
-      "team": "LAR",
-      "age": 23.1,
-      "sf_value": 2240,
-      "sf_rank": 241,
-      "sf_pos_rank": 31,
-      "sf_trend_7d": -10
     },
     "Demond Claiborne": {
       "playerID": 1943,
       "position": "RB",
       "team": "MIN",
       "age": 22.8,
-      "sf_value": 2234,
-      "sf_rank": 242,
+      "sf_value": 2237,
+      "sf_rank": 241,
       "sf_pos_rank": 63,
-      "sf_trend_7d": 8
+      "sf_trend_7d": 9
+    },
+    "Max Klare": {
+      "playerID": 2009,
+      "position": "TE",
+      "team": "LAR",
+      "age": 23.1,
+      "sf_value": 2237,
+      "sf_rank": 242,
+      "sf_pos_rank": 31,
+      "sf_trend_7d": -11
     },
     "David Njoku": {
       "playerID": 252,
@@ -2432,25 +2432,15 @@
       "sf_pos_rank": 32,
       "sf_trend_7d": -1
     },
-    "Jalen Milroe": {
-      "playerID": 1733,
-      "position": "QB",
-      "team": "SEA",
-      "age": 23.6,
+    "Eli Raridon": {
+      "playerID": 2018,
+      "position": "TE",
+      "team": "NEP",
+      "age": 22.5,
       "sf_value": 2226,
       "sf_rank": 244,
-      "sf_pos_rank": 36,
-      "sf_trend_7d": 3
-    },
-    "Kimani Vidal": {
-      "playerID": 1636,
-      "position": "RB",
-      "team": "LAC",
-      "age": 25.0,
-      "sf_value": 2223,
-      "sf_rank": 245,
-      "sf_pos_rank": 64,
-      "sf_trend_7d": -6
+      "sf_pos_rank": 33,
+      "sf_trend_7d": 1
     },
     "2026 Mid 3rd": {
       "playerID": 1534,
@@ -2458,29 +2448,49 @@
       "team": "FA",
       "age": 0.0,
       "sf_value": 2221,
-      "sf_rank": 246,
+      "sf_rank": 245,
       "sf_pos_rank": null,
-      "sf_trend_7d": 5
+      "sf_trend_7d": 6
     },
-    "Eli Raridon": {
-      "playerID": 2018,
-      "position": "TE",
-      "team": "NEP",
-      "age": 22.5,
+    "Jalen Milroe": {
+      "playerID": 1733,
+      "position": "QB",
+      "team": "SEA",
+      "age": 23.6,
+      "sf_value": 2220,
+      "sf_rank": 246,
+      "sf_pos_rank": 36,
+      "sf_trend_7d": 1
+    },
+    "Kimani Vidal": {
+      "playerID": 1636,
+      "position": "RB",
+      "team": "LAC",
+      "age": 25.0,
       "sf_value": 2217,
       "sf_rank": 247,
-      "sf_pos_rank": 33,
-      "sf_trend_7d": -2
+      "sf_pos_rank": 64,
+      "sf_trend_7d": -8
     },
     "2028 Early 3rd": {
       "playerID": 1888,
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 2196,
+      "sf_value": 2193,
       "sf_rank": 248,
       "sf_pos_rank": null,
       "sf_trend_7d": -7
+    },
+    "Geno Smith": {
+      "playerID": 671,
+      "position": "QB",
+      "team": "NYJ",
+      "age": 35.8,
+      "sf_value": 2192,
+      "sf_rank": 249,
+      "sf_pos_rank": 37,
+      "sf_trend_7d": 0
     },
     "Cyrus Allen": {
       "playerID": 1980,
@@ -2488,19 +2498,9 @@
       "team": "KCC",
       "age": 23.5,
       "sf_value": 2192,
-      "sf_rank": 249,
-      "sf_pos_rank": 92,
-      "sf_trend_7d": 40
-    },
-    "Geno Smith": {
-      "playerID": 671,
-      "position": "QB",
-      "team": "NYJ",
-      "age": 35.8,
-      "sf_value": 2186,
       "sf_rank": 250,
-      "sf_pos_rank": 37,
-      "sf_trend_7d": -1
+      "sf_pos_rank": 92,
+      "sf_trend_7d": 39
     },
     "Jordan James": {
       "playerID": 1755,
@@ -2512,25 +2512,25 @@
       "sf_pos_rank": 65,
       "sf_trend_7d": -5
     },
-    "Caleb Douglas": {
-      "playerID": 2016,
-      "position": "WR",
-      "team": "MIA",
-      "age": 22.9,
-      "sf_value": 2183,
-      "sf_rank": 252,
-      "sf_pos_rank": 93,
-      "sf_trend_7d": 11
-    },
     "Chimere Dike": {
       "playerID": 1814,
       "position": "WR",
       "team": "TEN",
       "age": 24.6,
-      "sf_value": 2181,
+      "sf_value": 2184,
+      "sf_rank": 252,
+      "sf_pos_rank": 93,
+      "sf_trend_7d": -17
+    },
+    "Caleb Douglas": {
+      "playerID": 2016,
+      "position": "WR",
+      "team": "MIA",
+      "age": 22.9,
+      "sf_value": 2177,
       "sf_rank": 253,
       "sf_pos_rank": 94,
-      "sf_trend_7d": -18
+      "sf_trend_7d": 10
     },
     "Pat Freiermuth": {
       "playerID": 1053,
@@ -2567,20 +2567,10 @@
       "position": "RB",
       "team": "GBP",
       "age": 25.6,
-      "sf_value": 2134,
+      "sf_value": 2131,
       "sf_rank": 257,
       "sf_pos_rank": 68,
       "sf_trend_7d": 0
-    },
-    "Drew Allar": {
-      "playerID": 1930,
-      "position": "QB",
-      "team": "PIT",
-      "age": 22.4,
-      "sf_value": 2132,
-      "sf_rank": 258,
-      "sf_pos_rank": 38,
-      "sf_trend_7d": 10
     },
     "Dalton Schultz": {
       "playerID": 487,
@@ -2588,16 +2578,26 @@
       "team": "HOU",
       "age": 30.1,
       "sf_value": 2130,
-      "sf_rank": 259,
+      "sf_rank": 258,
       "sf_pos_rank": 35,
-      "sf_trend_7d": -5
+      "sf_trend_7d": -4
+    },
+    "Drew Allar": {
+      "playerID": 1930,
+      "position": "QB",
+      "team": "PIT",
+      "age": 22.4,
+      "sf_value": 2129,
+      "sf_rank": 259,
+      "sf_pos_rank": 38,
+      "sf_trend_7d": 9
     },
     "Oscar Delp": {
       "playerID": 2013,
       "position": "TE",
       "team": "NOS",
       "age": 23.0,
-      "sf_value": 2121,
+      "sf_value": 2118,
       "sf_rank": 260,
       "sf_pos_rank": 36,
       "sf_trend_7d": -7
@@ -2607,7 +2607,7 @@
       "position": "TE",
       "team": "NYG",
       "age": 25.4,
-      "sf_value": 2101,
+      "sf_value": 2098,
       "sf_rank": 261,
       "sf_pos_rank": 37,
       "sf_trend_7d": 1
@@ -2617,7 +2617,7 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 2081,
+      "sf_value": 2084,
       "sf_rank": 262,
       "sf_pos_rank": null,
       "sf_trend_7d": 5
@@ -2627,30 +2627,30 @@
       "position": "RB",
       "team": "NOS",
       "age": 31.0,
-      "sf_value": 2080,
+      "sf_value": 2079,
       "sf_rank": 263,
       "sf_pos_rank": 69,
       "sf_trend_7d": 6
-    },
-    "Kyle Williams": {
-      "playerID": 1812,
-      "position": "WR",
-      "team": "NEP",
-      "age": 23.7,
-      "sf_value": 2073,
-      "sf_rank": 264,
-      "sf_pos_rank": 95,
-      "sf_trend_7d": -6
     },
     "2028 Mid 3rd": {
       "playerID": 1889,
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 2073,
-      "sf_rank": 265,
+      "sf_value": 2076,
+      "sf_rank": 264,
       "sf_pos_rank": null,
-      "sf_trend_7d": -5
+      "sf_trend_7d": -4
+    },
+    "Kyle Williams": {
+      "playerID": 1812,
+      "position": "WR",
+      "team": "NEP",
+      "age": 23.7,
+      "sf_value": 2070,
+      "sf_rank": 265,
+      "sf_pos_rank": 95,
+      "sf_trend_7d": -7
     },
     "Michael Mayer": {
       "playerID": 1427,
@@ -2662,32 +2662,32 @@
       "sf_pos_rank": 38,
       "sf_trend_7d": -5
     },
-    "Tez Johnson": {
-      "playerID": 1779,
-      "position": "WR",
-      "team": "TBB",
-      "age": 24.2,
-      "sf_value": 2050,
-      "sf_rank": 267,
-      "sf_pos_rank": 96,
-      "sf_trend_7d": -3
-    },
     "LeQuint Allen": {
       "playerID": 1761,
       "position": "RB",
       "team": "JAC",
       "age": 22.0,
-      "sf_value": 2048,
-      "sf_rank": 268,
+      "sf_value": 2054,
+      "sf_rank": 267,
       "sf_pos_rank": 70,
-      "sf_trend_7d": 2
+      "sf_trend_7d": 3
+    },
+    "Tez Johnson": {
+      "playerID": 1779,
+      "position": "WR",
+      "team": "TBB",
+      "age": 24.2,
+      "sf_value": 2047,
+      "sf_rank": 268,
+      "sf_pos_rank": 96,
+      "sf_trend_7d": -4
     },
     "Jake Tonges": {
       "playerID": 1356,
       "position": "TE",
       "team": "SFO",
       "age": 27.1,
-      "sf_value": 2038,
+      "sf_value": 2035,
       "sf_rank": 269,
       "sf_pos_rank": 39,
       "sf_trend_7d": 2
@@ -2697,30 +2697,30 @@
       "position": "WR",
       "team": "DEN",
       "age": 24.4,
-      "sf_value": 2037,
+      "sf_value": 2034,
       "sf_rank": 270,
       "sf_pos_rank": 97,
       "sf_trend_7d": -4
-    },
-    "Anthony Richardson": {
-      "playerID": 1405,
-      "position": "QB",
-      "team": "IND",
-      "age": 24.2,
-      "sf_value": 2033,
-      "sf_rank": 271,
-      "sf_pos_rank": 39,
-      "sf_trend_7d": -15
     },
     "Rashod Bateman": {
       "playerID": 1070,
       "position": "WR",
       "team": "BAL",
       "age": 26.7,
-      "sf_value": 2030,
-      "sf_rank": 272,
+      "sf_value": 2033,
+      "sf_rank": 271,
       "sf_pos_rank": 98,
-      "sf_trend_7d": 4
+      "sf_trend_7d": 5
+    },
+    "Anthony Richardson": {
+      "playerID": 1405,
+      "position": "QB",
+      "team": "IND",
+      "age": 24.2,
+      "sf_value": 2027,
+      "sf_rank": 272,
+      "sf_pos_rank": 39,
+      "sf_trend_7d": -16
     },
     "Trey Benson": {
       "playerID": 1565,
@@ -2737,7 +2737,7 @@
       "position": "WR",
       "team": "MIA",
       "age": 22.9,
-      "sf_value": 2019,
+      "sf_value": 2016,
       "sf_rank": 274,
       "sf_pos_rank": 99,
       "sf_trend_7d": -2
@@ -2747,10 +2747,20 @@
       "position": "WR",
       "team": "DAL",
       "age": 26.8,
-      "sf_value": 2001,
+      "sf_value": 2007,
       "sf_rank": 275,
       "sf_pos_rank": 100,
       "sf_trend_7d": 0
+    },
+    "2028 Late 3rd": {
+      "playerID": 1890,
+      "position": "RDP",
+      "team": "FA",
+      "age": 0.0,
+      "sf_value": 1995,
+      "sf_rank": 276,
+      "sf_pos_rank": null,
+      "sf_trend_7d": 1
     },
     "Colby Parkinson": {
       "playerID": 565,
@@ -2758,76 +2768,66 @@
       "team": "LAR",
       "age": 27.6,
       "sf_value": 1994,
-      "sf_rank": 276,
-      "sf_pos_rank": 40,
-      "sf_trend_7d": 6
-    },
-    "2028 Late 3rd": {
-      "playerID": 1890,
-      "position": "RDP",
-      "team": "FA",
-      "age": 0.0,
-      "sf_value": 1992,
       "sf_rank": 277,
-      "sf_pos_rank": null,
-      "sf_trend_7d": 0
+      "sf_pos_rank": 40,
+      "sf_trend_7d": 5
     },
     "DJ Giddens": {
       "playerID": 1760,
       "position": "RB",
       "team": "IND",
       "age": 23.0,
-      "sf_value": 1983,
+      "sf_value": 1986,
       "sf_rank": 278,
       "sf_pos_rank": 72,
       "sf_trend_7d": -4
-    },
-    "Isaiah Bond": {
-      "playerID": 1776,
-      "position": "WR",
-      "team": "CLE",
-      "age": 22.4,
-      "sf_value": 1974,
-      "sf_rank": 279,
-      "sf_pos_rank": 101,
-      "sf_trend_7d": -6
     },
     "Aaron Rodgers": {
       "playerID": 235,
       "position": "QB",
       "team": "PIT",
       "age": 42.7,
+      "sf_value": 1974,
+      "sf_rank": 279,
+      "sf_pos_rank": 40,
+      "sf_trend_7d": 5
+    },
+    "Isaiah Bond": {
+      "playerID": 1776,
+      "position": "WR",
+      "team": "CLE",
+      "age": 22.4,
       "sf_value": 1968,
       "sf_rank": 280,
-      "sf_pos_rank": 40,
-      "sf_trend_7d": 4
-    },
-    "Ray Davis": {
-      "playerID": 1574,
-      "position": "RB",
-      "team": "BUF",
-      "age": 26.7,
-      "sf_value": 1956,
-      "sf_rank": 281,
-      "sf_pos_rank": 73,
-      "sf_trend_7d": 5
+      "sf_pos_rank": 101,
+      "sf_trend_7d": -7
     },
     "Ja'Tavion Sanders": {
       "playerID": 1614,
       "position": "TE",
       "team": "CAR",
       "age": 23.4,
-      "sf_value": 1939,
-      "sf_rank": 282,
+      "sf_value": 1954,
+      "sf_rank": 281,
       "sf_pos_rank": 41,
-      "sf_trend_7d": 0
+      "sf_trend_7d": 1
+    },
+    "Ray Davis": {
+      "playerID": 1574,
+      "position": "RB",
+      "team": "BUF",
+      "age": 26.7,
+      "sf_value": 1953,
+      "sf_rank": 282,
+      "sf_pos_rank": 73,
+      "sf_trend_7d": 4
     },
     "Jaylin Lane": {
       "playerID": 1816,
       "position": "WR",
       "team": "WAS",
       "age": 24.3,
-      "sf_value": 1938,
+      "sf_value": 1941,
       "sf_rank": 283,
       "sf_pos_rank": 102,
       "sf_trend_7d": -3
@@ -2837,7 +2837,7 @@
       "position": "TE",
       "team": "CHI",
       "age": 27.4,
-      "sf_value": 1932,
+      "sf_value": 1938,
       "sf_rank": 284,
       "sf_pos_rank": 42,
       "sf_trend_7d": -6
@@ -2847,7 +2847,7 @@
       "position": "WR",
       "team": "NYG",
       "age": 28.8,
-      "sf_value": 1931,
+      "sf_value": 1928,
       "sf_rank": 285,
       "sf_pos_rank": 103,
       "sf_trend_7d": -5
@@ -2857,7 +2857,7 @@
       "position": "QB",
       "team": "LVR",
       "age": 38.0,
-      "sf_value": 1920,
+      "sf_value": 1926,
       "sf_rank": 286,
       "sf_pos_rank": 41,
       "sf_trend_7d": 9
@@ -2867,7 +2867,7 @@
       "position": "RB",
       "team": "CAR",
       "age": 22.1,
-      "sf_value": 1913,
+      "sf_value": 1910,
       "sf_rank": 287,
       "sf_pos_rank": 74,
       "sf_trend_7d": -8
@@ -2877,9 +2877,19 @@
       "position": "QB",
       "team": "NYJ",
       "age": 22.8,
-      "sf_value": 1905,
+      "sf_value": 1896,
       "sf_rank": 288,
       "sf_pos_rank": 42,
+      "sf_trend_7d": 2
+    },
+    "Dont'e Thornton": {
+      "playerID": 1787,
+      "position": "WR",
+      "team": "LVR",
+      "age": 23.7,
+      "sf_value": 1895,
+      "sf_rank": 289,
+      "sf_pos_rank": 104,
       "sf_trend_7d": 2
     },
     "Xavier Legette": {
@@ -2887,20 +2897,10 @@
       "position": "WR",
       "team": "CAR",
       "age": 25.5,
-      "sf_value": 1901,
-      "sf_rank": 289,
-      "sf_pos_rank": 104,
-      "sf_trend_7d": 3
-    },
-    "Dont'e Thornton": {
-      "playerID": 1787,
-      "position": "WR",
-      "team": "LVR",
-      "age": 23.7,
-      "sf_value": 1898,
+      "sf_value": 1892,
       "sf_rank": 290,
       "sf_pos_rank": 105,
-      "sf_trend_7d": 1
+      "sf_trend_7d": 2
     },
     "Devin Neal": {
       "playerID": 1746,
@@ -2917,20 +2917,10 @@
       "position": "RB",
       "team": "NYJ",
       "age": 24.5,
-      "sf_value": 1883,
+      "sf_value": 1886,
       "sf_rank": 292,
       "sf_pos_rank": 76,
       "sf_trend_7d": 5
-    },
-    "Deshaun Watson": {
-      "playerID": 261,
-      "position": "QB",
-      "team": "CLE",
-      "age": 30.9,
-      "sf_value": 1881,
-      "sf_rank": 293,
-      "sf_pos_rank": 43,
-      "sf_trend_7d": -6
     },
     "Justin Fields": {
       "playerID": 1015,
@@ -2938,9 +2928,9 @@
       "team": "KCC",
       "age": 27.4,
       "sf_value": 1881,
-      "sf_rank": 294,
-      "sf_pos_rank": 44,
-      "sf_trend_7d": -10
+      "sf_rank": 293,
+      "sf_pos_rank": 43,
+      "sf_trend_7d": -9
     },
     "Darnell Washington": {
       "playerID": 1431,
@@ -2948,16 +2938,26 @@
       "team": "PIT",
       "age": 25.0,
       "sf_value": 1878,
-      "sf_rank": 295,
+      "sf_rank": 294,
       "sf_pos_rank": 43,
-      "sf_trend_7d": -1
+      "sf_trend_7d": 0
+    },
+    "Deshaun Watson": {
+      "playerID": 261,
+      "position": "QB",
+      "team": "CLE",
+      "age": 30.9,
+      "sf_value": 1875,
+      "sf_rank": 295,
+      "sf_pos_rank": 44,
+      "sf_trend_7d": -8
     },
     "Demario Douglas": {
       "playerID": 1468,
       "position": "WR",
       "team": "NEP",
       "age": 25.7,
-      "sf_value": 1877,
+      "sf_value": 1874,
       "sf_rank": 296,
       "sf_pos_rank": 106,
       "sf_trend_7d": -3
@@ -2967,7 +2967,7 @@
       "position": "TE",
       "team": "DEN",
       "age": 22.1,
-      "sf_value": 1869,
+      "sf_value": 1866,
       "sf_rank": 297,
       "sf_pos_rank": 44,
       "sf_trend_7d": 4
@@ -2977,7 +2977,7 @@
       "position": "WR",
       "team": "PIT",
       "age": 25.1,
-      "sf_value": 1852,
+      "sf_value": 1855,
       "sf_rank": 298,
       "sf_pos_rank": 107,
       "sf_trend_7d": 29
@@ -2987,7 +2987,7 @@
       "position": "WR",
       "team": "KCC",
       "age": 23.5,
-      "sf_value": 1844,
+      "sf_value": 1838,
       "sf_rank": 299,
       "sf_pos_rank": 108,
       "sf_trend_7d": -1
@@ -2997,7 +2997,7 @@
       "position": "WR",
       "team": "CHI",
       "age": 22.5,
-      "sf_value": 1827,
+      "sf_value": 1830,
       "sf_rank": 300,
       "sf_pos_rank": 109,
       "sf_trend_7d": 24
@@ -3017,30 +3017,30 @@
       "position": "WR",
       "team": "LAC",
       "age": 23.0,
-      "sf_value": 1819,
+      "sf_value": 1816,
       "sf_rank": 302,
       "sf_pos_rank": 110,
       "sf_trend_7d": 11
-    },
-    "Bryce Lance": {
-      "playerID": 1981,
-      "position": "WR",
-      "team": "NOS",
-      "age": 24.0,
-      "sf_value": 1802,
-      "sf_rank": 303,
-      "sf_pos_rank": 111,
-      "sf_trend_7d": -5
     },
     "Jalen Tolbert": {
       "playerID": 1247,
       "position": "WR",
       "team": "MIA",
       "age": 27.4,
-      "sf_value": 1798,
+      "sf_value": 1801,
+      "sf_rank": 303,
+      "sf_pos_rank": 111,
+      "sf_trend_7d": -1
+    },
+    "Bryce Lance": {
+      "playerID": 1981,
+      "position": "WR",
+      "team": "NOS",
+      "age": 24.0,
+      "sf_value": 1799,
       "sf_rank": 304,
       "sf_pos_rank": 112,
-      "sf_trend_7d": -2
+      "sf_trend_7d": -6
     },
     "Eli Heidenreich": {
       "playerID": 2036,
@@ -3052,32 +3052,32 @@
       "sf_pos_rank": 77,
       "sf_trend_7d": 0
     },
+    "Christian Kirk": {
+      "playerID": 221,
+      "position": "WR",
+      "team": "SFO",
+      "age": 29.7,
+      "sf_value": 1781,
+      "sf_rank": 306,
+      "sf_pos_rank": 113,
+      "sf_trend_7d": -3
+    },
     "Emanuel Wilson": {
       "playerID": 1515,
       "position": "RB",
       "team": "SEA",
       "age": 27.2,
       "sf_value": 1774,
-      "sf_rank": 306,
-      "sf_pos_rank": 78,
-      "sf_trend_7d": -10
-    },
-    "Christian Kirk": {
-      "playerID": 221,
-      "position": "WR",
-      "team": "SFO",
-      "age": 29.7,
-      "sf_value": 1772,
       "sf_rank": 307,
-      "sf_pos_rank": 113,
-      "sf_trend_7d": -4
+      "sf_pos_rank": 78,
+      "sf_trend_7d": -11
     },
     "Tyquan Thornton": {
       "playerID": 1246,
       "position": "WR",
       "team": "KCC",
       "age": 26.0,
-      "sf_value": 1764,
+      "sf_value": 1770,
       "sf_rank": 308,
       "sf_pos_rank": 114,
       "sf_trend_7d": 3
@@ -3087,7 +3087,7 @@
       "position": "TE",
       "team": "DEN",
       "age": 31.9,
-      "sf_value": 1752,
+      "sf_value": 1755,
       "sf_rank": 309,
       "sf_pos_rank": 45,
       "sf_trend_7d": -2
@@ -3097,7 +3097,7 @@
       "position": "TE",
       "team": "WAS",
       "age": 24.2,
-      "sf_value": 1752,
+      "sf_value": 1749,
       "sf_rank": 310,
       "sf_pos_rank": 46,
       "sf_trend_7d": -4
@@ -3107,7 +3107,7 @@
       "position": "RB",
       "team": "ARI",
       "age": 31.3,
-      "sf_value": 1742,
+      "sf_value": 1739,
       "sf_rank": 311,
       "sf_pos_rank": 79,
       "sf_trend_7d": 1
@@ -3117,7 +3117,7 @@
       "position": "WR",
       "team": "TEN",
       "age": 31.6,
-      "sf_value": 1734,
+      "sf_value": 1731,
       "sf_rank": 312,
       "sf_pos_rank": 115,
       "sf_trend_7d": -4
@@ -3157,7 +3157,7 @@
       "position": "WR",
       "team": "WAS",
       "age": 26.4,
-      "sf_value": 1694,
+      "sf_value": 1700,
       "sf_rank": 316,
       "sf_pos_rank": 117,
       "sf_trend_7d": 9
@@ -3167,7 +3167,7 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 1692,
+      "sf_value": 1689,
       "sf_rank": 317,
       "sf_pos_rank": null,
       "sf_trend_7d": -8
@@ -3177,7 +3177,7 @@
       "position": "RB",
       "team": "KCC",
       "age": 23.3,
-      "sf_value": 1678,
+      "sf_value": 1681,
       "sf_rank": 318,
       "sf_pos_rank": 80,
       "sf_trend_7d": -4
@@ -3187,7 +3187,7 @@
       "position": "WR",
       "team": "GBP",
       "age": 24.7,
-      "sf_value": 1677,
+      "sf_value": 1680,
       "sf_rank": 319,
       "sf_pos_rank": 118,
       "sf_trend_7d": 1
@@ -3197,7 +3197,7 @@
       "position": "QB",
       "team": "MIA",
       "age": 23.2,
-      "sf_value": 1676,
+      "sf_value": 1673,
       "sf_rank": 320,
       "sf_pos_rank": 46,
       "sf_trend_7d": -1
@@ -3207,7 +3207,7 @@
       "position": "WR",
       "team": "ATL",
       "age": 26.4,
-      "sf_value": 1669,
+      "sf_value": 1670,
       "sf_rank": 321,
       "sf_pos_rank": 119,
       "sf_trend_7d": 8
@@ -3217,7 +3217,7 @@
       "position": "WR",
       "team": "WAS",
       "age": 25.4,
-      "sf_value": 1664,
+      "sf_value": 1670,
       "sf_rank": 322,
       "sf_pos_rank": 120,
       "sf_trend_7d": 6
@@ -3242,45 +3242,35 @@
       "sf_pos_rank": 121,
       "sf_trend_7d": -7
     },
+    "Luke Musgrave": {
+      "playerID": 1430,
+      "position": "TE",
+      "team": "GBP",
+      "age": 25.9,
+      "sf_value": 1649,
+      "sf_rank": 325,
+      "sf_pos_rank": 47,
+      "sf_trend_7d": -9
+    },
     "Xavier Hutchinson": {
       "playerID": 1454,
       "position": "WR",
       "team": "HOU",
       "age": 26.2,
-      "sf_value": 1645,
-      "sf_rank": 325,
+      "sf_value": 1642,
+      "sf_rank": 326,
       "sf_pos_rank": 122,
-      "sf_trend_7d": 9
+      "sf_trend_7d": 8
     },
     "Adam Randall": {
       "playerID": 2026,
       "position": "RB",
       "team": "BAL",
       "age": 22.1,
-      "sf_value": 1642,
-      "sf_rank": 326,
-      "sf_pos_rank": 82,
-      "sf_trend_7d": 28
-    },
-    "Luke Musgrave": {
-      "playerID": 1430,
-      "position": "TE",
-      "team": "GBP",
-      "age": 25.9,
-      "sf_value": 1640,
+      "sf_value": 1639,
       "sf_rank": 327,
-      "sf_pos_rank": 47,
-      "sf_trend_7d": -11
-    },
-    "George Holani": {
-      "playerID": 1579,
-      "position": "RB",
-      "team": "SEA",
-      "age": 26.6,
-      "sf_value": 1638,
-      "sf_rank": 328,
-      "sf_pos_rank": 83,
-      "sf_trend_7d": 2
+      "sf_pos_rank": 82,
+      "sf_trend_7d": 27
     },
     "Andrei Iosivas": {
       "playerID": 1422,
@@ -3288,16 +3278,26 @@
       "team": "CIN",
       "age": 26.8,
       "sf_value": 1636,
-      "sf_rank": 329,
+      "sf_rank": 328,
       "sf_pos_rank": 123,
-      "sf_trend_7d": -8
+      "sf_trend_7d": -7
+    },
+    "George Holani": {
+      "playerID": 1579,
+      "position": "RB",
+      "team": "SEA",
+      "age": 26.6,
+      "sf_value": 1632,
+      "sf_rank": 329,
+      "sf_pos_rank": 83,
+      "sf_trend_7d": 1
     },
     "Dawson Knox": {
       "playerID": 88,
       "position": "TE",
       "team": "BUF",
       "age": 29.7,
-      "sf_value": 1634,
+      "sf_value": 1625,
       "sf_rank": 330,
       "sf_pos_rank": 48,
       "sf_trend_7d": -12
@@ -3317,37 +3317,37 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 1603,
+      "sf_value": 1606,
       "sf_rank": 332,
       "sf_pos_rank": null,
       "sf_trend_7d": 0
-    },
-    "Tahj Brooks": {
-      "playerID": 1758,
-      "position": "RB",
-      "team": "CIN",
-      "age": 24.2,
-      "sf_value": 1588,
-      "sf_rank": 333,
-      "sf_pos_rank": 84,
-      "sf_trend_7d": -10
     },
     "2028 Early 4th": {
       "playerID": 1891,
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 1581,
-      "sf_rank": 334,
+      "sf_value": 1587,
+      "sf_rank": 333,
       "sf_pos_rank": null,
-      "sf_trend_7d": -8
+      "sf_trend_7d": -7
+    },
+    "Tahj Brooks": {
+      "playerID": 1758,
+      "position": "RB",
+      "team": "CIN",
+      "age": 24.2,
+      "sf_value": 1579,
+      "sf_rank": 334,
+      "sf_pos_rank": 84,
+      "sf_trend_7d": -11
     },
     "Riley Leonard": {
       "playerID": 1735,
       "position": "QB",
       "team": "IND",
       "age": 23.9,
-      "sf_value": 1561,
+      "sf_value": 1565,
       "sf_rank": 335,
       "sf_pos_rank": 47,
       "sf_trend_7d": -2
@@ -3367,40 +3367,40 @@
       "position": "RB",
       "team": "LAR",
       "age": 23.6,
-      "sf_value": 1552,
+      "sf_value": 1549,
       "sf_rank": 337,
       "sf_pos_rank": 85,
       "sf_trend_7d": 0
-    },
-    "Joe Milton": {
-      "playerID": 1556,
-      "position": "QB",
-      "team": "DAL",
-      "age": 26.4,
-      "sf_value": 1541,
-      "sf_rank": 338,
-      "sf_pos_rank": 48,
-      "sf_trend_7d": -3
-    },
-    "Noah Gray": {
-      "playerID": 1059,
-      "position": "TE",
-      "team": "KCC",
-      "age": 27.3,
-      "sf_value": 1532,
-      "sf_rank": 339,
-      "sf_pos_rank": 50,
-      "sf_trend_7d": -1
     },
     "2026 Late 4th": {
       "playerID": 1538,
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 1532,
-      "sf_rank": 340,
+      "sf_value": 1541,
+      "sf_rank": 338,
       "sf_pos_rank": null,
-      "sf_trend_7d": -1
+      "sf_trend_7d": 1
+    },
+    "Joe Milton": {
+      "playerID": 1556,
+      "position": "QB",
+      "team": "DAL",
+      "age": 26.4,
+      "sf_value": 1538,
+      "sf_rank": 339,
+      "sf_pos_rank": 48,
+      "sf_trend_7d": -4
+    },
+    "Noah Gray": {
+      "playerID": 1059,
+      "position": "TE",
+      "team": "KCC",
+      "age": 27.3,
+      "sf_value": 1534,
+      "sf_rank": 340,
+      "sf_pos_rank": 50,
+      "sf_trend_7d": -2
     },
     "Jimmy Horn": {
       "playerID": 1824,
@@ -3417,7 +3417,7 @@
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 1528,
+      "sf_value": 1522,
       "sf_rank": 342,
       "sf_pos_rank": null,
       "sf_trend_7d": -6
@@ -3427,7 +3427,7 @@
       "position": "WR",
       "team": "NYG",
       "age": 29.6,
-      "sf_value": 1517,
+      "sf_value": 1511,
       "sf_rank": 343,
       "sf_pos_rank": 125,
       "sf_trend_7d": -3
@@ -3437,109 +3437,39 @@
       "position": "WR",
       "team": "MIA",
       "age": 26.8,
-      "sf_value": 1498,
+      "sf_value": 1504,
       "sf_rank": 344,
       "sf_pos_rank": 126,
       "sf_trend_7d": 5
-    },
-    "Seth McGowan": {
-      "playerID": 1937,
-      "position": "RB",
-      "team": "IND",
-      "age": 24.8,
-      "sf_value": 1498,
-      "sf_rank": 345,
-      "sf_pos_rank": 86,
-      "sf_trend_7d": 20
     },
     "Justice Hill": {
       "playerID": 368,
       "position": "RB",
       "team": "BAL",
       "age": 28.7,
-      "sf_value": 1488,
+      "sf_value": 1494,
+      "sf_rank": 345,
+      "sf_pos_rank": 86,
+      "sf_trend_7d": 7
+    },
+    "Seth McGowan": {
+      "playerID": 1937,
+      "position": "RB",
+      "team": "IND",
+      "age": 24.8,
+      "sf_value": 1494,
       "sf_rank": 346,
       "sf_pos_rank": 87,
-      "sf_trend_7d": 6
+      "sf_trend_7d": 19
     },
     "Mike Gesicki": {
       "playerID": 330,
       "position": "TE",
       "team": "CIN",
       "age": 30.8,
-      "sf_value": 1479,
+      "sf_value": 1491,
       "sf_rank": 347,
       "sf_pos_rank": 51,
-      "sf_trend_7d": -1
-    },
-    "Devontez Walker": {
-      "playerID": 1592,
-      "position": "WR",
-      "team": "BAL",
-      "age": 25.1,
-      "sf_value": 1469,
-      "sf_rank": 348,
-      "sf_pos_rank": 127,
-      "sf_trend_7d": 15
-    },
-    "Joshua Palmer": {
-      "playerID": 1065,
-      "position": "WR",
-      "team": "BUF",
-      "age": 26.9,
-      "sf_value": 1467,
-      "sf_rank": 349,
-      "sf_pos_rank": 128,
-      "sf_trend_7d": -5
-    },
-    "Spencer Rattler": {
-      "playerID": 1557,
-      "position": "QB",
-      "team": "NOS",
-      "age": 25.9,
-      "sf_value": 1461,
-      "sf_rank": 350,
-      "sf_pos_rank": 49,
-      "sf_trend_7d": 11
-    },
-    "Will Shipley": {
-      "playerID": 1572,
-      "position": "RB",
-      "team": "PHI",
-      "age": 23.9,
-      "sf_value": 1459,
-      "sf_rank": 351,
-      "sf_pos_rank": 88,
-      "sf_trend_7d": -8
-    },
-    "KeAndre Lambert-Smith": {
-      "playerID": 1818,
-      "position": "WR",
-      "team": "LAC",
-      "age": 24.8,
-      "sf_value": 1458,
-      "sf_rank": 352,
-      "sf_pos_rank": 129,
-      "sf_trend_7d": -5
-    },
-    "Chris Brooks": {
-      "playerID": 1490,
-      "position": "RB",
-      "team": "GBP",
-      "age": 26.6,
-      "sf_value": 1454,
-      "sf_rank": 353,
-      "sf_pos_rank": 89,
-      "sf_trend_7d": -11
-    },
-    "Marquise Brown": {
-      "playerID": 311,
-      "position": "WR",
-      "team": "PHI",
-      "age": 29.2,
-      "sf_value": 1449,
-      "sf_rank": 354,
-      "sf_pos_rank": 130,
       "sf_trend_7d": -1
     },
     "Barion Brown": {
@@ -3547,40 +3477,120 @@
       "position": "WR",
       "team": "NOS",
       "age": 22.6,
-      "sf_value": 1447,
-      "sf_rank": 355,
-      "sf_pos_rank": 131,
-      "sf_trend_7d": 95
+      "sf_value": 1468,
+      "sf_rank": 348,
+      "sf_pos_rank": 127,
+      "sf_trend_7d": 102
+    },
+    "Devontez Walker": {
+      "playerID": 1592,
+      "position": "WR",
+      "team": "BAL",
+      "age": 25.1,
+      "sf_value": 1466,
+      "sf_rank": 349,
+      "sf_pos_rank": 128,
+      "sf_trend_7d": 14
+    },
+    "Joshua Palmer": {
+      "playerID": 1065,
+      "position": "WR",
+      "team": "BUF",
+      "age": 26.9,
+      "sf_value": 1464,
+      "sf_rank": 350,
+      "sf_pos_rank": 129,
+      "sf_trend_7d": -6
+    },
+    "KeAndre Lambert-Smith": {
+      "playerID": 1818,
+      "position": "WR",
+      "team": "LAC",
+      "age": 24.8,
+      "sf_value": 1455,
+      "sf_rank": 351,
+      "sf_pos_rank": 130,
+      "sf_trend_7d": -4
     },
     "Garrett Nussmeier": {
       "playerID": 1927,
       "position": "QB",
       "team": "KCC",
       "age": 24.5,
-      "sf_value": 1440,
-      "sf_rank": 356,
-      "sf_pos_rank": 50,
-      "sf_trend_7d": -5
+      "sf_value": 1455,
+      "sf_rank": 352,
+      "sf_pos_rank": 49,
+      "sf_trend_7d": -1
     },
-    "Audric Estime": {
-      "playerID": 1566,
-      "position": "RB",
+    "Spencer Rattler": {
+      "playerID": 1557,
+      "position": "QB",
       "team": "NOS",
-      "age": 22.9,
-      "sf_value": 1429,
-      "sf_rank": 357,
-      "sf_pos_rank": 90,
+      "age": 25.9,
+      "sf_value": 1452,
+      "sf_rank": 353,
+      "sf_pos_rank": 50,
+      "sf_trend_7d": 8
+    },
+    "Chris Brooks": {
+      "playerID": 1490,
+      "position": "RB",
+      "team": "GBP",
+      "age": 26.6,
+      "sf_value": 1451,
+      "sf_rank": 354,
+      "sf_pos_rank": 88,
       "sf_trend_7d": -12
+    },
+    "Marquise Brown": {
+      "playerID": 311,
+      "position": "WR",
+      "team": "PHI",
+      "age": 29.2,
+      "sf_value": 1449,
+      "sf_rank": 355,
+      "sf_pos_rank": 131,
+      "sf_trend_7d": -2
+    },
+    "Will Shipley": {
+      "playerID": 1572,
+      "position": "RB",
+      "team": "PHI",
+      "age": 23.9,
+      "sf_value": 1444,
+      "sf_rank": 356,
+      "sf_pos_rank": 89,
+      "sf_trend_7d": -13
     },
     "Malik Davis": {
       "playerID": 1197,
       "position": "RB",
       "team": "DAL",
       "age": 27.7,
-      "sf_value": 1426,
+      "sf_value": 1423,
+      "sf_rank": 357,
+      "sf_pos_rank": 90,
+      "sf_trend_7d": -7
+    },
+    "Audric Estime": {
+      "playerID": 1566,
+      "position": "RB",
+      "team": "NOS",
+      "age": 22.9,
+      "sf_value": 1417,
       "sf_rank": 358,
       "sf_pos_rank": 91,
-      "sf_trend_7d": -8
+      "sf_trend_7d": -13
+    },
+    "Noah Fant": {
+      "playerID": 243,
+      "position": "TE",
+      "team": "NOS",
+      "age": 28.7,
+      "sf_value": 1407,
+      "sf_rank": 359,
+      "sf_pos_rank": 52,
+      "sf_trend_7d": -1
     },
     "Devaughn Vele": {
       "playerID": 1643,
@@ -3588,26 +3598,16 @@
       "team": "NOS",
       "age": 28.6,
       "sf_value": 1405,
-      "sf_rank": 359,
-      "sf_pos_rank": 132,
-      "sf_trend_7d": 7
-    },
-    "Noah Fant": {
-      "playerID": 243,
-      "position": "TE",
-      "team": "NOS",
-      "age": 28.7,
-      "sf_value": 1404,
       "sf_rank": 360,
-      "sf_pos_rank": 52,
-      "sf_trend_7d": -2
+      "sf_pos_rank": 132,
+      "sf_trend_7d": 6
     },
     "Jordan Whittington": {
       "playerID": 1604,
       "position": "WR",
       "team": "LAR",
       "age": 25.8,
-      "sf_value": 1402,
+      "sf_value": 1399,
       "sf_rank": 361,
       "sf_pos_rank": 133,
       "sf_trend_7d": -4
@@ -3622,55 +3622,45 @@
       "sf_pos_rank": 134,
       "sf_trend_7d": 0
     },
-    "John Metchie": {
-      "playerID": 1276,
-      "position": "WR",
-      "team": "CAR",
-      "age": 26.1,
-      "sf_value": 1381,
-      "sf_rank": 363,
-      "sf_pos_rank": 135,
-      "sf_trend_7d": -7
-    },
     "Calvin Austin III": {
       "playerID": 1262,
       "position": "WR",
       "team": "NYG",
       "age": 27.4,
-      "sf_value": 1374,
-      "sf_rank": 364,
-      "sf_pos_rank": 136,
-      "sf_trend_7d": 4
-    },
-    "Isaac Guerendo": {
-      "playerID": 1626,
-      "position": "RB",
-      "team": "SFO",
-      "age": 26.1,
-      "sf_value": 1365,
-      "sf_rank": 365,
-      "sf_pos_rank": 92,
-      "sf_trend_7d": -1
+      "sf_value": 1380,
+      "sf_rank": 363,
+      "sf_pos_rank": 135,
+      "sf_trend_7d": 5
     },
     "2028 Late 4th": {
       "playerID": 1893,
       "position": "RDP",
       "team": "FA",
       "age": 0.0,
-      "sf_value": 1359,
-      "sf_rank": 366,
+      "sf_value": 1368,
+      "sf_rank": 364,
       "sf_pos_rank": null,
-      "sf_trend_7d": 9
+      "sf_trend_7d": 11
     },
-    "Daniel Bellinger": {
-      "playerID": 1322,
-      "position": "TE",
-      "team": "TEN",
-      "age": 25.9,
-      "sf_value": 1347,
-      "sf_rank": 367,
-      "sf_pos_rank": 53,
-      "sf_trend_7d": 1
+    "John Metchie": {
+      "playerID": 1276,
+      "position": "WR",
+      "team": "CAR",
+      "age": 26.1,
+      "sf_value": 1366,
+      "sf_rank": 365,
+      "sf_pos_rank": 136,
+      "sf_trend_7d": -9
+    },
+    "Isaac Guerendo": {
+      "playerID": 1626,
+      "position": "RB",
+      "team": "SFO",
+      "age": 26.1,
+      "sf_value": 1356,
+      "sf_rank": 366,
+      "sf_pos_rank": 92,
+      "sf_trend_7d": -2
     },
     "Brandon Aiyuk": {
       "playerID": 538,
@@ -3678,16 +3668,26 @@
       "team": "SFO",
       "age": 28.4,
       "sf_value": 1345,
-      "sf_rank": 368,
+      "sf_rank": 367,
       "sf_pos_rank": 137,
-      "sf_trend_7d": -27
+      "sf_trend_7d": -26
+    },
+    "Daniel Bellinger": {
+      "playerID": 1322,
+      "position": "TE",
+      "team": "TEN",
+      "age": 25.9,
+      "sf_value": 1344,
+      "sf_rank": 368,
+      "sf_pos_rank": 53,
+      "sf_trend_7d": 0
     },
     "Tahj Washington": {
       "playerID": 1644,
       "position": "WR",
       "team": "MIA",
       "age": 25.2,
-      "sf_value": 1344,
+      "sf_value": 1341,
       "sf_rank": 369,
       "sf_pos_rank": 138,
       "sf_trend_7d": 4
@@ -3707,7 +3707,7 @@
       "position": "RB",
       "team": "CHI",
       "age": 25.5,
-      "sf_value": 1330,
+      "sf_value": 1331,
       "sf_rank": 371,
       "sf_pos_rank": 94,
       "sf_trend_7d": -4
@@ -3717,7 +3717,7 @@
       "position": "TE",
       "team": "LAR",
       "age": 33.6,
-      "sf_value": 1328,
+      "sf_value": 1325,
       "sf_rank": 372,
       "sf_pos_rank": 54,
       "sf_trend_7d": 8
@@ -3727,7 +3727,7 @@
       "position": "QB",
       "team": "CLE",
       "age": 23.8,
-      "sf_value": 1314,
+      "sf_value": 1320,
       "sf_rank": 373,
       "sf_pos_rank": 51,
       "sf_trend_7d": 5
@@ -3742,15 +3742,15 @@
       "sf_pos_rank": 139,
       "sf_trend_7d": 9
     },
-    "Konata Mumpfield": {
-      "playerID": 1830,
-      "position": "WR",
-      "team": "LAR",
-      "age": 23.8,
-      "sf_value": 1302,
+    "Cade Stover": {
+      "playerID": 1613,
+      "position": "TE",
+      "team": "HOU",
+      "age": 26.2,
+      "sf_value": 1299,
       "sf_rank": 375,
-      "sf_pos_rank": 140,
-      "sf_trend_7d": -1
+      "sf_pos_rank": 55,
+      "sf_trend_7d": -5
     },
     "Deion Burks": {
       "playerID": 1972,
@@ -3759,8 +3759,28 @@
       "age": 23.6,
       "sf_value": 1298,
       "sf_rank": 376,
-      "sf_pos_rank": 141,
+      "sf_pos_rank": 140,
       "sf_trend_7d": 12
+    },
+    "Konata Mumpfield": {
+      "playerID": 1830,
+      "position": "WR",
+      "team": "LAR",
+      "age": 23.8,
+      "sf_value": 1296,
+      "sf_rank": 377,
+      "sf_pos_rank": 141,
+      "sf_trend_7d": -3
+    },
+    "Tai Felton": {
+      "playerID": 1797,
+      "position": "WR",
+      "team": "MIN",
+      "age": 23.4,
+      "sf_value": 1293,
+      "sf_rank": 378,
+      "sf_pos_rank": 142,
+      "sf_trend_7d": -1
     },
     "Tyson Bagent": {
       "playerID": 1478,
@@ -3768,9 +3788,9 @@
       "team": "CHI",
       "age": 26.2,
       "sf_value": 1291,
-      "sf_rank": 377,
+      "sf_rank": 379,
       "sf_pos_rank": 52,
-      "sf_trend_7d": 5
+      "sf_trend_7d": 3
     },
     "Damien Martinez": {
       "playerID": 1754,
@@ -3778,36 +3798,16 @@
       "team": "GBP",
       "age": 22.5,
       "sf_value": 1291,
-      "sf_rank": 378,
-      "sf_pos_rank": 95,
-      "sf_trend_7d": -7
-    },
-    "Cade Stover": {
-      "playerID": 1613,
-      "position": "TE",
-      "team": "HOU",
-      "age": 26.2,
-      "sf_value": 1290,
-      "sf_rank": 379,
-      "sf_pos_rank": 55,
-      "sf_trend_7d": -9
-    },
-    "Tai Felton": {
-      "playerID": 1797,
-      "position": "WR",
-      "team": "MIN",
-      "age": 23.4,
-      "sf_value": 1290,
       "sf_rank": 380,
-      "sf_pos_rank": 142,
-      "sf_trend_7d": -3
+      "sf_pos_rank": 95,
+      "sf_trend_7d": -9
     },
     "Tyreek Hill": {
       "playerID": 286,
       "position": "WR",
       "team": "FA",
       "age": 32.4,
-      "sf_value": 1284,
+      "sf_value": 1281,
       "sf_rank": 381,
       "sf_pos_rank": 143,
       "sf_trend_7d": -26
@@ -3817,40 +3817,30 @@
       "position": "WR",
       "team": "ATL",
       "age": 29.0,
-      "sf_value": 1275,
+      "sf_value": 1278,
       "sf_rank": 382,
       "sf_pos_rank": 144,
       "sf_trend_7d": 8
-    },
-    "Malachi Corley": {
-      "playerID": 1607,
-      "position": "WR",
-      "team": "CLE",
-      "age": 24.4,
-      "sf_value": 1256,
-      "sf_rank": 383,
-      "sf_pos_rank": 145,
-      "sf_trend_7d": 3
-    },
-    "Tommy Tremble": {
-      "playerID": 1054,
-      "position": "TE",
-      "team": "CAR",
-      "age": 26.2,
-      "sf_value": 1255,
-      "sf_rank": 384,
-      "sf_pos_rank": 56,
-      "sf_trend_7d": 1
     },
     "Jaleel McLaughlin": {
       "playerID": 1486,
       "position": "RB",
       "team": "DEN",
       "age": 25.9,
-      "sf_value": 1255,
-      "sf_rank": 385,
+      "sf_value": 1258,
+      "sf_rank": 383,
       "sf_pos_rank": 96,
-      "sf_trend_7d": -4
+      "sf_trend_7d": -2
+    },
+    "Ty Johnson": {
+      "playerID": 6,
+      "position": "RB",
+      "team": "BUF",
+      "age": 28.9,
+      "sf_value": 1255,
+      "sf_rank": 384,
+      "sf_pos_rank": 97,
+      "sf_trend_7d": -5
     },
     "Phil Mafah": {
       "playerID": 1763,
@@ -3858,26 +3848,36 @@
       "team": "DAL",
       "age": 23.8,
       "sf_value": 1255,
-      "sf_rank": 386,
-      "sf_pos_rank": 97,
-      "sf_trend_7d": -10
+      "sf_rank": 385,
+      "sf_pos_rank": 98,
+      "sf_trend_7d": -9
     },
-    "Ty Johnson": {
-      "playerID": 6,
-      "position": "RB",
-      "team": "BUF",
-      "age": 28.9,
+    "Malachi Corley": {
+      "playerID": 1607,
+      "position": "WR",
+      "team": "CLE",
+      "age": 24.4,
+      "sf_value": 1253,
+      "sf_rank": 386,
+      "sf_pos_rank": 145,
+      "sf_trend_7d": 0
+    },
+    "Tommy Tremble": {
+      "playerID": 1054,
+      "position": "TE",
+      "team": "CAR",
+      "age": 26.2,
       "sf_value": 1252,
       "sf_rank": 387,
-      "sf_pos_rank": 98,
-      "sf_trend_7d": -8
+      "sf_pos_rank": 56,
+      "sf_trend_7d": -2
     },
     "Rasheen Ali": {
       "playerID": 1631,
       "position": "RB",
       "team": "BAL",
       "age": 25.5,
-      "sf_value": 1246,
+      "sf_value": 1249,
       "sf_rank": 388,
       "sf_pos_rank": 99,
       "sf_trend_7d": -4
@@ -3897,7 +3897,7 @@
       "position": "WR",
       "team": "SFO",
       "age": 24.5,
-      "sf_value": 1239,
+      "sf_value": 1236,
       "sf_rank": 390,
       "sf_pos_rank": 146,
       "sf_trend_7d": 1
@@ -3907,7 +3907,7 @@
       "position": "WR",
       "team": "PHI",
       "age": 26.4,
-      "sf_value": 1232,
+      "sf_value": 1235,
       "sf_rank": 391,
       "sf_pos_rank": 147,
       "sf_trend_7d": 13
@@ -3917,7 +3917,7 @@
       "position": "WR",
       "team": "ARI",
       "age": 31.0,
-      "sf_value": 1228,
+      "sf_value": 1233,
       "sf_rank": 392,
       "sf_pos_rank": 148,
       "sf_trend_7d": 1
@@ -3927,10 +3927,20 @@
       "position": "WR",
       "team": "TBB",
       "age": 24.4,
-      "sf_value": 1219,
+      "sf_value": 1216,
       "sf_rank": 393,
       "sf_pos_rank": 149,
       "sf_trend_7d": -4
+    },
+    "Keenan Allen": {
+      "playerID": 265,
+      "position": "WR",
+      "team": "FA",
+      "age": 34.3,
+      "sf_value": 1204,
+      "sf_rank": 394,
+      "sf_pos_rank": 150,
+      "sf_trend_7d": 5
     },
     "Davis Mills": {
       "playerID": 1029,
@@ -3938,39 +3948,19 @@
       "team": "HOU",
       "age": 27.8,
       "sf_value": 1204,
-      "sf_rank": 394,
+      "sf_rank": 395,
       "sf_pos_rank": 53,
-      "sf_trend_7d": 6
+      "sf_trend_7d": 5
     },
     "Jameis Winston": {
       "playerID": 413,
       "position": "QB",
       "team": "NYG",
       "age": 32.6,
-      "sf_value": 1202,
-      "sf_rank": 395,
-      "sf_pos_rank": 54,
-      "sf_trend_7d": -8
-    },
-    "Keenan Allen": {
-      "playerID": 265,
-      "position": "WR",
-      "team": "FA",
-      "age": 34.3,
       "sf_value": 1201,
       "sf_rank": 396,
-      "sf_pos_rank": 150,
-      "sf_trend_7d": 3
-    },
-    "Donovan Edwards": {
-      "playerID": 1757,
-      "position": "RB",
-      "team": "MIA",
-      "age": 23.4,
-      "sf_value": 1200,
-      "sf_rank": 397,
-      "sf_pos_rank": 101,
-      "sf_trend_7d": 8
+      "sf_pos_rank": 54,
+      "sf_trend_7d": -9
     },
     "Greg Dortch": {
       "playerID": 10,
@@ -3978,9 +3968,19 @@
       "team": "DET",
       "age": 28.2,
       "sf_value": 1197,
-      "sf_rank": 398,
+      "sf_rank": 397,
       "sf_pos_rank": 151,
-      "sf_trend_7d": 5
+      "sf_trend_7d": 6
+    },
+    "Donovan Edwards": {
+      "playerID": 1757,
+      "position": "RB",
+      "team": "MIA",
+      "age": 23.4,
+      "sf_value": 1197,
+      "sf_rank": 398,
+      "sf_pos_rank": 101,
+      "sf_trend_7d": 7
     },
     "Xavier Restrepo": {
       "playerID": 1777,
@@ -3997,7 +3997,7 @@
       "position": "TE",
       "team": "DAL",
       "age": 24.1,
-      "sf_value": 1182,
+      "sf_value": 1185,
       "sf_rank": 400,
       "sf_pos_rank": 57,
       "sf_trend_7d": 2
@@ -4017,10 +4017,20 @@
       "position": "WR",
       "team": "NOS",
       "age": 25.4,
-      "sf_value": 1174,
+      "sf_value": 1177,
       "sf_rank": 402,
       "sf_pos_rank": 153,
       "sf_trend_7d": -1
+    },
+    "Elijah Higgins": {
+      "playerID": 1469,
+      "position": "TE",
+      "team": "ARI",
+      "age": 25.8,
+      "sf_value": 1170,
+      "sf_rank": 403,
+      "sf_pos_rank": 59,
+      "sf_trend_7d": 4
     },
     "Emari Demercado": {
       "playerID": 1481,
@@ -4028,19 +4038,19 @@
       "team": "KCC",
       "age": 27.6,
       "sf_value": 1170,
-      "sf_rank": 403,
-      "sf_pos_rank": 102,
-      "sf_trend_7d": -9
-    },
-    "Elijah Higgins": {
-      "playerID": 1469,
-      "position": "TE",
-      "team": "ARI",
-      "age": 25.8,
-      "sf_value": 1164,
       "sf_rank": 404,
-      "sf_pos_rank": 59,
-      "sf_trend_7d": 3
+      "sf_pos_rank": 102,
+      "sf_trend_7d": -10
+    },
+    "Tanner McKee": {
+      "playerID": 1218,
+      "position": "QB",
+      "team": "PHI",
+      "age": 26.3,
+      "sf_value": 1164,
+      "sf_rank": 405,
+      "sf_pos_rank": 55,
+      "sf_trend_7d": 1
     },
     "Jacob Cowing": {
       "playerID": 1611,
@@ -4048,19 +4058,9 @@
       "team": "SFO",
       "age": 25.5,
       "sf_value": 1156,
-      "sf_rank": 405,
-      "sf_pos_rank": 154,
-      "sf_trend_7d": 4
-    },
-    "Tanner McKee": {
-      "playerID": 1218,
-      "position": "QB",
-      "team": "PHI",
-      "age": 26.3,
-      "sf_value": 1155,
       "sf_rank": 406,
-      "sf_pos_rank": 55,
-      "sf_trend_7d": 0
+      "sf_pos_rank": 154,
+      "sf_trend_7d": 3
     },
     "Raheim Sanders": {
       "playerID": 1762,
@@ -4077,19 +4077,9 @@
       "position": "WR",
       "team": "LAR",
       "age": 24.6,
-      "sf_value": 1143,
+      "sf_value": 1140,
       "sf_rank": 408,
       "sf_pos_rank": 155,
-      "sf_trend_7d": 5
-    },
-    "Charlie Kolar": {
-      "playerID": 1254,
-      "position": "TE",
-      "team": "LAC",
-      "age": 27.5,
-      "sf_value": 1135,
-      "sf_rank": 409,
-      "sf_pos_rank": 60,
       "sf_trend_7d": 5
     },
     "Dillon Gabriel": {
@@ -4097,60 +4087,60 @@
       "position": "QB",
       "team": "CLE",
       "age": 25.6,
-      "sf_value": 1134,
-      "sf_rank": 410,
+      "sf_value": 1137,
+      "sf_rank": 409,
       "sf_pos_rank": 56,
-      "sf_trend_7d": -18
-    },
-    "Tyler Huntley": {
-      "playerID": 618,
-      "position": "QB",
-      "team": "BAL",
-      "age": 28.5,
-      "sf_value": 1133,
-      "sf_rank": 411,
-      "sf_pos_rank": 57,
-      "sf_trend_7d": -3
+      "sf_trend_7d": -17
     },
     "Efton Chism": {
       "playerID": 1838,
       "position": "WR",
       "team": "NEP",
       "age": 24.8,
-      "sf_value": 1132,
-      "sf_rank": 412,
+      "sf_value": 1135,
+      "sf_rank": 410,
       "sf_pos_rank": 156,
-      "sf_trend_7d": -3
+      "sf_trend_7d": -1
+    },
+    "Charlie Kolar": {
+      "playerID": 1254,
+      "position": "TE",
+      "team": "LAC",
+      "age": 27.5,
+      "sf_value": 1132,
+      "sf_rank": 411,
+      "sf_pos_rank": 60,
+      "sf_trend_7d": 3
     },
     "KaVontae Turpin": {
       "playerID": 1336,
       "position": "WR",
       "team": "DAL",
       "age": 30.0,
-      "sf_value": 1131,
-      "sf_rank": 413,
+      "sf_value": 1128,
+      "sf_rank": 412,
       "sf_pos_rank": 157,
-      "sf_trend_7d": 4
-    },
-    "Kalel Mullings": {
-      "playerID": 1750,
-      "position": "RB",
-      "team": "TEN",
-      "age": 23.8,
-      "sf_value": 1121,
-      "sf_rank": 414,
-      "sf_pos_rank": 104,
-      "sf_trend_7d": 2
+      "sf_trend_7d": 5
     },
     "Will Levis": {
       "playerID": 1402,
       "position": "QB",
       "team": "TEN",
       "age": 27.1,
-      "sf_value": 1120,
-      "sf_rank": 415,
+      "sf_value": 1125,
+      "sf_rank": 413,
+      "sf_pos_rank": 57,
+      "sf_trend_7d": 6
+    },
+    "Tyler Huntley": {
+      "playerID": 618,
+      "position": "QB",
+      "team": "BAL",
+      "age": 28.5,
+      "sf_value": 1124,
+      "sf_rank": 414,
       "sf_pos_rank": 58,
-      "sf_trend_7d": 4
+      "sf_trend_7d": -6
     },
     "Gardner Minshew": {
       "playerID": 47,
@@ -4158,16 +4148,26 @@
       "team": "ARI",
       "age": 30.2,
       "sf_value": 1118,
-      "sf_rank": 416,
+      "sf_rank": 415,
       "sf_pos_rank": 59,
-      "sf_trend_7d": -2
+      "sf_trend_7d": -1
+    },
+    "Kalel Mullings": {
+      "playerID": 1750,
+      "position": "RB",
+      "team": "TEN",
+      "age": 23.8,
+      "sf_value": 1118,
+      "sf_rank": 416,
+      "sf_pos_rank": 104,
+      "sf_trend_7d": 0
     },
     "Luke Schoonmaker": {
       "playerID": 1382,
       "position": "TE",
       "team": "DAL",
       "age": 27.9,
-      "sf_value": 1100,
+      "sf_value": 1111,
       "sf_rank": 417,
       "sf_pos_rank": 61,
       "sf_trend_7d": -6
@@ -4182,35 +4182,25 @@
       "sf_pos_rank": 158,
       "sf_trend_7d": 4
     },
-    "Jahdae Walker": {
-      "playerID": 1904,
-      "position": "WR",
-      "team": "CHI",
-      "age": 24.1,
-      "sf_value": 1087,
-      "sf_rank": 419,
-      "sf_pos_rank": 159,
-      "sf_trend_7d": 327
-    },
     "Jonathan Mingo": {
       "playerID": 1450,
       "position": "WR",
       "team": "DAL",
       "age": 25.3,
-      "sf_value": 1072,
+      "sf_value": 1087,
+      "sf_rank": 419,
+      "sf_pos_rank": 159,
+      "sf_trend_7d": 1
+    },
+    "Jahdae Walker": {
+      "playerID": 1904,
+      "position": "WR",
+      "team": "CHI",
+      "age": 24.1,
+      "sf_value": 1075,
       "sf_rank": 420,
       "sf_pos_rank": 160,
-      "sf_trend_7d": 0
-    },
-    "Marcus Mariota": {
-      "playerID": 23,
-      "position": "QB",
-      "team": "WAS",
-      "age": 32.8,
-      "sf_value": 1061,
-      "sf_rank": 421,
-      "sf_pos_rank": 60,
-      "sf_trend_7d": 0
+      "sf_trend_7d": 326
     },
     "Mack Hollins": {
       "playerID": 767,
@@ -4218,106 +4208,116 @@
       "team": "NEP",
       "age": 32.9,
       "sf_value": 1058,
-      "sf_rank": 422,
+      "sf_rank": 421,
       "sf_pos_rank": 161,
-      "sf_trend_7d": -4
+      "sf_trend_7d": -3
+    },
+    "Marcus Mariota": {
+      "playerID": 23,
+      "position": "QB",
+      "team": "WAS",
+      "age": 32.8,
+      "sf_value": 1055,
+      "sf_rank": 422,
+      "sf_pos_rank": 60,
+      "sf_trend_7d": -1
     },
     "Nick Westbrook-Ikhine": {
       "playerID": 950,
       "position": "WR",
       "team": "IND",
       "age": 29.4,
-      "sf_value": 1053,
+      "sf_value": 1054,
       "sf_rank": 423,
       "sf_pos_rank": 162,
       "sf_trend_7d": 1
-    },
-    "David Bell": {
-      "playerID": 1275,
-      "position": "WR",
-      "team": "CLE",
-      "age": 25.6,
-      "sf_value": 1045,
-      "sf_rank": 424,
-      "sf_pos_rank": 163,
-      "sf_trend_7d": 1
-    },
-    "Tyler Goodson": {
-      "playerID": 1189,
-      "position": "RB",
-      "team": "ATL",
-      "age": 25.7,
-      "sf_value": 1043,
-      "sf_rank": 425,
-      "sf_pos_rank": 105,
-      "sf_trend_7d": 2
-    },
-    "Dameon Pierce": {
-      "playerID": 1207,
-      "position": "RB",
-      "team": "PHI",
-      "age": 26.5,
-      "sf_value": 1039,
-      "sf_rank": 426,
-      "sf_pos_rank": 106,
-      "sf_trend_7d": 5
     },
     "Najee Harris": {
       "playerID": 1031,
       "position": "RB",
       "team": "FA",
       "age": 28.4,
-      "sf_value": 1033,
+      "sf_value": 1039,
+      "sf_rank": 424,
+      "sf_pos_rank": 105,
+      "sf_trend_7d": -12
+    },
+    "David Bell": {
+      "playerID": 1275,
+      "position": "WR",
+      "team": "CLE",
+      "age": 25.6,
+      "sf_value": 1037,
+      "sf_rank": 425,
+      "sf_pos_rank": 163,
+      "sf_trend_7d": 0
+    },
+    "Dameon Pierce": {
+      "playerID": 1207,
+      "position": "RB",
+      "team": "PHI",
+      "age": 26.5,
+      "sf_value": 1036,
+      "sf_rank": 426,
+      "sf_pos_rank": 106,
+      "sf_trend_7d": 5
+    },
+    "Tyler Goodson": {
+      "playerID": 1189,
+      "position": "RB",
+      "team": "ATL",
+      "age": 25.7,
+      "sf_value": 1032,
       "sf_rank": 427,
       "sf_pos_rank": 107,
-      "sf_trend_7d": -15
-    },
-    "Isaiah Hodgins": {
-      "playerID": 561,
-      "position": "WR",
-      "team": "NYG",
-      "age": 27.8,
-      "sf_value": 1029,
-      "sf_rank": 428,
-      "sf_pos_rank": 164,
-      "sf_trend_7d": -2
+      "sf_trend_7d": 0
     },
     "Brevin Jordan": {
       "playerID": 1052,
       "position": "TE",
       "team": "HOU",
       "age": 26.1,
-      "sf_value": 1029,
-      "sf_rank": 429,
-      "sf_pos_rank": 62,
-      "sf_trend_7d": 0
-    },
-    "Bam Knight": {
-      "playerID": 1186,
-      "position": "RB",
-      "team": "ARI",
-      "age": 25.3,
       "sf_value": 1026,
-      "sf_rank": 430,
-      "sf_pos_rank": 108,
-      "sf_trend_7d": 6
+      "sf_rank": 428,
+      "sf_pos_rank": 62,
+      "sf_trend_7d": 1
     },
     "Javon Baker": {
       "playerID": 1608,
       "position": "WR",
       "team": "SFO",
       "age": 24.5,
+      "sf_value": 1026,
+      "sf_rank": 429,
+      "sf_pos_rank": 164,
+      "sf_trend_7d": 1
+    },
+    "Isaiah Hodgins": {
+      "playerID": 561,
+      "position": "WR",
+      "team": "NYG",
+      "age": 27.8,
+      "sf_value": 1023,
+      "sf_rank": 430,
+      "sf_pos_rank": 165,
+      "sf_trend_7d": -4
+    },
+    "Bam Knight": {
+      "playerID": 1186,
+      "position": "RB",
+      "team": "ARI",
+      "age": 25.3,
       "sf_value": 1023,
       "sf_rank": 431,
-      "sf_pos_rank": 165,
-      "sf_trend_7d": -1
+      "sf_pos_rank": 108,
+      "sf_trend_7d": 5
     },
     "Kenny Pickett": {
       "playerID": 1208,
       "position": "QB",
       "team": "CAR",
       "age": 28.2,
-      "sf_value": 1018,
+      "sf_value": 1021,
       "sf_rank": 432,
       "sf_pos_rank": 61,
       "sf_trend_7d": 5
@@ -4347,7 +4347,7 @@
       "position": "RB",
       "team": "DEN",
       "age": 26.5,
-      "sf_value": 1004,
+      "sf_value": 1007,
       "sf_rank": 435,
       "sf_pos_rank": 110,
       "sf_trend_7d": -3
@@ -4377,20 +4377,10 @@
       "position": "TE",
       "team": "CHI",
       "age": 22.9,
-      "sf_value": 979,
+      "sf_value": 976,
       "sf_rank": 438,
       "sf_pos_rank": 64,
       "sf_trend_7d": 2
-    },
-    "Tyrell Shavers": {
-      "playerID": 1524,
-      "position": "WR",
-      "team": "BUF",
-      "age": 27.0,
-      "sf_value": 967,
-      "sf_rank": 439,
-      "sf_pos_rank": 167,
-      "sf_trend_7d": -11
     },
     "Ja'Lynn Polk": {
       "playerID": 1602,
@@ -4398,9 +4388,9 @@
       "team": "FA",
       "age": 24.3,
       "sf_value": 967,
-      "sf_rank": 440,
-      "sf_pos_rank": 168,
-      "sf_trend_7d": -68
+      "sf_rank": 439,
+      "sf_pos_rank": 167,
+      "sf_trend_7d": -67
     },
     "Israel Abanikanda": {
       "playerID": 1383,
@@ -4408,19 +4398,39 @@
       "team": "DAL",
       "age": 23.8,
       "sf_value": 965,
-      "sf_rank": 441,
+      "sf_rank": 440,
       "sf_pos_rank": 111,
-      "sf_trend_7d": -8
+      "sf_trend_7d": -7
     },
     "Jam Miller": {
       "playerID": 1948,
       "position": "RB",
       "team": "NEP",
       "age": 22.3,
-      "sf_value": 961,
-      "sf_rank": 442,
+      "sf_value": 965,
+      "sf_rank": 441,
       "sf_pos_rank": 112,
-      "sf_trend_7d": 18
+      "sf_trend_7d": 19
+    },
+    "Tyrell Shavers": {
+      "playerID": 1524,
+      "position": "WR",
+      "team": "BUF",
+      "age": 27.0,
+      "sf_value": 964,
+      "sf_rank": 442,
+      "sf_pos_rank": 168,
+      "sf_trend_7d": -14
+    },
+    "Sam Howell": {
+      "playerID": 1209,
+      "position": "QB",
+      "team": "DAL",
+      "age": 25.9,
+      "sf_value": 962,
+      "sf_rank": 443,
+      "sf_pos_rank": 63,
+      "sf_trend_7d": -10
     },
     "Michael Carter": {
       "playerID": 1035,
@@ -4428,39 +4438,19 @@
       "team": "TEN",
       "age": 27.2,
       "sf_value": 960,
-      "sf_rank": 443,
-      "sf_pos_rank": 113,
-      "sf_trend_7d": -4
-    },
-    "Sam Howell": {
-      "playerID": 1209,
-      "position": "QB",
-      "team": "DAL",
-      "age": 25.9,
-      "sf_value": 959,
       "sf_rank": 444,
-      "sf_pos_rank": 63,
-      "sf_trend_7d": -11
+      "sf_pos_rank": 113,
+      "sf_trend_7d": -5
     },
     "Jared Wiley": {
       "playerID": 1619,
       "position": "TE",
       "team": "KCC",
       "age": 25.8,
-      "sf_value": 943,
+      "sf_value": 940,
       "sf_rank": 445,
       "sf_pos_rank": 65,
       "sf_trend_7d": -4
-    },
-    "Jake Bobo": {
-      "playerID": 1488,
-      "position": "WR",
-      "team": "SEA",
-      "age": 28.0,
-      "sf_value": 933,
-      "sf_rank": 446,
-      "sf_pos_rank": 169,
-      "sf_trend_7d": -8
     },
     "Sione Vaki": {
       "playerID": 1627,
@@ -4468,16 +4458,26 @@
       "team": "DET",
       "age": 25.0,
       "sf_value": 932,
-      "sf_rank": 447,
+      "sf_rank": 446,
       "sf_pos_rank": 114,
-      "sf_trend_7d": -2
+      "sf_trend_7d": -1
+    },
+    "Jake Bobo": {
+      "playerID": 1488,
+      "position": "WR",
+      "team": "SEA",
+      "age": 28.0,
+      "sf_value": 930,
+      "sf_rank": 447,
+      "sf_pos_rank": 169,
+      "sf_trend_7d": -9
     },
     "Tyler Scott": {
       "playerID": 1436,
       "position": "WR",
       "team": "LAR",
       "age": 24.8,
-      "sf_value": 926,
+      "sf_value": 929,
       "sf_rank": 448,
       "sf_pos_rank": 170,
       "sf_trend_7d": -13
@@ -4487,7 +4487,7 @@
       "position": "RB",
       "team": "BUF",
       "age": 24.4,
-      "sf_value": 926,
+      "sf_value": 923,
       "sf_rank": 449,
       "sf_pos_rank": 115,
       "sf_trend_7d": -1
@@ -4497,7 +4497,7 @@
       "position": "QB",
       "team": "CIN",
       "age": 41.6,
-      "sf_value": 915,
+      "sf_value": 912,
       "sf_rank": 450,
       "sf_pos_rank": 64,
       "sf_trend_7d": -9
@@ -4517,30 +4517,30 @@
       "position": "TE",
       "team": "BAL",
       "age": 24.4,
-      "sf_value": 900,
+      "sf_value": 909,
       "sf_rank": 452,
       "sf_pos_rank": 66,
       "sf_trend_7d": 9
-    },
-    "Kendall Milton": {
-      "playerID": 1577,
-      "position": "RB",
-      "team": "CIN",
-      "age": 24.5,
-      "sf_value": 893,
-      "sf_rank": 453,
-      "sf_pos_rank": 116,
-      "sf_trend_7d": -8
     },
     "Brock Wright": {
       "playerID": 1162,
       "position": "TE",
       "team": "DET",
       "age": 27.7,
-      "sf_value": 891,
-      "sf_rank": 454,
+      "sf_value": 900,
+      "sf_rank": 453,
       "sf_pos_rank": 67,
-      "sf_trend_7d": -5
+      "sf_trend_7d": -4
+    },
+    "Kendall Milton": {
+      "playerID": 1577,
+      "position": "RB",
+      "team": "CIN",
+      "age": 24.5,
+      "sf_value": 890,
+      "sf_rank": 454,
+      "sf_pos_rank": 116,
+      "sf_trend_7d": -9
     },
     "Mason Tipton": {
       "playerID": 1686,
@@ -4552,32 +4552,32 @@
       "sf_pos_rank": 172,
       "sf_trend_7d": -4
     },
-    "Arian Smith": {
-      "playerID": 1815,
-      "position": "WR",
-      "team": "NYJ",
-      "age": 24.8,
-      "sf_value": 887,
-      "sf_rank": 456,
-      "sf_pos_rank": 173,
-      "sf_trend_7d": -1
-    },
     "Skyy Moore": {
       "playerID": 1283,
       "position": "WR",
       "team": "GBP",
       "age": 25.9,
-      "sf_value": 882,
+      "sf_value": 885,
+      "sf_rank": 456,
+      "sf_pos_rank": 173,
+      "sf_trend_7d": 3
+    },
+    "Arian Smith": {
+      "playerID": 1815,
+      "position": "WR",
+      "team": "NYJ",
+      "age": 24.8,
+      "sf_value": 884,
       "sf_rank": 457,
       "sf_pos_rank": 174,
-      "sf_trend_7d": 2
+      "sf_trend_7d": -2
     },
     "Bo Melton": {
       "playerID": 1244,
       "position": "WR",
       "team": "GBP",
       "age": 27.2,
-      "sf_value": 880,
+      "sf_value": 877,
       "sf_rank": 458,
       "sf_pos_rank": 175,
       "sf_trend_7d": -2
@@ -4587,7 +4587,7 @@
       "position": "QB",
       "team": "PHI",
       "age": 23.8,
-      "sf_value": 858,
+      "sf_value": 855,
       "sf_rank": 459,
       "sf_pos_rank": 65,
       "sf_trend_7d": 3
@@ -4597,40 +4597,40 @@
       "position": "WR",
       "team": "DEN",
       "age": 28.3,
-      "sf_value": 838,
+      "sf_value": 841,
       "sf_rank": 460,
       "sf_pos_rank": 176,
       "sf_trend_7d": 4
-    },
-    "Brenden Rice": {
-      "playerID": 1594,
-      "position": "WR",
-      "team": "FA",
-      "age": 24.4,
-      "sf_value": 824,
-      "sf_rank": 461,
-      "sf_pos_rank": 177,
-      "sf_trend_7d": -9
     },
     "Jawhar Jordan": {
       "playerID": 1641,
       "position": "RB",
       "team": "HOU",
       "age": 27.0,
-      "sf_value": 824,
-      "sf_rank": 462,
+      "sf_value": 833,
+      "sf_rank": 461,
       "sf_pos_rank": 117,
-      "sf_trend_7d": 5
-    },
-    "Demarcus Robinson": {
-      "playerID": 52,
-      "position": "WR",
-      "team": "SFO",
-      "age": 31.9,
-      "sf_value": 818,
-      "sf_rank": 463,
-      "sf_pos_rank": 178,
       "sf_trend_7d": 6
+    },
+    "Brenden Rice": {
+      "playerID": 1594,
+      "position": "WR",
+      "team": "FA",
+      "age": 24.4,
+      "sf_value": 827,
+      "sf_rank": 462,
+      "sf_pos_rank": 177,
+      "sf_trend_7d": -10
+    },
+    "Le'Veon Moss": {
+      "playerID": 1941,
+      "position": "RB",
+      "team": "MIA",
+      "age": 23.7,
+      "sf_value": 826,
+      "sf_rank": 463,
+      "sf_pos_rank": 118,
+      "sf_trend_7d": -9
     },
     "Hassan Haskins": {
       "playerID": 1191,
@@ -4639,18 +4639,18 @@
       "age": 26.7,
       "sf_value": 818,
       "sf_rank": 464,
-      "sf_pos_rank": 118,
+      "sf_pos_rank": 119,
       "sf_trend_7d": -6
     },
-    "Le'Veon Moss": {
-      "playerID": 1941,
-      "position": "RB",
-      "team": "MIA",
-      "age": 23.7,
-      "sf_value": 817,
+    "Demarcus Robinson": {
+      "playerID": 52,
+      "position": "WR",
+      "team": "SFO",
+      "age": 31.9,
+      "sf_value": 812,
       "sf_rank": 465,
-      "sf_pos_rank": 119,
-      "sf_trend_7d": -11
+      "sf_pos_rank": 178,
+      "sf_trend_7d": 4
     },
     "Drew Lock": {
       "playerID": 33,
@@ -4667,37 +4667,37 @@
       "position": "RB",
       "team": "SFO",
       "age": 28.3,
-      "sf_value": 796,
+      "sf_value": 799,
       "sf_rank": 467,
       "sf_pos_rank": 120,
       "sf_trend_7d": 27
-    },
-    "Jamari Thrash": {
-      "playerID": 1595,
-      "position": "WR",
-      "team": "FA",
-      "age": 25.6,
-      "sf_value": 796,
-      "sf_rank": 468,
-      "sf_pos_rank": 179,
-      "sf_trend_7d": -3
     },
     "Colbie Young": {
       "playerID": 2004,
       "position": "WR",
       "team": "CIN",
       "age": 24.0,
-      "sf_value": 789,
+      "sf_value": 791,
+      "sf_rank": 468,
+      "sf_pos_rank": 179,
+      "sf_trend_7d": 14
+    },
+    "Jamari Thrash": {
+      "playerID": 1595,
+      "position": "WR",
+      "team": "FA",
+      "age": 25.6,
+      "sf_value": 781,
       "sf_rank": 469,
       "sf_pos_rank": 180,
-      "sf_trend_7d": 13
+      "sf_trend_7d": -4
     },
     "Jack Endries": {
       "playerID": 2007,
       "position": "TE",
       "team": "CIN",
       "age": 22.4,
-      "sf_value": 777,
+      "sf_value": 781,
       "sf_rank": 470,
       "sf_pos_rank": 68,
       "sf_trend_7d": 10
@@ -4717,37 +4717,37 @@
       "position": "RB",
       "team": "PHI",
       "age": 28.3,
-      "sf_value": 768,
+      "sf_value": 774,
       "sf_rank": 472,
       "sf_pos_rank": 122,
       "sf_trend_7d": 1
-    },
-    "Zach Wilson": {
-      "playerID": 1016,
-      "position": "QB",
-      "team": "NOS",
-      "age": 27.0,
-      "sf_value": 766,
-      "sf_rank": 473,
-      "sf_pos_rank": 67,
-      "sf_trend_7d": -16
     },
     "Jonnu Smith": {
       "playerID": 84,
       "position": "TE",
       "team": "FA",
       "age": 31.0,
-      "sf_value": 764,
-      "sf_rank": 474,
+      "sf_value": 751,
+      "sf_rank": 473,
       "sf_pos_rank": 69,
-      "sf_trend_7d": -8
+      "sf_trend_7d": -7
+    },
+    "Zach Wilson": {
+      "playerID": 1016,
+      "position": "QB",
+      "team": "NOS",
+      "age": 27.0,
+      "sf_value": 750,
+      "sf_rank": 474,
+      "sf_pos_rank": 67,
+      "sf_trend_7d": -17
     },
     "Johnny Wilson": {
       "playerID": 1596,
       "position": "WR",
       "team": "PHI",
       "age": 25.4,
-      "sf_value": 736,
+      "sf_value": 740,
       "sf_rank": 475,
       "sf_pos_rank": 181,
       "sf_trend_7d": -4
@@ -4757,7 +4757,7 @@
       "position": "RB",
       "team": "MIA",
       "age": 28.1,
-      "sf_value": 710,
+      "sf_value": 708,
       "sf_rank": 476,
       "sf_pos_rank": 123,
       "sf_trend_7d": -8
@@ -4767,7 +4767,7 @@
       "position": "WR",
       "team": "NOS",
       "age": 25.6,
-      "sf_value": 681,
+      "sf_value": 677,
       "sf_rank": 477,
       "sf_pos_rank": 182,
       "sf_trend_7d": -3
@@ -4777,60 +4777,60 @@
       "position": "WR",
       "team": "LAC",
       "age": 25.9,
-      "sf_value": 604,
+      "sf_value": 601,
       "sf_rank": 478,
       "sf_pos_rank": 183,
       "sf_trend_7d": 1
-    },
-    "Jeremy McNichols": {
-      "playerID": 782,
-      "position": "RB",
-      "team": "WAS",
-      "age": 30.6,
-      "sf_value": 600,
-      "sf_rank": 479,
-      "sf_pos_rank": 124,
-      "sf_trend_7d": -3
     },
     "AJ Dillon": {
       "playerID": 631,
       "position": "RB",
       "team": "CAR",
       "age": 28.3,
-      "sf_value": 595,
+      "sf_value": 598,
+      "sf_rank": 479,
+      "sf_pos_rank": 124,
+      "sf_trend_7d": 6
+    },
+    "Jeremy McNichols": {
+      "playerID": 782,
+      "position": "RB",
+      "team": "WAS",
+      "age": 30.6,
+      "sf_value": 587,
       "sf_rank": 480,
       "sf_pos_rank": 125,
-      "sf_trend_7d": 5
+      "sf_trend_7d": -4
     },
     "LaJohntay Wester": {
       "playerID": 1823,
       "position": "WR",
       "team": "BAL",
       "age": 24.4,
-      "sf_value": 547,
+      "sf_value": 562,
       "sf_rank": 481,
       "sf_pos_rank": 184,
       "sf_trend_7d": 3
-    },
-    "Malik Heath": {
-      "playerID": 1502,
-      "position": "WR",
-      "team": "ATL",
-      "age": 26.4,
-      "sf_value": 546,
-      "sf_rank": 482,
-      "sf_pos_rank": 185,
-      "sf_trend_7d": -1
     },
     "Kyle McCord": {
       "playerID": 1738,
       "position": "QB",
       "team": "GBP",
       "age": 23.9,
-      "sf_value": 546,
-      "sf_rank": 483,
+      "sf_value": 560,
+      "sf_rank": 482,
       "sf_pos_rank": 68,
-      "sf_trend_7d": 4
+      "sf_trend_7d": 5
+    },
+    "Malik Heath": {
+      "playerID": 1502,
+      "position": "WR",
+      "team": "ATL",
+      "age": 26.4,
+      "sf_value": 552,
+      "sf_rank": 483,
+      "sf_pos_rank": 185,
+      "sf_trend_7d": -2
     },
     "Terrell Jennings": {
       "playerID": 1720,
@@ -4847,7 +4847,7 @@
       "position": "RB",
       "team": "NOS",
       "age": 28.2,
-      "sf_value": 531,
+      "sf_value": 537,
       "sf_rank": 485,
       "sf_pos_rank": 127,
       "sf_trend_7d": -8
@@ -4857,87 +4857,87 @@
       "position": "WR",
       "team": "ARI",
       "age": 22.2,
-      "sf_value": 526,
+      "sf_value": 532,
       "sf_rank": 486,
       "sf_pos_rank": 186,
       "sf_trend_7d": 28
-    },
-    "Zay Jones": {
-      "playerID": 327,
-      "position": "WR",
-      "team": "ARI",
-      "age": 31.4,
-      "sf_value": 525,
-      "sf_rank": 487,
-      "sf_pos_rank": 187,
-      "sf_trend_7d": 5
     },
     "Mecole Hardman": {
       "playerID": 404,
       "position": "WR",
       "team": "BUF",
       "age": 28.4,
-      "sf_value": 522,
+      "sf_value": 526,
+      "sf_rank": 487,
+      "sf_pos_rank": 187,
+      "sf_trend_7d": 5
+    },
+    "Zay Jones": {
+      "playerID": 327,
+      "position": "WR",
+      "team": "ARI",
+      "age": 31.4,
+      "sf_value": 519,
       "sf_rank": 488,
       "sf_pos_rank": 188,
       "sf_trend_7d": 4
-    },
-    "Kenny McIntosh": {
-      "playerID": 1385,
-      "position": "RB",
-      "team": "FA",
-      "age": 26.4,
-      "sf_value": 514,
-      "sf_rank": 489,
-      "sf_pos_rank": 128,
-      "sf_trend_7d": -36
-    },
-    "Tyler Johnson": {
-      "playerID": 572,
-      "position": "WR",
-      "team": "DAL",
-      "age": 28.0,
-      "sf_value": 512,
-      "sf_rank": 490,
-      "sf_pos_rank": 189,
-      "sf_trend_7d": -2
     },
     "Nathan Carter": {
       "playerID": 1902,
       "position": "RB",
       "team": "ATL",
       "age": 24.2,
-      "sf_value": 512,
-      "sf_rank": 491,
-      "sf_pos_rank": 129,
-      "sf_trend_7d": 23
+      "sf_value": 518,
+      "sf_rank": 489,
+      "sf_pos_rank": 128,
+      "sf_trend_7d": 25
     },
-    "Ainias Smith": {
-      "playerID": 1624,
-      "position": "WR",
+    "Kenny McIntosh": {
+      "playerID": 1385,
+      "position": "RB",
       "team": "FA",
-      "age": 25.2,
-      "sf_value": 497,
-      "sf_rank": 492,
-      "sf_pos_rank": 190,
-      "sf_trend_7d": -14
+      "age": 26.4,
+      "sf_value": 508,
+      "sf_rank": 490,
+      "sf_pos_rank": 129,
+      "sf_trend_7d": -37
+    },
+    "Tyler Johnson": {
+      "playerID": 572,
+      "position": "WR",
+      "team": "DAL",
+      "age": 28.0,
+      "sf_value": 506,
+      "sf_rank": 491,
+      "sf_pos_rank": 189,
+      "sf_trend_7d": -3
     },
     "Dylan Laube": {
       "playerID": 1584,
       "position": "RB",
       "team": "LVR",
       "age": 26.6,
-      "sf_value": 496,
-      "sf_rank": 493,
+      "sf_value": 499,
+      "sf_rank": 492,
       "sf_pos_rank": 130,
-      "sf_trend_7d": -7
+      "sf_trend_7d": -6
+    },
+    "Ainias Smith": {
+      "playerID": 1624,
+      "position": "WR",
+      "team": "FA",
+      "age": 25.2,
+      "sf_value": 494,
+      "sf_rank": 493,
+      "sf_pos_rank": 190,
+      "sf_trend_7d": -15
     },
     "Zavier Scott": {
       "playerID": 1898,
       "position": "RB",
       "team": "MIN",
       "age": 27.1,
-      "sf_value": 495,
+      "sf_value": 493,
       "sf_rank": 494,
       "sf_pos_rank": 131,
       "sf_trend_7d": -19
@@ -4947,7 +4947,7 @@
       "position": "WR",
       "team": "NYG",
       "age": 29.7,
-      "sf_value": 483,
+      "sf_value": 480,
       "sf_rank": 495,
       "sf_pos_rank": 191,
       "sf_trend_7d": 19
@@ -4957,20 +4957,30 @@
       "position": "RB",
       "team": "TEN",
       "age": 25.8,
-      "sf_value": 481,
+      "sf_value": 478,
       "sf_rank": 496,
       "sf_pos_rank": 132,
       "sf_trend_7d": 5
+    },
+    "Kalif Raymond": {
+      "playerID": 822,
+      "position": "WR",
+      "team": "CHI",
+      "age": 32.0,
+      "sf_value": 476,
+      "sf_rank": 497,
+      "sf_pos_rank": 192,
+      "sf_trend_7d": 33
     },
     "Noah Brown": {
       "playerID": 776,
       "position": "WR",
       "team": "WAS",
       "age": 30.6,
-      "sf_value": 477,
-      "sf_rank": 497,
-      "sf_pos_rank": 192,
-      "sf_trend_7d": 4
+      "sf_value": 474,
+      "sf_rank": 498,
+      "sf_pos_rank": 193,
+      "sf_trend_7d": 3
     },
     "Luke Altmyer": {
       "playerID": 1932,
@@ -4978,26 +4988,16 @@
       "team": "DET",
       "age": 23.8,
       "sf_value": 474,
-      "sf_rank": 498,
-      "sf_pos_rank": 69,
-      "sf_trend_7d": 3
-    },
-    "Kalif Raymond": {
-      "playerID": 822,
-      "position": "WR",
-      "team": "CHI",
-      "age": 32.0,
-      "sf_value": 473,
       "sf_rank": 499,
-      "sf_pos_rank": 193,
-      "sf_trend_7d": 31
+      "sf_pos_rank": 69,
+      "sf_trend_7d": 2
     },
     "Odell Beckham": {
       "playerID": 279,
       "position": "WR",
       "team": "NYG",
       "age": 33.8,
-      "sf_value": 419,
+      "sf_value": 416,
       "sf_rank": 554,
       "sf_pos_rank": 209,
       "sf_trend_7d": 112
