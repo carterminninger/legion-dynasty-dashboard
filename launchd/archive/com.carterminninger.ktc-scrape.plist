@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- ARCHIVED 2026-08-13 — ghost-plist archive session (watched_items entry
+     "GHOST-PLIST ARCHIVE SESSION", advisor A1-e condition, Carter-ratified
+     2026-08-06; moves executed under Carter's 2026-08-13 ratification).
+     WHY ARCHIVED: RunAtLoad=true latent arm — file sat in
+     ~/Library/LaunchAgents but the label was "disabled" in
+     launchctl print-disabled gui/501 and NOT loaded (verified live
+     2026-08-13; first verified 2026-08-06). Archive-don't-delete.
+     CONTEXT: superseded 2026-07-23 at the KTC dup-scraper closure — the
+     local plist was booted out and disabled; the GitHub Actions cron in
+     this repo is the AUTHORITATIVE scraper and must be watched (it went
+     silently stale 7/17 until the permissions fix; no local backup now).
+     The "disabled" override-db entry is deliberately LEFT IN PLACE as
+     defense-in-depth.
+     This file is history, not configuration — do not re-install without a
+     Carter ruling. -->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.carterminninger.ktc-scrape</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/carterminninger/Projects/legion-dynasty-dashboard/scripts/ktc_push.sh</string>
+    </array>
+
+    <!-- Run every hour; launchd fires missed intervals on wake from sleep -->
+    <key>StartInterval</key>
+    <integer>3600</integer>
+
+    <!-- Also run once immediately on agent load / login -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- launchd stdout/stderr captured here; script also writes its own log -->
+    <key>StandardOutPath</key>
+    <string>/Users/carterminninger/Projects/legion-dynasty-dashboard/scripts/ktc_launchd.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/carterminninger/Projects/legion-dynasty-dashboard/scripts/ktc_launchd.log</string>
+
+    <!-- Explicit env so launchd's minimal shell can find git and ssh key -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>HOME</key>
+        <string>/Users/carterminninger</string>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>GIT_SSH_COMMAND</key>
+        <string>ssh -i /Users/carterminninger/.ssh/id_ed25519 -o StrictHostKeyChecking=no</string>
+    </dict>
+</dict>
+</plist>
