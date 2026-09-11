@@ -46,13 +46,40 @@ def fetch_html() -> str:
     return res.text
 
 
+# KTC's page has carried the rankings in two shapes:
+#   (1) since ~2026-09-08: a JSON script element the page itself parses —
+#       <script type="application/json" id="ktc-players">[...]</script>
+#       var playersArray = JSON.parse(document.getElementById('ktc-players').textContent);
+#   (2) before that: an inline literal — var playersArray = [...];
+# Parse (1) first, fall back to (2). Both yield the same array of player dicts.
+# DISCLOSED NEGATIVE SPACE (advisor C4 refused, Carter-ruled 2026-09-10): when the
+# ktc-players element IS present but its payload does not parse, that is a HARD
+# FAILURE — the inline-literal fallback is deliberately NOT attempted. A
+# partially-changed page fails loud rather than degrading onto whichever shape
+# still happens to parse.
+# The `(?<![\w-])` guard keeps `data-id="ktc-players"` from false-matching (C3).
+_JSON_ELEMENT_RE = re.compile(
+    r"<script[^>]*(?<![\w-])id=[\"']ktc-players[\"'][^>]*>(.*?)</script>",
+    re.DOTALL | re.IGNORECASE,
+)
+_INLINE_LITERAL_RE = re.compile(r"var playersArray\s*=\s*(\[.+?\]);", re.DOTALL)
+
+
 def parse_players(html: str) -> list[dict]:
-    m = re.search(r"var playersArray\s*=\s*(\[.+?\]);", html, re.DOTALL)
-    if not m:
-        raise ValueError("playersArray not found in page — KTC may have changed their markup")
-    raw: list[dict] = json.loads(m.group(1))
-    log.info("Parsed %d players from playersArray", len(raw))
-    return raw
+    m = _JSON_ELEMENT_RE.search(html)
+    if m:
+        raw: list[dict] = json.loads(m.group(1))
+        log.info("Parsed %d players from the ktc-players JSON script element", len(raw))
+        return raw
+    m = _INLINE_LITERAL_RE.search(html)
+    if m:
+        raw = json.loads(m.group(1))
+        log.info("Parsed %d players from the inline playersArray literal", len(raw))
+        return raw
+    raise ValueError(
+        "player data not found in page — neither the ktc-players JSON script element "
+        "nor an inline playersArray literal is present; KTC may have changed their markup"
+    )
 
 
 def normalize(raw: list[dict]) -> dict:
@@ -139,3 +166,11 @@ if __name__ == "__main__":
 # CHANGELOG
 # 2026-07-21  Tee raw fetched HTML to scrape_evidence/ktc_raw.html for CI failure
 #             artifacts (data-retrieval-loop Phase 2). No scraper-logic change.
+# 2026-09-10  parse_players: read the ktc-players JSON script element first (KTC
+#             markup change ~2026-09-08 broke the literal regex — every scheduled run,
+#             4/day, failed from 2026-09-08 11:17Z on), fall back to the inline literal
+#             ONLY when the element is absent (present-but-unparseable = hard failure,
+#             disclosed above); error text now names
+#             both shapes (the old "playersArray not found" was a wrong specific —
+#             the variable is present, the literal is gone). normalize() and the
+#             contract untouched. Tests: scripts/test_ktc_scrape.py.

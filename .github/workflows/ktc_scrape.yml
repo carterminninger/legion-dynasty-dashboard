@@ -49,6 +49,12 @@ jobs:
         # (2026-07-22 UTC) and matching the local scripts/venv, not guessed.
         run: pip install cloudscraper==1.2.71
 
+      - name: Run scraper unit tests
+        # Both page shapes (ktc-players JSON element + inline literal) and the
+        # loud-failure path — scripts/test_ktc_scrape.py. Runs BEFORE the scrape so
+        # a broken parser fails here, not at the contract gate with a live fetch.
+        run: python3 -m unittest scripts/test_ktc_scrape.py
+
       - name: Run KTC scraper
         run: python3 scripts/ktc_scrape.py
 
