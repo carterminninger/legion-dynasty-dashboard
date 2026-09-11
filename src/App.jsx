@@ -26,6 +26,22 @@ const KTC_URL     = "/ktc_live.json";
 const COMBINE_URL = "/combine_data.json";
 const DD_URL      = "/dynasty_domain_rankings.json";
 const REFRESH_INTERVAL = 30 * 60 * 1000;
+// KTC staleness bound for the badge. Traced, not tuned: the scraper cron is
+// '15 */6 * * *' (.github/workflows/ktc_scrape.yml) and the data contract's
+// freshness bound is that 6h + 2h margin = 8h (scripts/contracts/ktc_live.json).
+// Older than this means at least one scheduled scrape failed to land, which is
+// what the badge must make visible: the last scrape to land was 2026-09-08
+// 04:42Z (origin/main 8e798f2); by the 9/10 repair the served file was ~2.5
+// days old while the old date-equals-today check read it only as "not today".
+const KTC_STALE_AFTER_MS = 8 * 60 * 60 * 1000;
+
+// Human age for the stale badge: "42m", "7h", "3d 2h".
+function formatAge(ms) {
+  const h = Math.floor(ms / 3600000);
+  if (h < 1) return `${Math.max(0, Math.floor(ms / 60000))}m`;
+  if (h < 24) return `${h}h`;
+  return `${Math.floor(h / 24)}d ${h % 24}h`;
+}
 
 // KTC name normalization — strips generational suffixes and apostrophes so
 // "Tre' Harris" matches "Tre Harris" and "Kenneth Walker III" matches "Kenneth Walker".
@@ -598,7 +614,14 @@ function LeagueStandings({ allRosters, leagueUsers, playersDb, ktcLive, myRoster
 
 // ── Briefing tab ──────────────────────────────────────────────────────────────
 
-function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLive, today, allRosters, playersDb, leagueUsers, myRosterId, onPlayerClick }) {
+function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLive, allRosters, playersDb, leagueUsers, myRosterId, onPlayerClick }) {
+  // Wall clock for the KTC age badge, ticked once a minute so an open tab's
+  // "3d 2h old" keeps counting; kept in state because render must stay pure.
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60 * 1000);
+    return () => clearInterval(id);
+  }, []);
   // memoized so the news effect can depend on it without refiring every render
   // (identity changes only with roster — exhaustive-deps ruling 2026-07-15)
   const starters   = useMemo(() => roster.filter(p => p.slot === "STARTER"), [roster]);
@@ -666,15 +689,23 @@ function BriefingTab({ roster, fcData, lastUpdated, onRefresh, refreshing, ktcLi
         </div>
         {(() => {
           const scrapedAt = ktcLive?.scraped_at;
-          const isToday   = scrapedAt?.slice(0,10) === today;
-          const color     = ktcLive ? (isToday ? T.success : T.warm) : T.danger;
-          const label     = ktcLive ? (isToday ? "KTC live" : "KTC stale") : "KTC offline";
+          const ageMs     = scrapedAt ? now - new Date(scrapedAt).getTime() : null;
+          // A usable age is finite and non-negative. A future-dated or unparseable
+          // stamp must NOT read live (fail-closed) and must not render NaN.
+          const ageOk     = ageMs != null && Number.isFinite(ageMs) && ageMs >= 0;
+          const isStale   = !(ageOk && ageMs <= KTC_STALE_AFTER_MS);
+          const color     = ktcLive ? (isStale ? T.warm : T.success) : T.danger;
+          const label     = ktcLive ? (isStale ? "KTC stale" : "KTC live") : "KTC offline";
           const time      = scrapedAt ? new Date(scrapedAt).toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }) : null;
+          // Stale shows the AGE (how far behind the data is), fresh shows the scrape time.
+          const staleWhy  = !scrapedAt ? "no timestamp" : !ageOk ? "timestamp unusable" : `${formatAge(ageMs)} old`;
+          const detail    = !ktcLive ? "" : isStale ? ` · ${staleWhy}` : (time ? ` · ${time}` : "");
+          const tip       = !scrapedAt ? "KTC scrape timestamp missing" : !ageOk ? `KTC scrape timestamp unusable: ${scrapedAt}` : `KTC scraped ${new Date(scrapedAt).toLocaleString()}`;
           return (
-            <div style={{ display:"flex", alignItems:"center", gap:6 }}>
+            <div style={{ display:"flex", alignItems:"center", gap:6 }} title={tip}>
               <span style={{ width:6, height:6, borderRadius:"50%", background:color, display:"inline-block" }} />
-              <span style={{ ...NUM, color:T.muted, opacity:0.8, fontSize:10 }}>
-                {label}{isToday && time ? ` · ${time}` : ""}
+              <span style={{ ...NUM, color: isStale && ktcLive ? T.warm : T.muted, opacity: isStale && ktcLive ? 1 : 0.8, fontSize:10 }}>
+                {label}{detail}
               </span>
             </div>
           );
@@ -1128,7 +1159,7 @@ function Dashboard() {
       {navTab === "briefing"  && (
         <BriefingTab
           roster={roster} fcData={fcData} lastUpdated={lastUpdated}
-          onRefresh={() => fetchFc(true)} refreshing={refreshing} ktcLive={ktcLive} today={today}
+          onRefresh={() => fetchFc(true)} refreshing={refreshing} ktcLive={ktcLive}
           allRosters={allRosters} playersDb={playersDb} leagueUsers={leagueUsers} myRosterId={myRosterId}
           onPlayerClick={setSelectedPlayer}
         />
@@ -1172,3 +1203,11 @@ export default function App() {
     </Routes>
   );
 }
+
+// CHANGELOG
+// 2026-09-10  KTC badge: stale is now AGE-based (> KTC_STALE_AFTER_MS, traced to the
+//             contract's 8h freshness bound) instead of scraped-date != today, shows the
+//             age when stale, fail-closed on future-dated/unparseable stamps (advisor C8/C9),
+//             minute-tick clock in state so render stays pure; unused `today` prop dropped.
+//             Manual port of diego d52652d onto legion's T.* token styling (advisor C20);
+//             the footer's "KTC <date>" at the bottom of App is deliberately untouched.
