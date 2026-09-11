@@ -234,7 +234,9 @@ export default function PlayerModal({ player, fcData, ktcLive, combineData, dyna
   const combine    = combineData?.players?.[player.name] ?? null;
   const liveKtc    = ktcLive?.players?.[player.name];
   const ktcValue   = liveKtc?.sf_value ?? player.ktc ?? 0;
-  const ktcRankLbl = liveKtc
+  // Mirrors App.jsx ktcRankStr: a live entry can lack ranks (KTC ships rank-less
+  // pick entries since ~2026-09-08), so fall back rather than render "#null overall".
+  const ktcRankLbl = liveKtc?.sf_pos_rank && liveKtc?.sf_rank
     ? `${player.pos}${liveKtc.sf_pos_rank} · #${liveKtc.sf_rank} overall`
     : player.ktcRank;
   const trend  = liveKtc?.sf_trend_7d ?? 0;
@@ -364,3 +366,7 @@ export default function PlayerModal({ player, fcData, ktcLive, combineData, dyna
     </div>
   );
 }
+
+// CHANGELOG
+// 2026-09-10  ktcRankLbl null-guards sf_pos_rank/sf_rank (advisor C17, Carter-ratified):
+//             replaces data-shape luck with structure; nothing rendered null today.
